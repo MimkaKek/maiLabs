@@ -19,8 +19,8 @@ typedef struct TVector {
 } Vector;
 
 typedef struct TBucket {
-    unsigned long long int lower_border;
-    unsigned long long int upper_border;
+    unsigned long long int lowerBorder;
+    unsigned long long int upperBorder;
     unsigned int counter;
     struct TVector* start;
 } Bucket;
@@ -47,7 +47,7 @@ unsigned long int Min(unsigned long long int a,unsigned long long int b) {
 
 /* 
  * Функция Linker берёт на вход:
- *     - "Цепочку" из указателей векторов Node;
+ *     - "Цепочку" из указателей векторов node;
  *     - Число векторов для массива указателей array;
  *     - Массив указателей array;
  * 
@@ -68,8 +68,8 @@ void Linker(Vector* node, unsigned int counter, Vector** array) {
 }
 
 /* 
- * Функция Create_Buckets берёт на вход:
- *     - Массив указателей на контейнеры Bucket;
+ * Функция CreateBuckets берёт на вход:
+ *     - Массив указателей array на контейнеры;
  *     - Указатель на количество этих указателей amount;
  *     - Шаг для границ контейнера step;
  *     - Нижнюю границу (минимальную) beginning;
@@ -82,7 +82,7 @@ void Linker(Vector* node, unsigned int counter, Vector** array) {
  *
  */
 
-void Create_Buckets(Bucket** array, unsigned int *amount, unsigned long long int step, unsigned long long int beginning, unsigned long long int *maxkey) {
+void CreateBuckets(Bucket** array, unsigned int *amount, unsigned long long int step, unsigned long long int beginning, unsigned long long int *maxkey) {
     for(int number = 0; number < *amount; number++) {
         Bucket* newBucket = (Bucket*)malloc(sizeof(Bucket));
         if(newBucket == NULL) {
@@ -91,18 +91,18 @@ void Create_Buckets(Bucket** array, unsigned int *amount, unsigned long long int
         }
         array[number] = newBucket;
         newBucket->counter = 0;
-        newBucket->lower_border = beginning;
-        newBucket->upper_border = beginning + step - 1;
+        newBucket->lowerBorder = beginning;
+        newBucket->upperBorder = beginning + step - 1;
         newBucket->start = NULL;
         beginning = beginning + step;
     }
-    array[(*amount) - 1]->upper_border = *maxkey;
+    array[(*amount) - 1]->upperBorder = *maxkey;
     return;
 }
 
 /* 
- * Функция Add_Node берёт на вход:
- *     - "Цепочку" из указателей векторов Node;
+ * Функция AddNode берёт на вход:
+ *     - "Цепочку" из указателей векторов node;
  *     - Указатель на ключ key;
  *     - Указатель на значение str;
  * 
@@ -110,64 +110,62 @@ void Create_Buckets(Bucket** array, unsigned int *amount, unsigned long long int
  *
  */
 
-Vector* Add_Node(Vector* node, unsigned long long int* key, unsigned long long int* str) {
+Vector* AddNode(Vector* node, unsigned long long int* key, unsigned long long int* str) {
     if(node == NULL) {
-
         Vector* newNode = (Vector*)malloc(sizeof(Vector));
         if(newNode == NULL) {
             puts("Error: Нехватка памяти! Завершение программы");
             exit (0);
         }
-
         newNode->str = *str;
         newNode->key = *key;
         newNode->next = NULL;
         return newNode;
     }
     else {
-        node->next = Add_Node(node->next, key, str);
+        node->next = AddNode(node->next, key, str);
         return node;
     }
 }
 
 /* 
- * Функция Add_In_Bucket берёт на вход:
- *     - "Цепочку" из указателей векторов Node, которая закрепляна за контейнером;
+ * Функция AddInBucket берёт на вход:
+ *     - "Цепочку" из указателей векторов node, которая закрепляна за контейнером;
  *     - Указатель current на тот вектор, что хотим добавить;
  * 
  * Функция добавляет в конец к "цепочке" векторов следующий вектор.           
  *
  */
 
-Vector* Add_In_Bucket(Vector* node, Vector* current) {
+Vector* AddInBucket(Vector* node, Vector* current) {
     if(node == NULL) {
         node = current;
         node->next = NULL;
     }
     else {
-        node->next = Add_In_Bucket(node->next, current);
+        node->next = AddInBucket(node->next, current);
     }
     return node;
 }
 
 /* 
- * Функция Place_In_Buckets берёт на вход:
- *     - Массив указателей на контейнеры array_of_buckets;
- *     - Массив указателей на векторы array_of_vectors;
- *     - Указатель на количество контейнеров;
- *     - Указатель на количество векторов;
+ * Функция PlaceInBuckets берёт на вход:
+ *     - Массив указателей на контейнеры arrayOfBuckets;
+ *     - Массив указателей на векторы arrayOfVectors;
+ *     - Указатель на количество контейнеров amountOfBuckets;
+ *     - Указатель на количество векторов counter;
  * 
  * Сортирует вектора по контейнера в соответствии с их ключами.
  *
  */
 
-void Place_In_Buckets(Bucket** array_of_buckets, Vector** array_of_vectors, unsigned int* amount_of_buckets, unsigned int* counter) {
-    for(int numb_vector = 0; numb_vector < *counter; numb_vector++) {
-        for(int numb_bucket = 0; numb_bucket < *amount_of_buckets; numb_bucket++) {
-            if(array_of_vectors[numb_vector]->key >= array_of_buckets[numb_bucket]->lower_border 
-               && array_of_vectors[numb_vector]->key <= array_of_buckets[numb_bucket]->upper_border) {
-                array_of_buckets[numb_bucket]->start = Add_In_Bucket(array_of_buckets[numb_bucket]->start, array_of_vectors[numb_vector]);
-                array_of_buckets[numb_bucket]->counter++;
+void PlaceInBuckets(Bucket** arrayOfBuckets, Vector** arrayOfVectors, unsigned int* amountOfBuckets, unsigned int* counter) {
+    for(int numbVector = 0; numbVector < *counter; numbVector++) {
+        for(int numbBucket = 0; numbBucket < *amountOfBuckets; numbBucket++) {
+            if(arrayOfVectors[numbVector]->key >= arrayOfBuckets[numbBucket]->lowerBorder 
+               && arrayOfVectors[numbVector]->key <= arrayOfBuckets[numbBucket]->upperBorder) {
+                arrayOfBuckets[numbBucket]->start = AddInBucket(arrayOfBuckets[numbBucket]->start, arrayOfVectors[numbVector]);
+                arrayOfBuckets[numbBucket]->counter++;
                 break;
             }
         }
@@ -176,7 +174,7 @@ void Place_In_Buckets(Bucket** array_of_buckets, Vector** array_of_vectors, unsi
 }
 
 /* 
- * Функция Sort_Vector берёт на вход:
+ * Функция SortVector берёт на вход:
  *     - "Цепочку" из указателей векторов Node, закреплённых за контейнером;
  *     - Число указателей на вектора counter, которые находятся в контейнере;
  * 
@@ -187,31 +185,31 @@ void Place_In_Buckets(Bucket** array_of_buckets, Vector** array_of_vectors, unsi
  *
  */
 
-void Sort_Vector(Vector* node, int counter) {
-    Vector** array_of_vectors = (Vector**) malloc(sizeof(Vector*)*counter);
-    if(array_of_vectors == NULL) {
+void SortVector(Vector* node, int counter) {
+    Vector** arrayOfVectors = (Vector**) malloc(sizeof(Vector*)*counter);
+    if(arrayOfVectors == NULL) {
         puts("Error: недостаточно памяти");
         exit(0);
     }
     Vector* tmp;
-    Linker(node, counter, array_of_vectors);
-    for(int sorted_part = 1; sorted_part < counter; sorted_part++) { 
-        for(int step = sorted_part; step > 0 && array_of_vectors[step - 1]->key > array_of_vectors[step]->key; step--) {
-            tmp = array_of_vectors[step - 1];
-            array_of_vectors[step - 1] = array_of_vectors[step];
-            array_of_vectors[step] = tmp;
+    Linker(node, counter, arrayOfVectors);
+    for(int sortedPart = 1; sortedPart < counter; sortedPart++) { 
+        for(int step = sortedPart; step > 0 && arrayOfVectors[step - 1]->key > arrayOfVectors[step]->key; step--) {
+            tmp = arrayOfVectors[step - 1];
+            arrayOfVectors[step - 1] = arrayOfVectors[step];
+            arrayOfVectors[step] = tmp;
         }
     }
     for(int step = 0; step < counter; step++) {
-        printf("%llu\t%llu\n", array_of_vectors[step]->key, array_of_vectors[step]->str);
-        free(array_of_vectors[step]);
+        printf("%llu\t%llu\n", arrayOfVectors[step]->key, arrayOfVectors[step]->str);
+        free(arrayOfVectors[step]);
     }
-    free(array_of_vectors);
+    free(arrayOfVectors);
     return;
 }
 
 /* 
- * Функция Sort_Bucket берёт на вход:
+ * Функция SortBucket берёт на вход:
  *     - Массив указателей на контейнеры array;
  *     - Указатель на количество контейнеров amount;
  * 
@@ -221,10 +219,10 @@ void Sort_Vector(Vector* node, int counter) {
  *
  */
  
-void Sort_Bucket(Bucket** array, unsigned int* amount) {
+void SortBucket(Bucket** array, unsigned int* amount) {
     for(int step = 0; step < *amount; step++) {
         if(array[step]->start != NULL) {
-            Sort_Vector(array[step]->start, array[step]->counter);
+            SortVector(array[step]->start, array[step]->counter);
         }
         free(array[step]);
     }
@@ -304,9 +302,9 @@ int main() {
     unsigned long long int maxkey = 0;
     unsigned long long int value = 0;
     char tmp = '0';
-    bool first_vector = true;
-    bool read_numb = true; //Считывать ключ
-    bool skip_n = true;
+    bool firstVector = true;
+    bool readNumb = true; //Считывать ключ
+    bool skipN = true;
     Vector* root = NULL;
     Vector* current = NULL;
     Vector* previous = NULL;
@@ -314,24 +312,24 @@ int main() {
     do {
         //tmp = fgetc(file);
         tmp = getchar();
-        if(tmp >= '0' && tmp <= '9' && read_numb) {
-            skip_n = false;
+        if(tmp >= '0' && tmp <= '9' && readNumb) {
+            skipN = false;
             key = (unsigned long long int) key * 10 + Atoi(tmp);
         }
-        else if(!read_numb && tmp >= '0' && tmp <= '9') {
+        else if(!readNumb && tmp >= '0' && tmp <= '9') {
             value = (unsigned long long int) value * 10 + Atoi(tmp);
         }
         else if(tmp == '\t' || tmp == ' ') {
-            read_numb = false;
+            readNumb = false;
         }
-        else if(tmp == '\n' && !skip_n) {
-            read_numb = true;
-            skip_n = true;
-            if(first_vector) {
-                first_vector = false;
+        else if(tmp == '\n' && !skipN) {
+            readNumb = true;
+            skipN = true;
+            if(firstVector) {
+                firstVector = false;
                 maxkey = key;
                 minkey = key;
-                root = Add_Node(root, &key, &value);
+                root = AddNode(root, &key, &value);
                 previous = root;
                 key = 0;
                 value = 0;
@@ -360,8 +358,8 @@ int main() {
 
             counter++;
         }
-        else if(tmp == '\n' && skip_n) {
-            read_numb = true;
+        else if(tmp == '\n' && skipN) {
+            readNumb = true;
         }
         else if((key == 0 || value == 0) && tmp == '-') {
             printf("Error: отрицательное число! Строка - %d\n", counter + 1);
@@ -377,26 +375,26 @@ int main() {
         return 0;
     }
     //fclose(file);
-    unsigned int amount_of_buckets = (unsigned int) sqrt(counter);
-    unsigned long long int width_of_buckets = (maxkey - minkey) / amount_of_buckets;
+    unsigned int amountOfBuckets = (unsigned int) sqrt(counter);
+    unsigned long long int widthOfBuckets = (maxkey - minkey) / amountOfBuckets;
 
-    Vector** array_of_vectors = (Vector**) malloc(sizeof(Vector*)*counter);
-    if(array_of_vectors == NULL) {
+    Vector** arrayOfVectors = (Vector**) malloc(sizeof(Vector*)*counter);
+    if(arrayOfVectors == NULL) {
         puts("Error: недостаточно памяти");
         return 0;
     }
-    Bucket** array_of_buckets = (Bucket**) malloc(sizeof(Bucket*)*amount_of_buckets);
-    if(array_of_buckets == NULL) {
+    Bucket** arrayOfBuckets = (Bucket**) malloc(sizeof(Bucket*)*amountOfBuckets);
+    if(arrayOfBuckets == NULL) {
         puts("Error: недостаточно памяти");
         return 0;
     }
-    Linker(root, counter, array_of_vectors);
-    Create_Buckets(array_of_buckets, &amount_of_buckets, width_of_buckets, minkey, &maxkey);
-    Place_In_Buckets(array_of_buckets, array_of_vectors, &amount_of_buckets, &counter);
-    free(array_of_vectors);
-    Sort_Bucket(array_of_buckets, &amount_of_buckets);
+    Linker(root, counter, arrayOfVectors);
+    CreateBuckets(arrayOfBuckets, &amountOfBuckets, widthOfBuckets, minkey, &maxkey);
+    PlaceInBuckets(arrayOfBuckets, arrayOfVectors, &amountOfBuckets, &counter);
+    free(arrayOfVectors);
+    SortBucket(arrayOfBuckets, &amountOfBuckets);
     //Print_Buckets(array_of_buckets, &amount_of_buckets);
-    free(array_of_buckets);
+    free(arrayOfBuckets);
     //end = clock();
     //printf("Время = %.4f\n", ((double) end - start)/((double) CLOCKS_PER_SEC));
     return 0;
