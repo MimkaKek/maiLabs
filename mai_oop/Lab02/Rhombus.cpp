@@ -5,13 +5,18 @@
 Rhombus::Rhombus() : Rhombus(0, 0) {
 }
 
-Rhombus::Rhombus(size_t i, size_t j) : side_d1(i), side_d2(j) {
+Rhombus::Rhombus(int i, int j) : side_d1(i), side_d2(j) {
     std::cout << "Rhombus created: " << side_d1 << ", " << side_d2 << std::endl;
 }
 
 Rhombus::Rhombus(std::istream &is) {
-    is >> side_d1;
-    is >> side_d2;
+    do {
+        is >> side_d1;
+        is >> side_d2;
+        if(side_d1 < 0 || side_d2 < 0) {
+          std::cout << "Number is < 0. Enter another numbers: ";
+        }
+    } while(side_d1 < 0 || side_d2 < 0);
     std::cout << "Rhombus created!" << std::endl;
 }
 

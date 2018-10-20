@@ -6,7 +6,6 @@ public:
     virtual double Square() = 0;
     virtual void   Print() = 0;
     virtual ~Figure() {};
-    virtual bool operator==(const Figure& left,const Figure& right);
 };
 
 #endif	/* FIGURE_H */

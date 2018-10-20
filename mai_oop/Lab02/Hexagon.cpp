@@ -5,12 +5,17 @@
 Hexagon::Hexagon() : Hexagon(0) {
 }
 
-Hexagon::Hexagon(size_t i) : side_a(i) {
+Hexagon::Hexagon(int i) : side_a(i) {
     std::cout << "Hexagon created: " << side_a << std::endl;
 }
 
 Hexagon::Hexagon(std::istream &is) {
-    is >> side_a;
+    do {
+        is >> side_a;
+        if(side_a < 0) {
+          std::cout << "Number is < 0. Enter another number: ";
+        }
+    } while(side_a < 0);
     std::cout << "Hexagon created!" << std::endl;
 }
 

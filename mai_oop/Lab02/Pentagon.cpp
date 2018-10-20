@@ -8,12 +8,17 @@ const double k = 0.688191;
 Pentagon::Pentagon() : Pentagon(0) {
 }
 
-Pentagon::Pentagon(size_t i) : side_a(i) {
+Pentagon::Pentagon(int i) : side_a(i) {
     std::cout << "Pentagon created: " << side_a << std::endl;
 }
 
 Pentagon::Pentagon(std::istream &is) {
-    is >> side_a;
+    do {
+        is >> side_a;
+        if(side_a < 0) {
+          std::cout << "Number is < 0. Enter another number: ";
+        }
+    } while(side_a < 0);
     std::cout << "Pentagon created!" << std::endl;
 }
 
