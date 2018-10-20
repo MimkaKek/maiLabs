@@ -7,13 +7,13 @@ int main(int argc, char** argv) {
     std::cout << "Choose the Figure:\n1. Hexagon\n2. Pentagon\n3. Rhombus" << std::endl;
     char choice;
     Figure *ptr;
-    bool key = true;
     for(;;) {
         std::cin >> choice;
         switch(choice) {
             case '1':
                 std::cout << "Enter the side: ";
                 ptr = new Hexagon(std::cin);
+                Hexagon test(*ptr);
                 ptr->Print();
                 ptr->Square();
                 delete ptr;
@@ -37,13 +37,8 @@ int main(int argc, char** argv) {
             case 'h':
                 std::cout << "Choose the Figure:\n1. Hexagon\n2. Pentagon\n3. Rhombus" << std::endl;
                 break;
-//           case '\n':
-//               key = true;
             default:
-//                if(key) {
-//                    key = false;
-                    std::cout << "Error! For help type 'h'!" << std::endl;
-//                }
+                std::cout << "Error! For help type 'h'!" << std::endl;
                 break;
         }
     }

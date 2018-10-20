@@ -10,8 +10,8 @@ public:
     Rhombus(std::istream &is);
     Rhombus(size_t d1, size_t d2);
     Rhombus(const Rhombus& orig);
-	friend std::ostream& operator<<(std::ostream& os,const Rhombus& rhombus);
-	friend bool operator==(const Rhombus& left,const Rhombus& right);
+    friend std::ostream& operator<<(std::ostream& os,const Rhombus& rhombus);
+    friend bool operator==(const Rhombus& left,const Rhombus& right);
     double Square() override;
     void   Print() override;
 

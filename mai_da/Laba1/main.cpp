@@ -303,7 +303,7 @@ int main() {
     unsigned long long int value = 0;
     char tmp = '0';
     bool firstVector = true;
-    bool readNumb = true; //Считывать ключ
+    bool readNumb = true; //Считывать ключ 10k = 0.0414 sec 20k = 0.0808 sec 40k = 0.1908 80k = 0.4047 sec 200k = 1.3766 sec
     bool skipN = true;
     Vector* root = NULL;
     Vector* current = NULL;

@@ -28,7 +28,7 @@ double Rhombus::Square() {
 }
 
 void Rhombus::Print() {
-    std::cout << "d1 = " << side_d1 << ", d2 = " << side_d2 << std::endl;
+    std::cout << "Rhombus: d1 = " << side_d1 << ", d2 = " << side_d2 << std::endl;
 }
 
 Rhombus::~Rhombus() {
