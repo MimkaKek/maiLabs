@@ -6,7 +6,7 @@
 #include <string.h>
 int main() {
 
-    int number, n, answer, status;
+    int number, n, answer;
     int filePipesPrev[2], filePipesNext[2];
     pid_t forkResult;
     
