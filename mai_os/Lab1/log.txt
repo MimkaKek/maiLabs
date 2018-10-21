@@ -1,0 +1,168 @@
+30459 execve("./a.out", ["./a.out"], 0x7fffcd4a4118 /* 51 vars */) = 0
+30459 brk(NULL)                         = 0x55b722ef3000
+30459 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+30459 access("/etc/ld.so.preload", R_OK) = -1 ENOENT (No such file or directory)
+30459 openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+30459 fstat(3, {st_mode=S_IFREG|0644, st_size=115947, ...}) = 0
+30459 mmap(NULL, 115947, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7ff80dc5c000
+30459 close(3)                          = 0
+30459 access("/etc/ld.so.nohwcap", F_OK) = -1 ENOENT (No such file or directory)
+30459 openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+30459 read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\260\34\2\0\0\0\0\0"..., 832) = 832
+30459 fstat(3, {st_mode=S_IFREG|0755, st_size=2030544, ...}) = 0
+30459 mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7ff80dc5a000
+30459 mmap(NULL, 4131552, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7ff80d661000
+30459 mprotect(0x7ff80d848000, 2097152, PROT_NONE) = 0
+30459 mmap(0x7ff80da48000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e7000) = 0x7ff80da48000
+30459 mmap(0x7ff80da4e000, 15072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7ff80da4e000
+30459 close(3)                          = 0
+30459 arch_prctl(ARCH_SET_FS, 0x7ff80dc5b4c0) = 0
+30459 mprotect(0x7ff80da48000, 16384, PROT_READ) = 0
+30459 mprotect(0x55b722d20000, 4096, PROT_READ) = 0
+30459 mprotect(0x7ff80dc79000, 4096, PROT_READ) = 0
+30459 munmap(0x7ff80dc5c000, 115947)    = 0
+30459 fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 1), ...}) = 0
+30459 brk(NULL)                         = 0x55b722ef3000
+30459 brk(0x55b722f14000)               = 0x55b722f14000
+30459 fstat(0, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 1), ...}) = 0
+30459 write(1, "Enter the number: ", 18) = 18
+30459 read(0, "13\n", 1024)             = 3
+30459 write(1, "===========\nCalculating\n", 24) = 24
+30459 write(1, "===========\n", 12)     = 12
+30459 pipe([3, 4])                      = 0
+30459 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30461
+30459 wait4(-1,  <unfinished ...>
+30461 pipe([5, 6])                      = 0
+30461 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30462
+30461 wait4(-1,  <unfinished ...>
+30462 pipe([7, 8])                      = 0
+30462 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30463
+30462 wait4(-1,  <unfinished ...>
+30463 pipe([9, 10])                     = 0
+30463 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30464
+30464 pipe( <unfinished ...>
+30463 wait4(-1,  <unfinished ...>
+30464 <... pipe resumed> [11, 12])      = 0
+30464 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30465
+30464 wait4(-1,  <unfinished ...>
+30465 pipe([13, 14])                    = 0
+30465 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30466
+30465 wait4(-1,  <unfinished ...>
+30466 pipe([15, 16])                    = 0
+30466 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30467
+30466 wait4(-1,  <unfinished ...>
+30467 pipe([17, 18])                    = 0
+30467 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30468
+30468 pipe( <unfinished ...>
+30467 wait4(-1,  <unfinished ...>
+30468 <... pipe resumed> [19, 20])      = 0
+30468 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30469
+30468 wait4(-1,  <unfinished ...>
+30469 pipe([21, 22])                    = 0
+30469 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30470
+30470 pipe( <unfinished ...>
+30469 wait4(-1,  <unfinished ...>
+30470 <... pipe resumed> [23, 24])      = 0
+30470 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30471
+30470 wait4(-1,  <unfinished ...>
+30471 pipe([25, 26])                    = 0
+30471 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30472
+30471 wait4(-1,  <unfinished ...>
+30472 pipe([27, 28])                    = 0
+30472 clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x7ff80dc5b790) = 30473
+30472 wait4(-1,  <unfinished ...>
+30473 write(28, "\1\0\0\0", 4)          = 4
+30473 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30473 exit_group(0)                     = ?
+30473 +++ exited with 0 +++
+30472 <... wait4 resumed> NULL, 0, NULL) = 30473
+30472 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30473, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30472 read(27, "\1\0\0\0", 4)           = 4
+30472 write(26, "\1\0\0\0", 4)          = 4
+30472 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30472 exit_group(0)                     = ?
+30472 +++ exited with 0 +++
+30471 <... wait4 resumed> NULL, 0, NULL) = 30472
+30471 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30472, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30471 read(25, "\1\0\0\0", 4)           = 4
+30471 write(24, "\1\0\0\0", 4)          = 4
+30471 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30471 exit_group(0)                     = ?
+30471 +++ exited with 0 +++
+30470 <... wait4 resumed> NULL, 0, NULL) = 30471
+30470 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30471, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30470 read(23, "\1\0\0\0", 4)           = 4
+30470 write(22, "\1\0\0\0", 4)          = 4
+30470 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30470 exit_group(0)                     = ?
+30470 +++ exited with 0 +++
+30469 <... wait4 resumed> NULL, 0, NULL) = 30470
+30469 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30470, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30469 read(21, "\1\0\0\0", 4)           = 4
+30469 write(20, "\1\0\0\0", 4)          = 4
+30469 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30469 exit_group(0)                     = ?
+30469 +++ exited with 0 +++
+30468 <... wait4 resumed> NULL, 0, NULL) = 30469
+30468 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30469, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30468 read(19, "\1\0\0\0", 4)           = 4
+30468 write(18, "\1\0\0\0", 4)          = 4
+30468 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30468 exit_group(0)                     = ?
+30468 +++ exited with 0 +++
+30467 <... wait4 resumed> NULL, 0, NULL) = 30468
+30467 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30468, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30467 read(17, "\1\0\0\0", 4)           = 4
+30467 write(16, "\1\0\0\0", 4)          = 4
+30467 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30467 exit_group(0)                     = ?
+30467 +++ exited with 0 +++
+30466 <... wait4 resumed> NULL, 0, NULL) = 30467
+30466 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30467, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30466 read(15, "\1\0\0\0", 4)           = 4
+30466 write(14, "\1\0\0\0", 4)          = 4
+30466 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30466 exit_group(0)                     = ?
+30466 +++ exited with 0 +++
+30465 <... wait4 resumed> NULL, 0, NULL) = 30466
+30465 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30466, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30465 read(13, "\1\0\0\0", 4)           = 4
+30465 write(12, "\1\0\0\0", 4)          = 4
+30465 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30465 exit_group(0)                     = ?
+30465 +++ exited with 0 +++
+30464 <... wait4 resumed> NULL, 0, NULL) = 30465
+30464 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30465, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30464 read(11, "\1\0\0\0", 4)           = 4
+30464 write(10, "\1\0\0\0", 4)          = 4
+30464 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30464 exit_group(0)                     = ?
+30464 +++ exited with 0 +++
+30463 <... wait4 resumed> NULL, 0, NULL) = 30464
+30463 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30464, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30463 read(9, "\1\0\0\0", 4)            = 4
+30463 write(8, "\1\0\0\0", 4)           = 4
+30463 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30463 exit_group(0)                     = ?
+30463 +++ exited with 0 +++
+30462 <... wait4 resumed> NULL, 0, NULL) = 30463
+30462 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30463, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30462 read(7, "\1\0\0\0", 4)            = 4
+30462 write(6, "\1\0\0\0", 4)           = 4
+30462 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30462 exit_group(0)                     = ?
+30462 +++ exited with 0 +++
+30461 <... wait4 resumed> NULL, 0, NULL) = 30462
+30461 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30462, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30461 read(5, "\1\0\0\0", 4)            = 4
+30461 write(4, "\1\0\0\0", 4)           = 4
+30461 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30461 exit_group(0)                     = ?
+30461 +++ exited with 0 +++
+30459 <... wait4 resumed> NULL, 0, NULL) = 30461
+30459 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=30461, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+30459 read(3, "\1\0\0\0", 4)            = 4
+30459 write(1, "Answer - True!\n", 15)  = 15
+30459 lseek(0, -1, SEEK_CUR)            = -1 ESPIPE (Illegal seek)
+30459 exit_group(0)                     = ?
+30459 +++ exited with 0 +++
