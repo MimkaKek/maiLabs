@@ -18,9 +18,22 @@ void TArray<T>::Add(std::shared_ptr<T> figure) {
 		return;
 	}
 	else {
-		array = (std::shared_ptr<T>*) realloc(array, (amount + 1) * sizeof(std::shared_ptr<T>));
+    ///*
+    std::shared_ptr<T>* tmp = (std::shared_ptr<T>*) malloc((amount + 1) * sizeof(std::shared_ptr<T>));
+    for(int step = 0; step < amount; step++) {
+      tmp[step] = array[step];
+      array[step] = nullptr;
+    }
+    tmp[amount] = figure;
+    free(array);
+    array = tmp;//*/
+		/*array = (std::shared_ptr<T>*) realloc(array, (amount + 1) * sizeof(std::shared_ptr<T>));
+    if(array == nullptr) {
+        puts("Error!");
+        exit(1);
+    }*/
     amount++;
-		array[amount - 1] = figure;
+		//array[amount - 1] = figure;
 		return;
 	}
 }
@@ -54,7 +67,7 @@ template <class T>
 TArray<T>::~TArray() {
   for(int i = 0; i < amount; i++)
     array[i] = nullptr;
-	delete array;
+	free(array);
 	std::cout << "Array destroyed!" << std::endl;
 }
 
