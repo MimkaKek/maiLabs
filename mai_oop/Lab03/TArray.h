@@ -11,8 +11,7 @@ public:
 	TArray();
 	void Add(std::shared_ptr<T> figure);
 	std::shared_ptr<T> Remove(int i);
-  void Print(const int step);
-	unsigned int GetAmount() const;
+  void Print(int step) const;
  	template <class A> friend std::ostream& operator<<(std::ostream& os, TArray<A>& array);
 	virtual ~TArray();
 private:

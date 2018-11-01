@@ -34,6 +34,11 @@ double Pentagon::Square() {
     return tmp;
 }
 
+std::ostream& operator<<(std::ostream& os,const Pentagon& pentagon) {
+  os << "a = " << pentagon.side_a << std::endl;
+  return os;
+}
+
 bool operator==(const Pentagon& left,const Pentagon& right) {
 	if(left.side_a == right.side_a)
 		return true;

@@ -41,7 +41,7 @@ Rhombus::~Rhombus() {
 }
 
 std::ostream& operator<<(std::ostream& os,const Rhombus& rhombus) {
-	os << "d1 = " << rhombus.side_d1 << ", d2 = " << rhombus.side_d2 << std::endl;
+	os << "d1 = " << rhombus.side_d1 << "d2 = " << rhombus.side_d2 << std::endl;
 	return os;
 }
 

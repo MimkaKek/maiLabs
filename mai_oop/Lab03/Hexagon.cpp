@@ -30,6 +30,11 @@ double Hexagon::Square() {
     return tmp;
 }
 
+std::ostream& operator<<(std::ostream& os,const Hexagon& hexagon) {
+    os << "a = " << hexagon.side_a << std::endl;
+    return os;
+}
+
 bool operator==(const Hexagon& left,const Hexagon& right) {
 	if(left.side_a == right.side_a)
 		return true;

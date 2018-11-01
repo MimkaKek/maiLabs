@@ -11,6 +11,7 @@ public:
     Pentagon(int a);
     Pentagon(const Pentagon& orig);
 
+    friend std::ostream& operator<<(std::ostream& os,const Pentagon& pentagon);
     friend bool operator==(const Pentagon& left,const Pentagon& right);
     double Square() override;
     void   Print() override;

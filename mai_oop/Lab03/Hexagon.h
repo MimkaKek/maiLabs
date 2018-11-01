@@ -11,6 +11,7 @@ public:
     Hexagon(int a);
     Hexagon(const Hexagon& orig);
 
+    friend std::ostream& operator<<(std::ostream& os,const Hexagon& hexagon);
     friend bool operator==(const Hexagon& left,const Hexagon& right);
     double Square() override;
     void   Print() override;
