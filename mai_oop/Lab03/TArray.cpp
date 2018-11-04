@@ -31,9 +31,9 @@ void TArray<T>::Add(std::shared_ptr<T> figure) {
     if(array == nullptr) {
         puts("Error!");
         exit(1);
-    }*/
+    }
+		array[amount] = figure;*/
     amount++;
-		//array[amount - 1] = figure;
 		return;
 	}
 }
