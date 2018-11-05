@@ -42,6 +42,42 @@ TNode* AddAnotherNode(unsigned long long int key, char* str, TNode* next) {
     return tmp;
 }
 
+TNode* AddInTree(TNode* node, char* str, unsigned long long int key) {
+    if(node == NULL) {
+        TNode* newNode = AddNode(key, str);
+        return newNode;
+    }
+    else {
+        int step = 0;
+        while((str[step] == node->partOfWord[step]) && (str[step] != '\0' && node->partOfWord[step] != '\0')) {
+            step++;
+        }
+        if(step == 0) {
+            node->neighbor = AddInTree(node->neighbor, str, key);
+            return node;
+        }
+        else if(node->partOfWord[step + 1] == '$') {
+            node->next = AddInTree(node->next, str + step, key);
+            return node;
+        }
+        else {
+            char* tmp = malloc(sizeof(char)*(strlen(node->partOfWord) - step));
+            strcpy(tmp, node->partOfWord + step);
+            node->partOfWord = realloc(node->partOfWord, sizeof(char)*(step + 2));
+            if(node->next != NULL) {
+                node->next = AddAnotherNode(key, tmp, node->next);
+            }
+            else {
+                node->next = AddInTree(node->next, tmp, key);
+            }
+            node->next = AddInTree(node->next, str + step, key);
+            node->partOfWord[step] = '\0';
+            node->partOfWord[step + 1] = '$';
+            return node;
+        }
+    }
+}
+
 void ClearTree(TNode* node) {
     if(node == NULL) {
         return;
@@ -53,53 +89,33 @@ void ClearTree(TNode* node) {
     return;
 }
 
-TNode* FAddInTree(TNode* node, int deep, long long unsigned key, char* str) {
-    if(node == NULL) {
-        if(str[strlen(str) + 1] == '$') {
-            node = AddAnotherNode(key, str, NULL);
-        }
-        else {
-            node = AddNode(key, str);
-        }
-        return node;
-    }
-    else if(deep > 1) {
-        node->next = FAddInTree(node->next, deep - 1, key, str);
-        return node;
-    }
-    else {
-        node->neighbor = FAddInTree(node->neighbor, deep, key, str);
-        return node;
-    }
-}
-
 TNode* FLoadTree(FILE* file, TNode* node, char* buffer) {
-    unsigned long long key;
-    int mem;
-    int mover = 0;
+    unsigned long long int key;
     int step = 0;
-    while(fscanf(file, "%s", buffer) != EOF) {
-        step = 0;
-        mover = 0;
-        while(buffer[step] == '-') {
-            buffer[step++] = '\0';
-        }
+    int mem;
+    int check;
+    char tmp;
+    for(;;) {
         mem = step;
-        while(buffer[step] != '\0') {
-            buffer[mover] = buffer[step];
-            step++;
-            mover++;
-        }
-        if(buffer[mover - 1] == '$') {
-            buffer[mover - 1] = '\0';
-            buffer[mover] = '$';
-            key = 0;
+        step = 0;
+        if (fread(&check, sizeof(int), 1, file)) {
+            do {
+                fread(&tmp, sizeof(char), 1, file);
+                buffer[step] = tmp;
+                ++step;
+            } while(tmp != '#' && tmp != '$');
+            if(tmp == '$') {
+                key = 0;
+                node = AddInTree(node, buffer, key);
+            }
+            else {
+                fread(&key, sizeof(unsigned long long int), 1, file);
+                node = AddInTree(node, buffer, key);
+            }
         }
         else {
-            buffer[mover] = '\0';
-            fscanf(file, "%llu", &key);
+            break;
         }
-        node = FAddInTree(node, mem, key, buffer);
     }
     return node;
 }
@@ -118,25 +134,26 @@ void PrintTree(TNode* node, int deep) {
     }
 }
 
-void FSaveTree(FILE* file, TNode* node, int deep) {
+void FSaveTree(FILE* file, TNode* node) {
     if(node == NULL) {
         return;
     }
     else {
-        for(int step = 0; step < deep; step++)
-            fprintf(file, "-");
-        fprintf(file, "-%s", node->partOfWord);
+        char tmp;
+        int numb = 0;
+        fwrite(&numb, sizeof(int), 1, file);
+        fwrite(node->partOfWord, sizeof(char), strlen(node->partOfWord) + 1, file);
         if(node->partOfWord[strlen(node->partOfWord) + 1] == '$') {
-            fprintf(file, "$\n");
+          tmp = '$';
+          fwrite(&tmp, sizeof(char), 1, file);
         }
-        else if(node->neighbor == NULL) {
-            fprintf(file, " %llu\n", node->key);
+        else {
+          tmp = '#';
+          fwrite(&tmp, sizeof(char), 1, file);
+          fwrite(&node->key, sizeof(unsigned long long int), 1, file);
         }
-        else if(node->partOfWord[0] == '\0') {
-            fprintf(file, " %llu\n", node->key);
-        }
-        FSaveTree(file, node->next, deep + 1);
-        FSaveTree(file, node->neighbor, deep);
+        FSaveTree(file, node->next);
+        FSaveTree(file, node->neighbor);
         return;
     }
 }
@@ -175,42 +192,6 @@ void StrToLower(char* str) {
         step++;
     }
     return;
-}
-
-TNode* AddInTree(TNode* node, char* str, unsigned long long int key) {
-    if(node == NULL) {
-        TNode* newNode = AddNode(key, str);
-        return newNode;
-    }
-    else {
-        int step = 0;
-        while((str[step] == node->partOfWord[step]) && (str[step] != '\0' && node->partOfWord[step] != '\0')) {
-            step++;
-        }
-        if(step == 0) {
-            node->neighbor = AddInTree(node->neighbor, str, key);
-            return node;
-        }
-        else if(node->partOfWord[step + 1] == '$') {
-            node->next = AddInTree(node->next, str + step, key);
-            return node;
-        }
-        else {
-            char* tmp = malloc(sizeof(char)*(strlen(node->partOfWord) - step));
-            strcpy(tmp, node->partOfWord + step);
-            node->partOfWord = realloc(node->partOfWord, sizeof(char)*(step + 2));
-            if(node->next != NULL) {
-                node->next = AddAnotherNode(key, tmp, node->next);
-            }
-            else {
-                node->next = AddInTree(node->next, tmp, key);
-            }
-            node->next = AddInTree(node->next, str + step, key);
-            node->partOfWord[step] = '\0';
-            node->partOfWord[step + 1] = '$';
-            return node;
-        }
-    }
 }
 
 int main() {
@@ -260,7 +241,7 @@ int main() {
                             puts("Error: Can't open the file!");
                             return 1;
                         }
-                        FSaveTree(file, root, 0);
+                        FSaveTree(file, root);
                         puts("OK");
                         fclose(file);
                     }
@@ -273,6 +254,7 @@ int main() {
                         ClearTree(root);
                         root = NULL;
                         root = FLoadTree(file, root, buffer);
+                        PrintTree(root, 0);
                         puts("OK");
                     }
                     else {

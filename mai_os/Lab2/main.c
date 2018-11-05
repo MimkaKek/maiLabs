@@ -30,37 +30,40 @@ void* potok(void* try)
     pthread_exit(0);
 }
 
-int main(int argc, char* argv[])
-{
-	pthread_t tid; /* идентификатор потока */
+int main(int argc, char* argv[]) {
 	pthread_attr_t attr; /* отрибуты потока */
-    int countM, countS;
+    int countM, countS, numberOfThreads;
     int ltime = time(NULL);
     unsigned int stime = (unsigned int) ltime / 2;
     srand(stime);
     pthread_mutex_init(&mutex, NULL);
-    if (argc != 2) {
-        fprintf(stderr,"usage: progtest <integer value>\n");
+    if (argc != 3) {
+        fprintf(stderr,"usage: ./start.exec <integer value> <number of threads>\n");
         return -1;
     }
     countM = atoi(argv[1]);
-    if (countM < 0) {
-        fprintf(stderr,"Аргумент %d не может быть отрицательным числом\n",atoi(argv[1]));
+    numberOfThreads = atoi(argv[2]);
+    pthread_t* id = malloc(sizeof(pthread_t)*(numberOfThreads - 1));
+    if (countM < 0 || numberOfThreads < 0) {
+        fprintf(stderr,"Error: value can't be less than zero\n");
         return -1;
     }
-    if ((countM % 2) == 0) {
-        countM /= 2;
-        countS = countM;
-    } else {
-        countM /= 2;
-        countS = countM + 1;
+    if (numberOfThreads == 0) {
+        fprintf(stderr,"Error: number of threads can't be equal zero\n");
+        return -1;
     }
-	pthread_attr_init(&attr);
-	pthread_create(&tid,&attr,potok,&countS);
-    foo(countM);
-	pthread_join(tid,NULL);
+    countS = countM / numberOfThreads;
+    pthread_attr_init(&attr);
+    for(int i = 0; i < numberOfThreads - 1; ++i) {
+        pthread_create(id + i,&attr,potok,&countS);
+    }
+    foo(countS + (countM % numberOfThreads));
+    for(int i = 0; i < numberOfThreads - 1; ++i) {
+        pthread_join(id[i],NULL);
+    }
     double answer = (goodCount / allCount) * 100;
     printf("Succesful attempts - %.0f\nAll attemps - %.0f\nChance = %f!\n", goodCount, allCount, answer);
+    free(id);
     return 0;
 }
 
