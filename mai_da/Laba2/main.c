@@ -99,7 +99,7 @@ TNode* RemoveFromTree(TNode* node, char* word, int step) {
         }
     }
     else if(word[step] == '\0' && node->partOfWord[tmp] == '\0') {
-        printf("OK: %llu\n", node->key);
+        printf("OK\n");
         answer = 1;
         TNode* save = node->neighbor;
         free(node->partOfWord);
