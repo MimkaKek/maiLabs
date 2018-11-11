@@ -294,8 +294,8 @@ unsigned long long int Atoi(char tmp) {
 
 int main() {
     
-    //time_t start, end;
-    //start = clock();
+    time_t start, end;
+    start = clock();
     unsigned int counter = 0;
     unsigned long long int key = 0;
     unsigned long long int minkey = 0;
@@ -309,75 +309,44 @@ int main() {
     Vector* current = NULL;
     Vector* previous = NULL;
     //FILE* file = fopen("test","r");
-    do {
-        //tmp = fgetc(file);
-        tmp = getchar();
-        if(tmp >= '0' && tmp <= '9' && readNumb) {
-            skipN = false;
-            key = (unsigned long long int) key * 10 + Atoi(tmp);
+    while(scanf("%llu%llu", &key, &value) == 2) {
+        if(firstVector) {
+          firstVector = false;
+          current = (Vector*)malloc(sizeof(Vector));
+          if(current == NULL) {
+              puts("Error: Нехватка памяти! Завершение программы");
+              exit (0);
+          }
+          current->key = key;
+          current->str = value;
+          current->next = NULL;
+          root = current;
+          previous = current;
+          current = NULL;
+          continue;
         }
-        else if(!readNumb && tmp >= '0' && tmp <= '9') {
-            value = (unsigned long long int) value * 10 + Atoi(tmp);
+        current = (Vector*)malloc(sizeof(Vector));
+        if(current == NULL) {
+            puts("Error: Нехватка памяти! Завершение программы");
+            exit (0);
         }
-        else if(tmp == '\t' || tmp == ' ') {
-            readNumb = false;
-        }
-        else if(tmp == '\n' && !skipN) {
-            readNumb = true;
-            skipN = true;
-            if(firstVector) {
-                firstVector = false;
-                maxkey = key;
-                minkey = key;
-                root = AddNode(root, &key, &value);
-                previous = root;
-                key = 0;
-                value = 0;
-                counter = 1;
-                continue;
-            }
-            current = (Vector*)malloc(sizeof(Vector));
-            if(current == NULL) {
-                puts("Error: Нехватка памяти! Завершение программы");
-                exit (0);
-            }
+        
+        current->key = key;
+        current->str = value;
+        current->next = NULL;
+        
+        previous->next = current;
+        current = NULL;
+        
+        minkey = Min(key, minkey);
+        maxkey = Max(key, maxkey);
 
-            previous->next = current;
-            current->str = value;
-            current->key = key;
-            current->next = NULL;
-
-            previous = current;
-            current = current->next;
-
-            minkey = Min(key, minkey);
-            maxkey = Max(key, maxkey);
-
-            key = 0;
-            value = 0;
-
-            counter++;
-        }
-        else if(tmp == '\n' && skipN) {
-            readNumb = true;
-        }
-        else if((key == 0 || value == 0) && tmp == '-') {
-            printf("Error: отрицательное число! Строка - %d\n", counter + 1);
-            return 0;
-        }
-        else if(tmp != '\377'){
-            printf("Error: неверный формат! Строка - %d\n", counter + 1);
-            return 0;
-        }
-    } while(tmp != '\0' && tmp != EOF);
-
-    if(counter == 0) {
-        return 0;
+        counter++;
     }
     //fclose(file);
     unsigned int amountOfBuckets = (unsigned int) sqrt(counter);
     unsigned long long int widthOfBuckets = (maxkey - minkey) / amountOfBuckets;
-
+    puts("Check!");
     Vector** arrayOfVectors = (Vector**) malloc(sizeof(Vector*)*counter);
     if(arrayOfVectors == NULL) {
         puts("Error: недостаточно памяти");
@@ -388,14 +357,20 @@ int main() {
         puts("Error: недостаточно памяти");
         return 0;
     }
+    puts("Check!");
     Linker(root, counter, arrayOfVectors);
+    puts("Check!");
     CreateBuckets(arrayOfBuckets, &amountOfBuckets, widthOfBuckets, minkey, &maxkey);
+    puts("Check!");
     PlaceInBuckets(arrayOfBuckets, arrayOfVectors, &amountOfBuckets, &counter);
+    puts("Check!");
     free(arrayOfVectors);
     SortBucket(arrayOfBuckets, &amountOfBuckets);
+    puts("Check!");
     //Print_Buckets(array_of_buckets, &amount_of_buckets);
+    puts("Check!");
     free(arrayOfBuckets);
-    //end = clock();
-    //printf("Время = %.4f\n", ((double) end - start)/((double) CLOCKS_PER_SEC));
+    end = clock();
+    printf("Время = %.4f\n", ((double) end - start)/((double) CLOCKS_PER_SEC));
     return 0;
 }
