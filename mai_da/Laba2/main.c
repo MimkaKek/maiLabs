@@ -3,7 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-int answer = 0;
+unsigned long long int answer = 0;
 
 typedef struct Node {
     unsigned long long int  key;
@@ -15,7 +15,7 @@ typedef struct Node {
 TNode* AddNode(unsigned long long int key, char* str, TNode* next, int mode) {
     TNode* tmp = (TNode*) malloc(sizeof(TNode));
     if(tmp == NULL) {
-        puts("Error!");
+        puts("ERROR: can't allocate memory for node!");
         exit(0);
     }
     tmp->partOfWord = malloc(sizeof(char)*(strlen(str) + 2));
@@ -48,6 +48,7 @@ TNode* AddInTree(TNode* node, char* str, unsigned long long int key) {
             return node;
         }        
         else if(node->partOfWord[step] == '\0' && node->partOfWord[step + 1] != '$' && str[step] == '\0') {
+            answer = 0;
             puts("Exist");
             return node;
         }
@@ -87,11 +88,11 @@ TNode* RemoveFromTree(TNode* node, char* word, int step) {
     }
     if(node->partOfWord[tmp + 1] == '$') {
         node->next = RemoveFromTree(node->next, word, step);
-        if(node->next != NULL && node->next->neighbor == NULL && answer) {
-            node->partOfWord = realloc(node->partOfWord, sizeof(char)*(strlen(node->partOfWord)+strlen(node->next->partOfWord) + 1));
+        if(node->next != NULL && node->next->neighbor == NULL) {
+            node->partOfWord = realloc(node->partOfWord, sizeof(char)*(strlen(node->partOfWord)+strlen(node->next->partOfWord) + 2));
             strcat(node->partOfWord, node->next->partOfWord);
+            node->partOfWord[strlen(node->partOfWord) + 1] = node->next->partOfWord[strlen(node->next->partOfWord) + 1];
             node->key = node->next->key;
-            answer = 0;
             TNode* tmp = node->next->next;
             free(node->next->partOfWord);
             free(node->next);
@@ -100,7 +101,6 @@ TNode* RemoveFromTree(TNode* node, char* word, int step) {
     }
     else if(word[step] == '\0' && node->partOfWord[tmp] == '\0') {
         printf("OK\n");
-        answer = 1;
         TNode* save = node->neighbor;
         free(node->partOfWord);
         free(node);
@@ -129,7 +129,7 @@ TNode* FLoadTree(FILE* file, TNode* node, char* buffer) {
         step = 0;
         if (fread(&tmp, sizeof(unsigned char), 1, file)) { //Проверяем, есть ли ещё кусок
             if(tmp != 219) {
-                puts("Error: load failed!");
+                puts("ERROR: load failed!");
                 answer = 1;
                 return node;
             }
@@ -195,7 +195,7 @@ void FSaveTree(FILE* file, TNode* node, char* buffer, int step) {
             fwrite(buffer, sizeof(char), strlen(buffer) + 1, file);
             fwrite(&tmp, sizeof(unsigned char), 1, file);
             fwrite(&(node->key), sizeof(unsigned long long int), 1, file);
-            printf("%s - %llu\n", buffer, node->key);
+            //printf("%s - %llu\n", buffer, node->key);
             if(node->neighbor != NULL) {
                 FSaveTree(file, node->neighbor, buffer, begin);
             }
@@ -241,30 +241,34 @@ int main() {
     FILE* file;
     TNode* root = NULL;
     TNode* tmp = NULL;
-    for(;;) {
-        scanf("%s", str);
+    while(scanf("%s", str) != EOF) {
         switch(str[0]) {
             case '\n':
                 break;
             case '+':
                 if(scanf("%s%llu", str, &key) == 2) {
                     StrToLower(str);
+                    answer = 1;
                     root = AddInTree(root, str, key);
+                    if(answer == 1) {
+                        puts("OK");
+                        answer = 0;
+                    }
                 }
                 else {
-                    puts("Error: bad format!");
-                    return 1;
+                    puts("ERROR: bad format!");
+                    return 0;
                 }
                 break;
             case '-':
                 if(scanf("%s", str)) {
                     StrToLower(str);
-                    RemoveFromTree(root, str, 0);
+                    root = RemoveFromTree(root, str, 0);
                     answer = 0;
                 }
                 else {
-                    puts("Error: bad format!");
-                    return 1;
+                    puts("ERROR: bad format!");
+                    return 0;
                 }
                 break;
             case '!':
@@ -273,8 +277,8 @@ int main() {
                         scanf("%s", pathToFile);
                         file = fopen(pathToFile, "w");
                         if(file == NULL) {
-                            puts("Error: Can't open the file!");
-                            return 1;
+                            puts("ERROR: Can't open the file!");
+                            return 0;
                         }
                         FSaveTree(file, root, str, 0);
                         puts("OK");
@@ -284,8 +288,8 @@ int main() {
                         scanf("%s", pathToFile);
                         file = fopen(pathToFile, "r");
                         if(file == NULL) {
-                            puts("Error: Can't open the file!");
-                            return 1;
+                            puts("ERROR: Can't open the file!");
+                            return 0;
                         }
                         tmp = NULL;
                         tmp = FLoadTree(file, tmp, str);
@@ -308,13 +312,13 @@ int main() {
                         break;
                     }
                     else {
-                        puts("Error: wrong command!");
-                        return 1;
+                        puts("ERROR: wrong command!");
+                        return 0;
                     }
                 }
                 else {
-                    puts("Error: bad input format!");
-                    return 1;
+                    puts("ERROR: bad input format!");
+                    return 0;
                 }
                 break;
             default:
