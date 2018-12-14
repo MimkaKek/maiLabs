@@ -12,7 +12,6 @@ public:
     
     void push(std::shared_ptr<T> &&item);
     bool empty();
-    size_t GetSize();
     
     
     TIterator<TQueueItem<T>,T> begin();

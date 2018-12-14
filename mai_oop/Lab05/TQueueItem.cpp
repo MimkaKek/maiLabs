@@ -36,3 +36,6 @@ std::ostream& operator<<(std::ostream& os, const TQueueItem<A>& obj) {
     os << *obj.item << std::endl;
     return os;
 }
+
+template class TQueueItem<char>;
+template std::ostream& operator<<(std::ostream& os, const TQueueItem<char>& obj);

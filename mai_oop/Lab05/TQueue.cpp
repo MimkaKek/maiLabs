@@ -36,11 +36,6 @@ bool TQueue<T>::empty() {
 }
 
 template <typename T> 
-size_t TQueue<T>::GetSize() {
-    return size;
-}
-
-template <typename T> 
 std::shared_ptr<T> TQueue<T>::pop() {
     std::shared_ptr<T> result = nullptr;
     if (head != nullptr) {
@@ -64,3 +59,7 @@ TIterator<TQueueItem<T>,T> TQueue<T>::end() {
 template <typename T> 
 TQueue<T>::~TQueue() {
 }
+
+
+template class TQueue<char>;
+template std::ostream& operator<<(std::ostream& os, const TQueue<char>& obj);
