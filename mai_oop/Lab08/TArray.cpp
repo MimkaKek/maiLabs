@@ -54,7 +54,6 @@ bool TArray<T>::Push(std::shared_ptr<T> figure) {
             }
             std::cout << "Size increased to " << amount << "!" << std::endl;
         }
-        ++size;
         ++current;
         array[current - 1] = other;
         return true;
@@ -67,10 +66,6 @@ std::shared_ptr<T> TArray<T>::Pop(int i) {
     std::shared_ptr<TArrayItem<T>> tmp;
     if(i < 0 || i >= current) {
         std::cout << "Warning: out of array!" << std::endl;
-        return nullptr;
-    }
-    else if (size == 0) {
-        std::cout << "Warning: array is empty!" << std::endl;
         return nullptr;
     }
     for(int step = i; step < current - 1; ++step) {
@@ -116,7 +111,7 @@ std::ostream& TArray<T>::Print(const int step, std::ostream& os) const {
 
 template <class A> 
 std::ostream& operator<<(std::ostream& os, TArray<A>& obj) {
-    if(!obj.size) {
+    if(!obj.current) {
         os << "Array is Empty!";
         return os;
     }

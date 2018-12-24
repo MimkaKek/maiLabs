@@ -33,8 +33,8 @@ public:
     virtual ~TArray();
 private:
     unsigned int                        current;
-    unsigned int                        size;
     unsigned int                        amount;
+    
     std::shared_ptr<TArrayItem<T>>*     array;
 };
 
