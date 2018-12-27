@@ -36,6 +36,7 @@ TNode* AddNode(unsigned long long int key, char* str, TNode* next, int mode) {
 TNode* AddInTree(TNode* node, char* str, unsigned long long int key) {
     if(node == NULL) {
         TNode* newNode = AddNode(key, str, NULL, 0);
+        answer = 1;
         return newNode;
     }
     else {
@@ -47,8 +48,7 @@ TNode* AddInTree(TNode* node, char* str, unsigned long long int key) {
             node->neighbor = AddInTree(node->neighbor, str, key);
             return node;
         }        
-        else if(node->partOfWord[step] == '\0' && node->partOfWord[step + 1] != '$' && str[step] == '\0') {
-            answer = 0;
+        else if(node->partOfWord[step] == '\0' && str[step] == '\0') {
             puts("Exist");
             return node;
         }
@@ -100,6 +100,7 @@ TNode* RemoveFromTree(TNode* node, char* word, int step) {
         }
     }
     else if(word[step] == '\0' && node->partOfWord[tmp] == '\0') {
+        answer = 1;
         printf("OK\n");
         TNode* save = node->neighbor;
         free(node->partOfWord);
@@ -125,26 +126,21 @@ TNode* FLoadTree(FILE* file, TNode* node, char* buffer) {
     unsigned long long int key;
     int step = 0;
     unsigned char tmp;
-    for(;;) {
+    while(fread(&tmp, sizeof(unsigned char), 1, file) == 1) {
         step = 0;
-        if (fread(&tmp, sizeof(unsigned char), 1, file)) { //Проверяем, есть ли ещё кусок
-            if(tmp != 219) {
-                puts("ERROR: load failed!");
-                answer = 1;
-                return node;
-            }
-            do {
-                fread(&tmp, sizeof(unsigned char), 1, file); //Посимвольно считываем и записываем в буффер
-                buffer[step] = tmp;
-                ++step;
-            } while(tmp != 219);                    //Если встречаем конечный узел
-            buffer[step] = '\0';
-            fread(&key, sizeof(unsigned long long int), 1, file);
-            node = AddInTree(node, buffer, key);
+        if(tmp != 219) {
+            puts("ERROR: load failed!");
+            answer = 2;
+            return node;
         }
-        else {
-            break;
-        }
+        do {
+            fread(&tmp, sizeof(unsigned char), 1, file); //Посимвольно считываем и записываем в буффер
+            buffer[step] = tmp;
+            ++step;
+        } while(tmp != 219);                    //Если встречаем конечный узел
+        buffer[step] = '\0';
+        fread(&key, sizeof(unsigned long long int), 1, file);
+        node = AddInTree(node, buffer, key);
     }
     return node;
 }
@@ -220,7 +216,6 @@ void FindInTree(TNode* node, char* word) {
         answer = 1;
         return;
     } 
-
     FindInTree(node->neighbor, word);
     return;
 }
@@ -248,7 +243,6 @@ int main() {
             case '+':
                 if(scanf("%s%llu", str, &key) == 2) {
                     StrToLower(str);
-                    answer = 1;
                     root = AddInTree(root, str, key);
                     if(answer == 1) {
                         puts("OK");
@@ -264,6 +258,9 @@ int main() {
                 if(scanf("%s", str)) {
                     StrToLower(str);
                     root = RemoveFromTree(root, str, 0);
+                    if(answer == 0) {
+                        puts("NoSuchWord");
+                    }
                     answer = 0;
                 }
                 else {
@@ -291,9 +288,8 @@ int main() {
                             puts("ERROR: Can't open the file!");
                             return 0;
                         }
-                        tmp = NULL;
                         tmp = FLoadTree(file, tmp, str);
-                        if(answer == 1) {
+                        if(answer == 2) {
                             answer = 0;
                             tmp = ClearTree(tmp);
                             continue;
@@ -322,12 +318,12 @@ int main() {
                 }
                 break;
             default:
-                answer = 0;
                 StrToLower(str);
                 FindInTree(root, str);
                 if(answer == 0) {
                     puts("NoSuchWord");
                 }
+                answer = 0;
                 break;
         }
     }

@@ -1,7 +1,7 @@
 all: main.exe
 	rm *.o
 main.exe: main.o Rhombus.o Hexagon.o Pentagon.o TArray.o
-	g++ -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm -g main.o TArray.o Rhombus.o -o main.exe
+	g++ -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm -g main.o TArray.o Pentagon.o Hexagon.o Rhombus.o -o main.exe
 main.o: main.cpp
 	g++ -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm -c -g main.cpp
 Hexagon.o: Hexagon.cpp
