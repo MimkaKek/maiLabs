@@ -15,7 +15,7 @@ bool TArray<T>::Empty() {
 template <class T>
 void TArray<T>::Sort() {
     int l, r;
-    for(l = 0; l < current; ++l) {
+    for(l = 0; l < current - 1; ++l) {
         r = l + 1;
         while(r > 1 && (*array[r - 1]) > (*array[r])) {
             std::shared_ptr<TArrayItem<T>> tmp = array[r - 1];
@@ -27,53 +27,9 @@ void TArray<T>::Sort() {
     return;
 }
 
-template<class T> 
-std::future<void> TArray<T>::SortInBackground() {
-    std::packaged_task<void(void)> task(std::bind(std::mem_fn(&TArray<T>::ParallelSort), this));
-    std::future<void> res(task.get_future());
-    std::thread th(std::move(task));
-    th.detach();
-    return res;
-}
-
 template <class T>
 size_t TArray<T>::Size() {
-    return current + 1;
-}
-
-template <class T>
-void TArray<T>::ParallelSort() {
-    if (Size() > 1) {
-        std::shared_ptr<T> middle = Pop(0);
-        TArray<T> left, right;
-
-        while (!Empty()) {
-            std::shared_ptr<T> item = Pop(0);
-            if (*item < *middle) {
-                left.Push(item);
-            } else {
-                right.Push(item);
-            }
-        }
-
-        std::future<void> left_res = left.SortInBackground();
-        std::future<void> right_res = right.SortInBackground();
-
-        left_res.get();
-
-        while (!left.Empty()) { 
-            Push(left.Pop(0));
-        }
-        
-        Push(middle);
-        
-        right_res.get();
-        
-        while (!right.Empty()) { 
-            Push(right.Pop(0));
-        }
-    }
-    return;
+    return current;
 }
 
 template <class T>
@@ -96,8 +52,8 @@ bool TArray<T>::Push(std::shared_ptr<T> figure) {
         return false;
     }
     if(amount == 0) {
-        array = (std::shared_ptr<TArrayItem<T>>*) malloc(sizeof(std::shared_ptr<T>));
-        amount = 1;
+        array = (std::shared_ptr<TArrayItem<T>>*) malloc(sizeof(std::shared_ptr<TArrayItem<T>>)*22);
+        amount = 22;
         current = 1;
         array[current - 1] = other;
         return true;
@@ -105,7 +61,7 @@ bool TArray<T>::Push(std::shared_ptr<T> figure) {
     else {
         if(current == amount) {
             amount *= 2;
-            array = (std::shared_ptr<TArrayItem<T>>*) realloc(array, amount*sizeof(std::shared_ptr<T>));
+            array = (std::shared_ptr<TArrayItem<T>>*) realloc(array, amount*sizeof(std::shared_ptr<TArrayItem<T>>));
             if(array == nullptr) {
                 puts("Error in realloc!");
                 return false;
@@ -134,11 +90,11 @@ std::shared_ptr<T> TArray<T>::Pop(int i) {
     tmp = array[current - 1];
     array[current - 1] = nullptr;
     --current;
-    if(current == (amount / 2) - 1) {
+    /*if(current == (amount / 2) - 1) {
         amount /= 2;
         array = (std::shared_ptr<TArrayItem<T>>*) realloc(array, amount * sizeof(std::shared_ptr<T>));
         std::cout << "Size decreased to " << amount << "!" << std::endl;
-    }
+    }*/
     return tmp->GetValue();
 }
 

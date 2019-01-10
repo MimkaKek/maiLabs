@@ -22,7 +22,6 @@ public:
     size_t                              Size();
     
     void                                Sort();
-    void                                ParallelSort();
     
     void                                Reverse();
     
@@ -35,11 +34,9 @@ public:
     
     virtual ~TArray();
 private:
-    unsigned int                        current;
-    unsigned int                        amount;
+    int                                 current;
+    int                                 amount;
     std::shared_ptr<TArrayItem<T>>*     array;
-    
-    std::future<void>                   SortInBackground();
 };
 
 #endif  /* TARRAY_H */

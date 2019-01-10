@@ -60,10 +60,10 @@ int main(int argc, char** argv) {
                     array.Push(std::shared_ptr<Hexagon> (new Hexagon(side1)));
                     break;
                 case 2:
-                    array.Push(std::shared_ptr<Pentagon> (new Pentagon(side1)));
+                    array.Push(std::shared_ptr<Pentagon> (new Pentagon(side2)));
                     break;
                 case 3:
-                    array.Push(std::shared_ptr<Rhombus> (new Rhombus(side2, side2)));
+                    array.Push(std::shared_ptr<Rhombus> (new Rhombus(side1, side2)));
                     break;
             }
         }
