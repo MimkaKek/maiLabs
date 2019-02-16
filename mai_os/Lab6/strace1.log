@@ -1,0 +1,500 @@
+execve("./client.exec", ["./client.exec"], 0x7ffd4fdc6cc0 /* 51 vars */) = 0
+brk(NULL)                               = 0x556c9b55d000
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=117902, ...}) = 0
+mmap(NULL, 117902, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f011d829000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/local/lib/libzmq.so.5", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0p.\1\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=605616, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f011d827000
+mmap(NULL, 2701056, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f011d38b000
+mprotect(0x7f011d419000, 2093056, PROT_NONE) = 0
+mmap(0x7f011d618000, 28672, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x8d000) = 0x7f011d618000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000b\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=144976, ...}) = 0
+mmap(NULL, 2221184, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f011d16c000
+mprotect(0x7f011d186000, 2093056, PROT_NONE) = 0
+mmap(0x7f011d385000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19000) = 0x7f011d385000
+mmap(0x7f011d387000, 13440, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f011d387000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\260\34\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=2030544, ...}) = 0
+mmap(NULL, 4131552, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f011cd7b000
+mprotect(0x7f011cf62000, 2097152, PROT_NONE) = 0
+mmap(0x7f011d162000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e7000) = 0x7f011d162000
+mmap(0x7f011d168000, 15072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f011d168000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/librt.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\0\"\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=31680, ...}) = 0
+mmap(NULL, 2128864, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f011cb73000
+mprotect(0x7f011cb7a000, 2093056, PROT_NONE) = 0
+mmap(0x7f011cd79000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x6000) = 0x7f011cd79000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/usr/lib/x86_64-linux-gnu/libstdc++.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\360\303\10\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=1594832, ...}) = 0
+mmap(NULL, 3702816, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f011c7ea000
+mprotect(0x7f011c963000, 2097152, PROT_NONE) = 0
+mmap(0x7f011cb63000, 49152, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x179000) = 0x7f011cb63000
+mmap(0x7f011cb6f000, 12320, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f011cb6f000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libgcc_s.so.1", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\300*\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=96616, ...}) = 0
+mmap(NULL, 2192432, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f011c5d2000
+mprotect(0x7f011c5e9000, 2093056, PROT_NONE) = 0
+mmap(0x7f011c7e8000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x16000) = 0x7f011c7e8000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\200\272\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=1700792, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f011d825000
+mmap(NULL, 3789144, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f011c234000
+mprotect(0x7f011c3d1000, 2093056, PROT_NONE) = 0
+mmap(0x7f011c5d0000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19c000) = 0x7f011c5d0000
+close(3)                                = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f011d822000
+arch_prctl(ARCH_SET_FS, 0x7f011d822740) = 0
+mprotect(0x7f011d162000, 16384, PROT_READ) = 0
+mprotect(0x7f011c5d0000, 4096, PROT_READ) = 0
+mprotect(0x7f011c7e8000, 4096, PROT_READ) = 0
+mprotect(0x7f011cb63000, 40960, PROT_READ) = 0
+mprotect(0x7f011d385000, 4096, PROT_READ) = 0
+mprotect(0x7f011cd79000, 4096, PROT_READ) = 0
+mprotect(0x7f011d618000, 24576, PROT_READ) = 0
+mprotect(0x556c99c65000, 4096, PROT_READ) = 0
+mprotect(0x7f011d846000, 4096, PROT_READ) = 0
+munmap(0x7f011d829000, 117902)          = 0
+set_tid_address(0x7f011d822a10)         = 7735
+set_robust_list(0x7f011d822a20, 24)     = 0
+rt_sigaction(SIGRTMIN, {sa_handler=0x7f011d171cb0, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f011d17e890}, NULL, 8) = 0
+rt_sigaction(SIGRT_1, {sa_handler=0x7f011d171d50, sa_mask=[], sa_flags=SA_RESTORER|SA_RESTART|SA_SIGINFO, sa_restorer=0x7f011d17e890}, NULL, 8) = 0
+rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+brk(NULL)                               = 0x556c9b55d000
+brk(0x556c9b57e000)                     = 0x556c9b57e000
+eventfd2(0, EFD_CLOEXEC)                = 3
+fcntl(3, F_GETFL)                       = 0x2 (flags O_RDWR)
+fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK)    = 0
+fcntl(3, F_GETFL)                       = 0x802 (flags O_RDWR|O_NONBLOCK)
+fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK)    = 0
+eventfd2(0, EFD_CLOEXEC)                = 4
+fcntl(4, F_GETFL)                       = 0x2 (flags O_RDWR)
+fcntl(4, F_SETFL, O_RDWR|O_NONBLOCK)    = 0
+fcntl(4, F_GETFL)                       = 0x802 (flags O_RDWR|O_NONBLOCK)
+fcntl(4, F_SETFL, O_RDWR|O_NONBLOCK)    = 0
+epoll_create1(EPOLL_CLOEXEC)            = 5
+epoll_ctl(5, EPOLL_CTL_ADD, 4, {0, {u32=2606181728, u64=93924951010656}}) = 0
+epoll_ctl(5, EPOLL_CTL_MOD, 4, {EPOLLIN, {u32=2606181728, u64=93924951010656}}) = 0
+mmap(NULL, 8392704, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f011ba33000
+mprotect(0x7f011ba34000, 8388608, PROT_READ|PROT_WRITE) = 0
+clone(child_stack=0x7f011c232fb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f011c2339d0, tls=0x7f011c233700, child_tidptr=0x7f011c2339d0) = 7736
+futex(0x7f011cb7007c, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+futex(0x7f011cb70088, FUTEX_WAKE_PRIVATE, 2147483647) = 0
+openat(AT_FDCWD, "/proc/self/task/7736/comm", O_RDWR) = 6
+write(6, "ZMQbg/0", 7)                  = 7
+close(6)                                = 0
+eventfd2(0, EFD_CLOEXEC)                = 6
+fcntl(6, F_GETFL)                       = 0x2 (flags O_RDWR)
+fcntl(6, F_SETFL, O_RDWR|O_NONBLOCK)    = 0
+fcntl(6, F_GETFL)                       = 0x802 (flags O_RDWR|O_NONBLOCK)
+fcntl(6, F_SETFL, O_RDWR|O_NONBLOCK)    = 0
+epoll_create1(EPOLL_CLOEXEC)            = 7
+epoll_ctl(7, EPOLL_CTL_ADD, 6, {0, {u32=2606183696, u64=93924951012624}}) = 0
+epoll_ctl(7, EPOLL_CTL_MOD, 6, {EPOLLIN, {u32=2606183696, u64=93924951012624}}) = 0
+mmap(NULL, 8392704, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f011b232000
+mprotect(0x7f011b233000, 8388608, PROT_READ|PROT_WRITE) = 0
+clone(child_stack=0x7f011ba31fb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f011ba329d0, tls=0x7f011ba32700, child_tidptr=0x7f011ba329d0) = 7737
+openat(AT_FDCWD, "/proc/self/task/7737/comm", O_RDWR) = 8
+write(8, "ZMQbg/1", 7)                  = 7
+close(8)                                = 0
+eventfd2(0, EFD_CLOEXEC)                = 8
+fcntl(8, F_GETFL)                       = 0x2 (flags O_RDWR)
+fcntl(8, F_SETFL, O_RDWR|O_NONBLOCK)    = 0
+fcntl(8, F_GETFL)                       = 0x802 (flags O_RDWR|O_NONBLOCK)
+fcntl(8, F_SETFL, O_RDWR|O_NONBLOCK)    = 0
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa3c) = 7738
+wait4(7738, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7738
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=7738, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 2), ...}) = 0
+write(1, "Enter the port. You need 4 numbe"..., 36) = 36
+fstat(0, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 2), ...}) = 0
+write(1, "> ", 2)                       = 2
+read(0, "1040\n", 1024)                 = 5
+write(1, "Your adress: tcp://localhost:104"..., 34) = 34
+mmap(NULL, 8392704, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f011aa31000
+mprotect(0x7f011aa32000, 8388608, PROT_READ|PROT_WRITE) = 0
+clone(child_stack=0x7f011b230fb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f011b2319d0, tls=0x7f011b231700, child_tidptr=0x7f011b2319d0) = 7741
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+write(8, "\1\0\0\0\0\0\0\0", 8)         = 8
+write(1, "Connecting...\n", 14)         = 14
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa1c) = 7744
+wait4(7744, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7744
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Welcome!\n", 9)               = 9
+write(1, "1) Log in.\n", 11)            = 11
+write(1, "2) Register.\n", 13)          = 13
+write(1, "3) Exit\n", 8)                = 8
+write(1, "> ", 2)                       = 2
+read(0, "1\n", 1024)                    = 2
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9ac) = 7746
+wait4(7746, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7746
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Want Exit? ('y' or 'n')\n", 24) = 24
+write(1, "> ", 2)                       = 2
+read(0, "n\n", 1024)                    = 2
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9ac) = 7748
+wait4(7748, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7748
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Enter your login: ", 18)      = 18
+read(0, "Mimka\n", 1024)                = 6
+poll([{fd=8, events=POLLIN}], 1, 0)     = 1 ([{fd=8, revents=POLLIN}])
+read(8, "\1\0\0\0\0\0\0\0", 8)          = 8
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+poll([{fd=8, events=POLLIN}], 1, -1)    = 1 ([{fd=8, revents=POLLIN}])
+read(8, "\1\0\0\0\0\0\0\0", 8)          = 8
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+poll([{fd=8, events=POLLIN}], 1, -1)    = 1 ([{fd=8, revents=POLLIN}])
+read(8, "\1\0\0\0\0\0\0\0", 8)          = 8
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+write(1, "Wait please... Message recieved."..., 33) = 33
+write(1, "Success!\n", 9)               = 9
+write(1, "Press enter...", 14)          = 14
+read(0, "\n", 1024)                     = 1
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa6c) = 7750
+wait4(7750, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7750
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Main menu:\n", 11)            = 11
+write(1, "1) Send money to this account;\n", 31) = 31
+write(1, "2) Send money to another account"..., 34) = 34
+write(1, "3) Get money from this account;\n", 32) = 32
+write(1, "4) Check balance;\n", 18)     = 18
+write(1, "5) Check number of card and logi"..., 35) = 35
+write(1, "6) Log out;\n", 12)           = 12
+write(1, "7) Exit.\n", 9)               = 9
+write(1, "> ", 2)                       = 2
+read(0, "4\n", 1024)                    = 2
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa0c) = 7753
+wait4(7753, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7753
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+poll([{fd=8, events=POLLIN}], 1, -1)    = 1 ([{fd=8, revents=POLLIN}])
+read(8, "\1\0\0\0\0\0\0\0", 8)          = 8
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(1, "Message recieved.\n", 18)     = 18
+write(1, "Balance: 231.412320\n", 20)   = 20
+write(1, "Press enter...", 14)          = 14
+read(0, "\n", 1024)                     = 1
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa6c) = 7755
+wait4(7755, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7755
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Main menu:\n", 11)            = 11
+write(1, "1) Send money to this account;\n", 31) = 31
+write(1, "2) Send money to another account"..., 34) = 34
+write(1, "3) Get money from this account;\n", 32) = 32
+write(1, "4) Check balance;\n", 18)     = 18
+write(1, "5) Check number of card and logi"..., 35) = 35
+write(1, "6) Log out;\n", 12)           = 12
+write(1, "7) Exit.\n", 9)               = 9
+write(1, "> ", 2)                       = 2
+read(0, "1\n", 1024)                    = 2
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9fc) = 7757
+wait4(7757, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7757
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "How many money: ", 16)        = 16
+read(0, "1000\n", 1024)                 = 5
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+poll([{fd=8, events=POLLIN}], 1, -1)    = 1 ([{fd=8, revents=POLLIN}])
+read(8, "\1\0\0\0\0\0\0\0", 8)          = 8
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(1, "Message recieved.\n", 18)     = 18
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9fc) = 7759
+wait4(7759, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7759
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Success! Press enter...", 23) = 23
+read(0, "\n", 1024)                     = 1
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa6c) = 7761
+wait4(7761, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7761
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Main menu:\n", 11)            = 11
+write(1, "1) Send money to this account;\n", 31) = 31
+write(1, "2) Send money to another account"..., 34) = 34
+write(1, "3) Get money from this account;\n", 32) = 32
+write(1, "4) Check balance;\n", 18)     = 18
+write(1, "5) Check number of card and logi"..., 35) = 35
+write(1, "6) Log out;\n", 12)           = 12
+write(1, "7) Exit.\n", 9)               = 9
+write(1, "> ", 2)                       = 2
+read(0, "3\n", 1024)                    = 2
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9fc) = 7763
+wait4(7763, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7763
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "How many money?\n", 16)       = 16
+write(1, "> ", 2)                       = 2
+read(0, "1000\n", 1024)                 = 5
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+poll([{fd=8, events=POLLIN}], 1, -1)    = 1 ([{fd=8, revents=POLLIN}])
+read(8, "\1\0\0\0\0\0\0\0", 8)          = 8
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(1, "Message recieved.\n", 18)     = 18
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9fc) = 7770
+wait4(7770, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7770
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Success! Press enter...", 23) = 23
+read(0, "\n", 1024)                     = 1
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa6c) = 7772
+wait4(7772, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7772
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Main menu:\n", 11)            = 11
+write(1, "1) Send money to this account;\n", 31) = 31
+write(1, "2) Send money to another account"..., 34) = 34
+write(1, "3) Get money from this account;\n", 32) = 32
+write(1, "4) Check balance;\n", 18)     = 18
+write(1, "5) Check number of card and logi"..., 35) = 35
+write(1, "6) Log out;\n", 12)           = 12
+write(1, "7) Exit.\n", 9)               = 9
+write(1, "> ", 2)                       = 2
+read(0, "3\n", 1024)                    = 2
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9fc) = 7774
+wait4(7774, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7774
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "How many money?\n", 16)       = 16
+write(1, "> ", 2)                       = 2
+read(0, "1000\n", 1024)                 = 5
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+poll([{fd=8, events=POLLIN}], 1, -1)    = 1 ([{fd=8, revents=POLLIN}])
+read(8, "\1\0\0\0\0\0\0\0", 8)          = 8
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(1, "Message recieved.\n", 18)     = 18
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9fc) = 7776
+wait4(7776, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7776
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Something go wrong. Press enter."..., 34) = 34
+read(0, "\n", 1024)                     = 1
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa6c) = 7778
+wait4(7778, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7778
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Main menu:\n", 11)            = 11
+write(1, "1) Send money to this account;\n", 31) = 31
+write(1, "2) Send money to another account"..., 34) = 34
+write(1, "3) Get money from this account;\n", 32) = 32
+write(1, "4) Check balance;\n", 18)     = 18
+write(1, "5) Check number of card and logi"..., 35) = 35
+write(1, "6) Log out;\n", 12)           = 12
+write(1, "7) Exit.\n", 9)               = 9
+write(1, "> ", 2)                       = 2
+read(0, "4\n", 1024)                    = 2
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa0c) = 7780
+wait4(7780, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7780
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+poll([{fd=8, events=POLLIN}], 1, -1)    = 1 ([{fd=8, revents=POLLIN}])
+read(8, "\1\0\0\0\0\0\0\0", 8)          = 8
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(1, "Message recieved.\n", 18)     = 18
+write(1, "Balance: 231.412320\n", 20)   = 20
+write(1, "Press enter...", 14)          = 14
+read(0, "\n", 1024)                     = 1
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa6c) = 7782
+wait4(7782, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7782
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Main menu:\n", 11)            = 11
+write(1, "1) Send money to this account;\n", 31) = 31
+write(1, "2) Send money to another account"..., 34) = 34
+write(1, "3) Get money from this account;\n", 32) = 32
+write(1, "4) Check balance;\n", 18)     = 18
+write(1, "5) Check number of card and logi"..., 35) = 35
+write(1, "6) Log out;\n", 12)           = 12
+write(1, "7) Exit.\n", 9)               = 9
+write(1, "> ", 2)                       = 2
+read(0, "2\n", 1024)                    = 2
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9fc) = 7786
+wait4(7786, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7786
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "You will enter login ('l') or nu"..., 52) = 52
+write(1, "> ", 2)                       = 2
+read(0, "l\n", 1024)                    = 2
+write(1, "Enter the login\n", 16)       = 16
+write(1, "> ", 2)                       = 2
+read(0, "Test\n", 1024)                 = 5
+write(1, "How many money?\n", 16)       = 16
+write(1, "> ", 2)                       = 2
+read(0, "100\n", 1024)                  = 4
+brk(0x556c9b59f000)                     = 0x556c9b59f000
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+poll([{fd=8, events=POLLIN}], 1, -1)    = 1 ([{fd=8, revents=POLLIN}])
+read(8, "\1\0\0\0\0\0\0\0", 8)          = 8
+poll([{fd=8, events=POLLIN}], 1, 0)     = 0 (Timeout)
+write(1, "Message recieved.\n", 18)     = 18
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bda9fc) = 7792
+wait4(7792, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7792
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Success! Press enter...", 23) = 23
+read(0, "\n", 1024)                     = 1
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa6c) = 7794
+wait4(7794, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7794
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Main menu:\n", 11)            = 11
+write(1, "1) Send money to this account;\n", 31) = 31
+write(1, "2) Send money to another account"..., 34) = 34
+write(1, "3) Get money from this account;\n", 32) = 32
+write(1, "4) Check balance;\n", 18)     = 18
+write(1, "5) Check number of card and logi"..., 35) = 35
+write(1, "6) Log out;\n", 12)           = 12
+write(1, "7) Exit.\n", 9)               = 9
+write(1, "> ", 2)                       = 2
+read(0, "7\n", 1024)                    = 2
+rt_sigaction(SIGINT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_IGN, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, 8) = 0
+rt_sigprocmask(SIG_BLOCK, [CHLD], [], 8) = 0
+clone(child_stack=NULL, flags=CLONE_PARENT_SETTID|SIGCHLD, parent_tidptr=0x7ffe23bdaa3c) = 7796
+wait4(7796, [{WIFEXITED(s) && WEXITSTATUS(s) == 0}], 0, NULL) = 7796
+rt_sigaction(SIGINT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigaction(SIGQUIT, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=SA_RESTORER, sa_restorer=0x7f011cdb9f20}, NULL, 8) = 0
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+write(1, "Are you sure? ('y' or 'n')\n", 27) = 27
+write(1, "> ", 2)                       = 2
+read(0, "y\n", 1024)                    = 2
+write(4, "\1\0\0\0\0\0\0\0", 8)         = 8
+write(8, "\1\0\0\0\0\0\0\0", 8)         = 8
+poll([{fd=3, events=POLLIN}], 1, -1)    = 1 ([{fd=3, revents=POLLIN}])
+read(3, "\1\0\0\0\0\0\0\0", 8)          = 8
+write(6, "\1\0\0\0\0\0\0\0", 8)         = 8
+close(7)                                = 0
+close(6)                                = 0
+brk(0x556c9b59e000)                     = 0x556c9b59e000
+close(5)                                = 0
+close(4)                                = 0
+close(3)                                = 0
+lseek(0, -1, SEEK_CUR)                  = -1 ESPIPE (Illegal seek)
+exit_group(0)                           = ?
++++ exited with 0 +++

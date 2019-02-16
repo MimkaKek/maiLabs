@@ -1,142 +1,103 @@
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <errno.h>
 
-int main() {
+unsigned long long int goodCount = 0;
+//unsigned long long int allCount = 0;
+pthread_mutex_t mutex;
 
-    int     number, n, answer;
-    int     check;
-    int*    addrPrev;
-    int*    addrNext;
-    pid_t   forkResult;
-
-    for(;;) {
-        printf("Enter the number: ");
-        check = scanf("%d", &number);
-        if(check == 1 && number <= 0) {
-            fprintf(stderr, "Number can't be less or equal zero.\n");
-        }
-        else if(check == 0) {
-            fprintf(stderr, "Incorrect input.\n");
-            exit(1);
-        }
-        else {
-            break;
+int CalculateChance(int s) {
+    //pthread_mutex_lock(&mutex);
+    unsigned long long int goodAttempt = 0;
+    double card[2];
+    for(int step = 0; step < s; ++step) {
+        //pthread_mutex_lock(&mutex);
+        //++allCount;
+        //pthread_mutex_unlock(&mutex);
+        card[0] = rand() % 52;
+        card[1] = rand() % 52;
+        if(card[0] == card[1]) {
+            ++goodAttempt;
         }
     }
-    puts("===========\nCalculating\n===========");
-    addrNext = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    if( addrNext == MAP_FAILED ) {
-        fprintf(stderr,"Error: bad memory map.\n");
-        exit(1);
-    }
-    forkResult = fork();
-    if(forkResult == 0) {
-        /* Промежуточный процесс проверяет делимость.
-         */
-        for(n = 1; n < (number / 2 + 1); n++) {
-            addrPrev = addrNext;
-            if(number == 1) {
-                *addrPrev = 1;
-                exit(0);
-            }
-            if(number % n == 0 && n != 1) {
-                *addrPrev = 0;
-                exit(0);
-            }
-            addrNext = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-            if( addrNext == MAP_FAILED ) {
-                fprintf(stderr,"Error: bad memory map.\n");
-                *addrPrev = -1;
-                exit(1);
-            }
-            /* Разделение на 2 процесса - родительский ждёт дочерний. 
-             * Дочерний переходит в очередной проверке на делимость.
-             */
-            forkResult = fork();          
-            if(forkResult != 0) {
-                /*Промежуточные процессы начинают ждать отклика из дочерних процессов. 
-                 * Результат передают своему родителю.
-                 */
-                wait(NULL);
-                if(*addrNext >= 0) {
-                    *addrPrev = *addrNext;
-                    if(munmap(addrNext, sizeof(int)) == -1) {
-                        fprintf(stderr,"Error: bad memory unmap\n");
-                        *addrPrev = -1;
-                        exit(1);
-                    }
-                    exit(0);
-                }
-                else {
-                    *addrPrev = *addrNext;
-                    if(munmap(addrNext, sizeof(int)) == -1) {
-                        fprintf(stderr,"Error: bad memory unmap\n");
-                        *addrPrev = -1;
-                        exit(1);
-                    }
-                    exit(1);
-                }
-            }
-            else if(forkResult == -1) {
-                /* Ошибка в работе fork.
-                 */
-                fprintf(stderr, "Error: bad fork result.\n");
-                if(munmap(addrNext, sizeof(int)) == -1) {
-                    fprintf(stderr,"Error: bad memory unmap\n");
-                    *addrPrev = -1;
-                    exit(1);
-                }
-                exit(1);
-            }
-        }
-        
-    }
-    else if(forkResult != -1) {
-        /* Первоначальный процесс ждёт отклика своего дочернего процесса и выводит результат.
-         */
-        wait(NULL);
-        if(*addrNext >= 0) {
-            if(*addrNext == 1) {
-                puts("Answer - True!");
-                if(munmap(addrNext, sizeof(int)) == -1) {
-                    fprintf(stderr,"Error: bad memory unmap\n");
-                    *addrPrev = -1;
-                    exit(1);
-                }
-                exit(0);
-            }
-            else {
-                puts("Answer - False!");
-                if(munmap(addrNext, sizeof(int)) == -1) {
-                    fprintf(stderr,"Error: bad memory unmap\n");
-                    *addrPrev = -1;
-                    exit(1);
-                }
-                exit(0);
-            }
-        }
-        else {
-            /* Случай одной из нескольких ошибок.
-             */
-            if(munmap(addrNext, sizeof(int)) == -1) {
-                fprintf(stderr,"Error: bad memory unmap\n");
-                *addrPrev = -1;
-                exit(1);
-            }
-            exit(1);
-        }
-        
-    }
-    else {
-        /* Ошибка в работе fork.
-         */
-        fprintf(stderr, "Bad fork result!\n");
-        exit(1);
-    }
-    *addrNext = 1;
-    exit(0);
+    //printf("Check! Id of thread = %ld\n", pthread_self());
+    //pthread_mutex_unlock(&mutex);
+    return goodAttempt;
 }
+
+void* InputForThread(void* try) 
+{
+    int* countTry = (int*) try;
+    goodCount += CalculateChance(*countTry);
+    pthread_exit(0);
+}
+
+int main(int argc, char* argv[]) {
+    pthread_attr_t attr;
+    time_t start, end;
+    start = clock();
+    int countM, countS, numberOfThreads;
+    int ltime = time(NULL);
+    unsigned int stime = (unsigned int) ltime / 2;
+    srand(stime);
+    errno = pthread_mutex_init(&mutex, NULL);
+    if( errno != 0 ) {
+        fprintf(stderr, "Error: mutex init failed.\n");
+    }
+    if (argc != 3) {
+        fprintf(stderr,"usage: ./start.exec <number of attempts> <number of threads>\n");
+        exit(1);
+    }
+    countM = atoi(argv[1]);
+    numberOfThreads = atoi(argv[2]);
+    pthread_t* id = malloc(sizeof(pthread_t)*(numberOfThreads - 1));
+    if (countM <= 0 || numberOfThreads <= 0) {
+        fprintf(stderr,"Error: value can't be less or equal zero\n");
+        exit(1);
+    }
+    countS = countM / numberOfThreads;
+    pthread_attr_init(&attr);
+    CalculateChance(countS + (countM % numberOfThreads));
+    for(int i = 0; i < numberOfThreads - 1; ++i) {
+        errno = pthread_create(id + i, &attr, InputForThread, &countS);
+        if( errno == EAGAIN ) {
+            fprintf(stderr, "Error: a system limit is exceeded.\n");
+            exit(1);
+        }
+        else if ( errno == EINVAL ) {
+            fprintf(stderr, "Error: the value of attr_t is invalid.\n");
+            exit(1);
+        }
+        else if ( errno == EPERM ) {
+            fprintf(stderr, "Error: the caller does not have appropriate permission to set the required scheduling parameters or scheduling policy.\n");
+            exit(1);
+        }
+    }
+    for(int i = 0; i < numberOfThreads - 1; ++i) {
+        errno = pthread_join(id[i], NULL);
+        if ( errno == ESRCH ) {
+            fprintf(stderr, "Error: no thread could be found corresponding to that specified by the given thread ID.\n");
+            exit(1);
+        }
+        else if ( errno == EDEADLK ) {
+            fprintf(stderr, "Error: a deadlock was detected or the value of thread specifies the calling thread.\n");
+            exit(1);
+        }
+        else if ( errno == EINVAL ) {
+            fprintf(stderr, "Error: the value specified by thread does not refer to a joinable thread.\n");
+            exit(1);
+        }
+    }
+    /*if(allCount < atoi(argv[1])) {
+        fprintf(stderr, "Error: finished attempts less than specified attempts\n");
+    }*/
+    double answer = ((double) goodCount / (double) atoi(argv[1])) * 100;
+    printf("Succesful attempts - %llu\nAll attemps - %llu\nChance = %.4f%%\n", goodCount, /*allCount*/(unsigned long long int) atoi(argv[1]), answer);
+    end = clock();
+    printf("Time = %.5f\n", ((double) end - start)/((double) CLOCKS_PER_SEC));
+    free(id);
+    return 0;
+}
+

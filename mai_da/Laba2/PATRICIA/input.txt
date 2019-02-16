@@ -1,0 +1,28 @@
++ a 1
++ aa 2
++ ab 3
++ ba 4
+a
+aa
+ab
+ba
+- ab
+a
+aa
+ab
+ba
+- a
+a
+aa
+ab
+ba
+- ba
+a
+aa
+ab
+ba
+- aa
+a
+aa
+ab
+ba

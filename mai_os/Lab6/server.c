@@ -75,6 +75,21 @@ void RecvMessage(void* serverSocket, MessageToServer* recv) {
         return;
 }
 
+double TransformToKey(char* login) {
+        
+        int             i = strlen(login);
+        int             k = 0;
+        
+        double          answer;
+        
+        for(int step = 0; step < i; ++step) {
+                k += login[step];
+        }
+        
+        answer = k * i;
+        return answer;
+}
+
 void GetPort() {
         
         system("clear");
@@ -106,10 +121,10 @@ void GetPort() {
         }
 }
 
-int FindInVectorNumber(char* number) {
+int FindInVector(double key) {
 
         for(int i = 0; i < vector->current; ++i) {
-                if(strcmp(number, vector->users[i].number) == 0) {
+                if(key == vector->users[i].key) {
                         return i;
                 }
         }
@@ -117,10 +132,10 @@ int FindInVectorNumber(char* number) {
         return -1;
 }
 
-int FindInVectorLogin(char* login) {
-
+int FindInVectorNumber(char* number) {
+        
         for(int i = 0; i < vector->current; ++i) {
-                if(strcmp(login, vector->users[i].login) == 0) {
+                if(strcmp(number, vector->users[i].number) == 0) {
                         return i;
                 }
         }
@@ -141,7 +156,7 @@ TVector* AddInVector(char* login, char* number) {
                 strcpy(vector->users[0].login, login);
                 strcpy(vector->users[0].number, number);
                 vector->users[0].value = 0;
-                vector->users[0].key = 0;
+                vector->users[0].key = TransformToKey(login);
         }
         else {
                 if(vector->current == vector->size) {
@@ -156,7 +171,7 @@ TVector* AddInVector(char* login, char* number) {
                 strcpy(vector->users[vector->current - 1].login, login);
                 strcpy(vector->users[vector->current - 1].number, number);
                 vector->users[vector->current - 1].value = 0;
-                vector->users[vector->current - 1].key = 0;
+                vector->users[vector->current - 1].key = TransformToKey(login);
         }
         pthread_mutex_unlock(&(vector->mutex));
         return vector;
@@ -165,8 +180,9 @@ TVector* AddInVector(char* login, char* number) {
 void Registrate(void* serverSocket, MessageToServer* recv) {
         
         MessageFromServer       reply;
+        double                  key = TransformToKey(recv->login);
         
-        if(FindInVectorLogin(recv->login) != -1 || FindInVectorNumber(recv->number) != -1) {
+        if(FindInVector(key) != -1 || FindInVectorNumber(recv->number) != -1) {
                 reply.status = 0;
                 SendMessage(&reply, serverSocket);
         }
@@ -181,7 +197,9 @@ void Registrate(void* serverSocket, MessageToServer* recv) {
 void LogIn(void* serverSocket, MessageToServer* recv) {
         
         MessageFromServer       reply;
-        int exist = FindInVectorLogin(recv->login);
+        double                  key = TransformToKey(recv->login);
+        
+        int exist = FindInVector(key);
         
         if(exist != -1) {
                 strcpy(reply.number, vector->users[exist].number);
@@ -198,8 +216,9 @@ void LogIn(void* serverSocket, MessageToServer* recv) {
 void AddMoney(void* serverSocket, MessageToServer* recv) {
         
         MessageFromServer       reply;
+        double                  key = TransformToKey(recv->login);
         
-        int number = FindInVectorLogin(recv->login);
+        int number = FindInVector(key);
         
         if(number == -1) {
                 reply.status = 0;
@@ -218,10 +237,16 @@ void AddMoneyToAnother(void* serverSocket, MessageToServer* recv, int flag) {
         MessageFromServer       reply;
         int                     numberThis;
         int                     numberAim;
+        double                  keyThis;
+        double                  keyAim;
         
         if(flag == LOGIN) {
-                numberThis = FindInVectorLogin(recv->login);
-                numberAim = FindInVectorLogin(recv->aimLogin); 
+                
+                keyThis = TransformToKey(recv->login);
+                keyAim = TransformToKey(recv->aimLogin);
+                
+                numberThis = FindInVector(keyThis);
+                numberAim = FindInVector(keyAim);
         }
         else {
                 numberThis = FindInVectorNumber(recv->number);
@@ -252,8 +277,9 @@ void TakeMoney(void* serverSocket, MessageToServer* recv) {
         
         MessageFromServer       reply;
         int                     numberThis;
+        double                  key = TransformToKey(recv->login);
         
-        numberThis = FindInVectorLogin(recv->login);
+        numberThis = FindInVector(key);
         
         if(numberThis == -1) {
                 reply.status = 0;
@@ -277,8 +303,9 @@ void GetValue(void* serverSocket, MessageToServer* recv) {
         
         MessageFromServer       reply;
         int                     numberThis;
+        double                  key = TransformToKey(recv->login);
         
-        numberThis = FindInVectorLogin(recv->login);
+        numberThis = FindInVector(key);
         
         if(numberThis != -1) {
                 reply.value = vector->users[numberThis].value;
@@ -308,6 +335,7 @@ void CreateNewAccount() {
         char            number[20];
         char            value[16];
         double          money;
+        double          key;
         int             error;
                 
         system("clear");
@@ -315,7 +343,8 @@ void CreateNewAccount() {
         while(1) {
                 printf("> ");
                 scanf("%s", login);
-                if(FindInVectorLogin(login) == -1) {
+                key = TransformToKey(login);
+                if(FindInVector(key) == -1) {
                         break;
                 }
                 else {
@@ -379,7 +408,7 @@ void CreateNewAccount() {
         }
         money = atof(value);
         AddInVector(login, number);
-        vector->users[FindInVectorLogin(login)].value = money;
+        vector->users[FindInVector(key)].value = money;
         return;
 }
 
@@ -444,7 +473,7 @@ void PrintClients(int i) {
         printf("|              List of clients             |\n");
         printf("============================================\n");
         for(int j = 0; j < vector->current; ++j) {
-                printf("%d) Login - %s. Card - %s. Money - %lf\n", j + 1, vector->users[j].login, vector->users[j].number, vector->users[j].value);
+                printf("%2d) Login - %s.\n   Key - %lf.\n   Card - %s.\n   Money - %lf\n", j + 1, vector->users[j].login, vector->users[j].key, vector->users[j].number, vector->users[j].value);
         }
         printf("============================================\n");
         if(i) {
@@ -487,8 +516,9 @@ void RemoveClient(char* menu) {
 void CheckAccount(void* serverSocket, MessageToServer* recv) {
         
         MessageFromServer               reply;
+        double                          key = TransformToKey(recv->login);
         
-        int check = FindInVectorLogin(recv->login);
+        int check = FindInVector(key);
         
         if(check == -1) {
                 reply.status = 0;

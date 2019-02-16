@@ -1,103 +1,103 @@
-#include <pthread.h>
-#include <stdio.h>
+#include <sys/types.h> 
+#include <sys/wait.h>
+#include <unistd.h>
 #include <stdlib.h>
-#include <time.h>
-#include <errno.h>
+#include <stdio.h>
 
-unsigned long long int goodCount = 0;
-//unsigned long long int allCount = 0;
-pthread_mutex_t mutex;
+int main() {
 
-int CalculateChance(int s) {
-    //pthread_mutex_lock(&mutex);
-    unsigned long long int goodAttempt = 0;
-    double card[2];
-    for(int step = 0; step < s; ++step) {
-        //pthread_mutex_lock(&mutex);
-        //++allCount;
-        //pthread_mutex_unlock(&mutex);
-        card[0] = rand() % 52;
-        card[1] = rand() % 52;
-        if(card[0] == card[1]) {
-            ++goodAttempt;
+    int number, n, answer;
+    int filePipesPrev[2], filePipesNext[2];
+    pid_t forkResult;
+    
+    do {
+        printf("Enter the number: ");
+        scanf("%d", &number);
+        if(number <= 0) {
+            puts("Please, enter the number > 0");
+        }   
+    } while(number <= 0);
+    
+    puts("===========\nCalculating\n===========");
+    //printf("Root Process - %d working!\n", getpid());
+    //puts("Creating new node!");
+    if(number == 1) {
+            puts("Answer - True!");
+            exit(0);
+    }
+    pipe(filePipesNext);
+    forkResult = fork();
+
+    if(forkResult == 0) {
+        for(n = 1; n < number; n++) {
+          //printf("%d. Process - %d working!\n", n, getpid());
+          filePipesPrev[0] = filePipesNext[0];
+          filePipesPrev[1] = filePipesNext[1];
+          if(number == 1) {
+            answer = 1;
+            write(filePipesPrev[1],&answer,sizeof(int));
+            exit(0);
+          }
+          if(number % n == 0 && (number != n && n != 1)) {
+            //printf("%d. Answer finded! Proccess %d stop working!\n", n, getpid());
+            answer = 0;
+            write(filePipesPrev[1],&answer,sizeof(int));
+            exit(0);
+          }
+          pipe(filePipesNext);
+          //printf("Pipes: before %d and %d, after %d and %d\n", filePipesPrev[0], filePipesPrev[1], filePipesNext[0],filePipesNext[1]);
+          forkResult = fork();
+          if(forkResult != 0) {
+            //printf("Proccess %d wait for reading!\n", getpid());
+            wait(NULL);
+            if(read(filePipesNext[0],&answer,sizeof(int)) != 0) {
+              //printf("Get answer - %d ! Process - %d stop working!\n", answer, getpid());
+              //printf("Proccess %d start write!\n", getpid());
+              write(filePipesPrev[1],&answer,sizeof(int));
+              exit(0);
+            }
+            else {
+              puts("Error: can't read answer from pipe!");
+              answer = -2;
+              write(filePipesPrev[1],&answer,sizeof(int));
+              exit(1);
+            }
+          }
+          else if(forkResult == -1) {
+            perror("fork");
+            answer = -1;
+            write(filePipesPrev[1],&answer,sizeof(int));
+            exit(1);
+          }
         }
     }
-    //printf("Check! Id of thread = %ld\n", pthread_self());
-    //pthread_mutex_unlock(&mutex);
-    return goodAttempt;
+    else if(forkResult != -1) {
+        wait(NULL);
+        if(read(filePipesNext[0],&answer,sizeof(int)) != 0) {
+            if(answer == 1) {
+                puts("Answer - True!");
+                exit(0);
+            }
+            else if (answer == 0) {
+                puts("Answer - False!");
+                exit(0);
+            }
+            else if (answer < 0) {
+              exit(1);
+            }
+            exit(0);
+        }
+        else {
+            puts("Error: can't read answer from pipe!");
+            exit(1);
+        }
+    }
+    else {
+      perror("fork");
+      exit(1);
+    }
+    answer = 1;
+    write(filePipesNext[1],&answer,sizeof(int));
+    //printf("Answer finded! Proccess %d stop working!\n", getpid());
+    exit(0);
 }
-
-void* InputForThread(void* try) 
-{
-    int* countTry = (int*) try;
-    goodCount += CalculateChance(*countTry);
-    pthread_exit(0);
-}
-
-int main(int argc, char* argv[]) {
-    pthread_attr_t attr;
-    time_t start, end;
-    start = clock();
-    int countM, countS, numberOfThreads;
-    int ltime = time(NULL);
-    unsigned int stime = (unsigned int) ltime / 2;
-    srand(stime);
-    errno = pthread_mutex_init(&mutex, NULL);
-    if( errno != 0 ) {
-        fprintf(stderr, "Error: mutex init failed.\n");
-    }
-    if (argc != 3) {
-        fprintf(stderr,"usage: ./start.exec <number of attempts> <number of threads>\n");
-        exit(1);
-    }
-    countM = atoi(argv[1]);
-    numberOfThreads = atoi(argv[2]);
-    pthread_t* id = malloc(sizeof(pthread_t)*(numberOfThreads - 1));
-    if (countM <= 0 || numberOfThreads <= 0) {
-        fprintf(stderr,"Error: value can't be less or equal zero\n");
-        exit(1);
-    }
-    countS = countM / numberOfThreads;
-    pthread_attr_init(&attr);
-    CalculateChance(countS + (countM % numberOfThreads));
-    for(int i = 0; i < numberOfThreads - 1; ++i) {
-        errno = pthread_create(id + i, &attr, InputForThread, &countS);
-        if( errno == EAGAIN ) {
-            fprintf(stderr, "Error: a system limit is exceeded.\n");
-            exit(1);
-        }
-        else if ( errno == EINVAL ) {
-            fprintf(stderr, "Error: the value of attr_t is invalid.\n");
-            exit(1);
-        }
-        else if ( errno == EPERM ) {
-            fprintf(stderr, "Error: the caller does not have appropriate permission to set the required scheduling parameters or scheduling policy.\n");
-            exit(1);
-        }
-    }
-    for(int i = 0; i < numberOfThreads - 1; ++i) {
-        errno = pthread_join(id[i], NULL);
-        if ( errno == ESRCH ) {
-            fprintf(stderr, "Error: no thread could be found corresponding to that specified by the given thread ID.\n");
-            exit(1);
-        }
-        else if ( errno == EDEADLK ) {
-            fprintf(stderr, "Error: a deadlock was detected or the value of thread specifies the calling thread.\n");
-            exit(1);
-        }
-        else if ( errno == EINVAL ) {
-            fprintf(stderr, "Error: the value specified by thread does not refer to a joinable thread.\n");
-            exit(1);
-        }
-    }
-    /*if(allCount < atoi(argv[1])) {
-        fprintf(stderr, "Error: finished attempts less than specified attempts\n");
-    }*/
-    double answer = ((double) goodCount / (double) atoi(argv[1])) * 100;
-    printf("Succesful attempts - %llu\nAll attemps - %llu\nChance = %.4f%%\n", goodCount, /*allCount*/(unsigned long long int) atoi(argv[1]), answer);
-    end = clock();
-    printf("Time = %.5f\n", ((double) end - start)/((double) CLOCKS_PER_SEC));
-    free(id);
-    return 0;
-}
-

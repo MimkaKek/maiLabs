@@ -1,8 +1,6 @@
-#ifndef TPatriciaTrieH
-#define TPatriciaTrieH
-
-#include <stdlib.h>
-#include <string.h>
+#include "TPatriciaTrieItem.h"
+#include <cstring>
+#include <cstdlib>
 
 //----------------------------------------------------------------------------
 template <class T>
@@ -28,9 +26,9 @@ void TPatriciaTrieItem<T>::Initialize(char* k, T d, int bi, TPatriciaTrieItem<T>
     }
     
     data      = d;
+    index     = bi;
     left      = l;
     right     = r;
-    bit_index = bi;
 }
 
 //----------------------------------------------------------------------------
@@ -73,5 +71,4 @@ TPatriciaTrieItem<T>* TPatriciaTrieItem<T>::GetRight() {
     return right;
 }
 
-
-#endif
+template class TPatriciaTrieItem<unsigned long long int>;

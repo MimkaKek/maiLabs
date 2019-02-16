@@ -153,6 +153,9 @@ int Register(MessageToServer* msg, void* senderSocket) {
                                         }
                                 }
                         }
+                        else {
+                                error = 1;
+                        }
                         if(error) {
                                 printf("Incorrect input. Try again.\n");
                         }
@@ -194,7 +197,7 @@ int LogIn(MessageToServer* msg, void* senderSocket) {
                 if(menu[1] == '\0') {
                         switch(menu[0]) {
                                 case 'y':
-                                        return 1;
+                                        return -1;
                                 case 'n':
                                         error = 0;
                                         break;
@@ -272,8 +275,16 @@ void LoginToServer(MessageToServer* msg, void* senderSocket, void* context, char
                                                 break;
                                         }
                                 case '2':
-                                        if(!Register(msg, senderSocket)) {
+                                        check = Register(msg, senderSocket) 
+                                        if(!check){
                                                 return;
+                                        }
+                                        else if(check == 1) {
+                                                error = 0;
+                                                break;
+                                        }
+                                        else {
+                                                break;
                                         }
                                         check = LogIn(msg, senderSocket);
                                         if(!check) {
@@ -405,7 +416,8 @@ int SendMoneyToSomeone(MessageToServer* msg, void* senderSocket, char* menu) {
                 else {
                         msg->act = 5;
                         printf("Enter number of the card.\n");
-                        while(1) {
+                        error = 1;
+                        while(error) {
                                 printf("> ");
                                 scanf("%s", msg->aimNumb);
                                 error = 0;
@@ -420,28 +432,6 @@ int SendMoneyToSomeone(MessageToServer* msg, void* senderSocket, char* menu) {
                                         if(menu[i] == '\0') {
                                                 break;
                                         }
-                                }
-                                if(!error) {
-                                        if(WorkWithMsg(msg, senderSocket, &recv)) {
-                                                if(recv.status) {
-                                                        system("clear");
-                                                        printf("Success! Press enter...");
-                                                        getchar();
-                                                        getchar();
-                                                        break;
-                                                }
-                                                else{
-                                                        system("clear");
-                                                        printf("Something go wrong. Press enter...");
-                                                        getchar();
-                                                        getchar();
-                                                        break;
-                                                }
-                                        }
-                                        else {
-                                                return 0;
-                                        }
-                                        
                                 }
                         }
                         break;
@@ -802,7 +792,7 @@ int main() {
                                 system("clear");
                                 printf("Connection have lost. Trying to reconnect!\n");
                                 printf("=============================\n");
-                                printf("Time left - %d seconds!\n", timer);
+                                printf("|     Time left - %2d:%2d     |\n", timer / 60, timer % 60);
                                 printf("=============================\n");
                                 --timer;
                                 msg.act = 100;
