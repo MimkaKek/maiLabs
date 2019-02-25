@@ -7,7 +7,7 @@
 #include <random>
 #include "TPatriciaTrie.h"
 
-const unsigned long long int MAX_WORDS = 1000;
+const unsigned long long int MAX_WORDS = 10000;
 
 void StrToLower(char* str) {
     int step = 0;
@@ -20,19 +20,14 @@ void StrToLower(char* str) {
 
 void Benchmark(TPatriciaTrie<unsigned long long int>* tree) {
     
-    unsigned long int                       state = 1;
-    int                                     error = 0;
     char*                                   words[MAX_WORDS];
     char                                    tags[MAX_WORDS];
-    std::chrono::high_resolution_clock::time_point beginning = std::chrono::high_resolution_clock::now();
-    std::chrono::high_resolution_clock::duration d = std::chrono::high_resolution_clock::now() - beginning;
-    unsigned seed2 = d.count();
-    std::default_random_engine              generator(seed2);
-    std::uniform_int_distribution<int>      lengthOfWord(50, 100);
+    std::default_random_engine              generator;
     std::uniform_int_distribution<char>     character(97, 122);
+    double bs, cs, bl, cl;
 
     for(int i = 0; i < MAX_WORDS; ++i) {
-        int numb = lengthOfWord(generator);
+        int numb = 200;
         words[i] = (char*) malloc((numb + 1)*sizeof(char));
         for(int j = 0; j < numb; ++j) {
             words[i][j] = character(generator);
@@ -43,90 +38,127 @@ void Benchmark(TPatriciaTrie<unsigned long long int>* tree) {
     unsigned int start_time =  clock();
     
     for(unsigned long int i = 0; i < MAX_WORDS; ++i) {
-        if(tree->Insert(words[i], i)) {
+        if(tree->Insert(words[i], i + 1)) {
             tags[i] = 1;
-            if(!tree->Lookup(words[i])) {
-                std::cout << "Error detected - Search after insert: " << words[i] << std::endl;
-            }
-            std::cout << "=========================================" << std::endl;
-            std::cout << "|\tWORD: " << words[i] << "\t\t\t\t|" << std::endl;
-            std::cout << "|\tNUMB: " << i << "\t\t\t\t|" << std::endl;
-            std::cout << "=========================================" << std::endl;
-            std::cout << "|\tSTATE #" << state << "\t\t\t|" << std::endl;
-            std::cout << "|\tINSERT" << "\t\t\t\t|" << std::endl;
-            std::cout << "=========================================" << std::endl;
-            ++state;
-            tree->Print(tree->GetHead(), 0);
-                if(i == MAX_WORDS - 1) {
-                    std::cout << "=========================================" << std::endl;
-                }
-            for(int j = 0; j <= i; ++j) {
-                if(tags[j]) {
-                    if(!tree->Lookup(words[j])) {
-                        if(!error) {
-                            std::cout << "=========================================" << std::endl;
-                        }
-                        std::cout << "Error detected - Search after insert: " << words[j] << " = " << j << std::endl;
-                        error = 1;
-                    }
-                }
-            }
-            if(error) {
-                std::cout << "=========================================" << std::endl;
-                exit(0);
-            }
         }
         else {
             tags[i] = 0;
-            if(!(tree->Lookup(words[i]))) {
-                std::cout << "=========================================" << std::endl;
-                std::cout << "Error detected - Search after insert: " << words[i] << " = " << i << std::endl;
-                error = 1;
+        }
+    }
+    
+    for(unsigned long int i = 0; i < MAX_WORDS; ++i) {
+        if(tags[i]) {
+            if(!tree->Lookup(words[i])) {
+                std::cout << "Can't find word - " << words[i] << std::endl << "Number - " << i + 1 << std::endl;
+                exit(0);
             }
         }
     }
     
+    unsigned int save_time = clock();
+    {
+        std::ofstream file("Benchmark_Before.bin", std::ofstream::binary);
+        if(!file) {
+            std::cout << "ERROR: can't open file!" << std::endl;
+            exit(0);
+        }
+        tree->SaveTrie_Before(tree->GetHead(), &file);
+        file.close();
+    }
+    unsigned int end_time = clock();
+    unsigned int search_time = (end_time - save_time);
+    bs = (double) search_time / CLOCKS_PER_SEC;
+    std::cout << "Save_Before - " << bs << std::endl;
+    
+    save_time = clock();
+    {
+        std::ofstream file("Benchmark_Current.bin", std::ofstream::binary);
+        if(!file) {
+            std::cout << "ERROR: can't open file!" << std::endl;
+            exit(0);
+        }
+        tree->SaveTrie_Current(tree->GetHead(), &file);
+        file.close();
+    }
+    end_time = clock();
+    search_time = (end_time - save_time);
+    cs = (double) search_time / CLOCKS_PER_SEC;
+    std::cout << "Save_Current - " << cs << std::endl;
+    
+    save_time = clock();
+    {
+        std::ifstream file("Benchmark_Before.bin", std::ofstream::binary);
+        if(!file) {
+            std::cout << "ERROR: can't open file!" << std::endl;
+            exit(0);
+        }
+        if(!tree->Empty()) {
+            tree->ClearTrie();
+        }
+        char str[256];
+        tree->LoadTrie_Before(str, tree->GetHead(), &file);
+        file.close();
+    }
+    end_time = clock();
+    search_time = (end_time - save_time);
+    bl = (double) search_time / CLOCKS_PER_SEC;
+    std::cout << "Load_Before - " << bl << std::endl;
+    
+    for(unsigned long int i = 0; i < MAX_WORDS; ++i) {
+        if(tags[i]) {
+            if(!tree->Lookup(words[i])) {
+                std::cout << "Can't find word - " << words[i] << std::endl << "Number - " << i + 1 << std::endl;
+                exit(0);
+            }
+        }
+    }
+    
+    save_time = clock();
+    {
+        std::ifstream file("Benchmark_Current.bin", std::ofstream::binary);
+        if(!file) {
+            std::cout << "ERROR: can't open file!" << std::endl;
+            exit(0);
+        }
+        if(!tree->Empty()) {
+            tree->ClearTrie();
+        }
+        char str[256];
+        tree->LoadTrie_Current(str, &file);
+        file.close();
+    }
+    end_time = clock();
+    search_time = (end_time - save_time);
+    cl = (double) search_time / CLOCKS_PER_SEC;
+    std::cout << "Load_Current - " << cl << std::endl;
+    
+    for(unsigned long int i = 0; i < MAX_WORDS; ++i) {
+        if(tags[i]) {
+            if(!tree->Lookup(words[i])) {
+                std::cout << "Can't find word - " << words[i] << std::endl << "Number - " << i + 1 << std::endl;
+                exit(0);
+            }
+        }
+    }
+    
+    std::cout << "Total before - " << bl + bs << std::endl;
+    std::cout << "Total current - " << cl + cs << std::endl;
+    
     for(unsigned long int i = 0; i < MAX_WORDS; i += 1) {
+        if(tags[i]) {
             if(tree->Delete(words[i])) {
-                if(i) {
-                    std::cout << "=========================================" << std::endl;   
-                }
-                std::cout << "|\tWORD: " << words[i] << "\t\t\t\t|" << std::endl;
-                std::cout << "|\tNUMB: " << i << "\t\t\t\t|" << std::endl;
-                std::cout << "=========================================" << std::endl;
-                std::cout << "|\tSTATE #" << state << "\t\t\t|" << std::endl;
-                std::cout << "|\tDELETE" << "\t\t\t\t|" << std::endl;
-                std::cout << "=========================================" << std::endl;
-                tree->Print(tree->GetHead(), 0);
-                if(i == MAX_WORDS - 1) {
-                    std::cout << "=========================================" << std::endl;
-                }
-                ++state;
                 tags[i] = 0;
-                for(int j = 0; j < MAX_WORDS; ++j) {
-                    if(tags[j]) {
-                        if(!tree->Lookup(words[j])) {
-                            if(!error) {
-                                std::cout << "=========================================" << std::endl;
-                            }
-                            std::cout << "Error detected - Search after delete: " << words[j] << " = " << j << std::endl;
-                            error = 1;
-                        }
-                    }
-                }
-                if(error) {
-                    std::cout << "=========================================" << std::endl;
-                    exit(0);
-                }
             }
             else {
                 std::cout << "Error detected - Delete: " << words[i] << std::endl;
             }
+        }
     }
     
-    unsigned int end_time = clock();
-    unsigned int search_time = (end_time - start_time);
-    std::cout <<  (double) search_time / CLOCKS_PER_SEC << std::endl;
+    end_time = clock();
+    search_time = (end_time - start_time);
+    std::cout << "All time - " <<  (double) search_time / CLOCKS_PER_SEC << std::endl;
+    
     for(int i = 0; i < MAX_WORDS; ++i) {
         free(words[i]);
     }
@@ -225,7 +257,7 @@ void SaveOrLoad(TPatriciaTrie<unsigned long long int>* tree, char* str) {
             std::cout << "ERROR: can't open file!" << std::endl;
             exit(0);
         }
-        tree->SaveTrie(tree->GetHead(), &file);
+        tree->SaveTrie_Current(tree->GetHead(), &file);
         std::cout << "OK" << std::endl;
         file.close();
     }
@@ -243,7 +275,7 @@ void SaveOrLoad(TPatriciaTrie<unsigned long long int>* tree, char* str) {
         if(!tree->Empty()) {
             tree->ClearTrie();
         }
-        tree->LoadTrie(str, tree->GetHead(), &file);
+        tree->LoadTrie_Current(str, &file);
         std::cout << "OK" << std::endl;
         file.close();
     }

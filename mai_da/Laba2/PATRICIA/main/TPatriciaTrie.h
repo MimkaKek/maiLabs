@@ -29,8 +29,10 @@ class TPatriciaTrie {
         void                    Print(TPatriciaTrieItem<T>*, int);
         void                    ClearTrie();
         bool                    Empty();
-        bool                    SaveTrie(TPatriciaTrieItem<T>*, std::ofstream*);
-        void                    LoadTrie(char*, TPatriciaTrieItem<T>*, std::ifstream*);
+        bool                    SaveTrie_Current(TPatriciaTrieItem<T>*, std::ofstream*);
+        bool                    SaveTrie_Before(TPatriciaTrieItem<T>*, std::ofstream*);
+        void                    LoadTrie_Current(char*, std::ifstream*);
+        void                    LoadTrie_Before(char*, TPatriciaTrieItem<T>*, std::ifstream*);
 };
 
 #endif
