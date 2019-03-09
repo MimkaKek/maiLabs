@@ -26,8 +26,8 @@
   0
        )
 ;***** Date of YOUR birthday *******
-(define dd 18)
-(define mm 02)
+(define dd 03)
+(define mm 03)
 (define yyyy 1999)
 ;***********************************
 (report-results (+ (* dd 1000000)

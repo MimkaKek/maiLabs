@@ -1,8 +1,8 @@
 ;golden-section
-(define a 2)(define b 3);2.84786
+(define a -1)(define b 1);2.84786
 (define (fun x)
- (set! x (- x (/ 100 101 e)))
- (-(+(log(+ x 1))(exp(+(- x)7))(expt(- x 8)3)) (atan(- x 6)) 2)
+ (set! x (- x (/ 101 102 e)))
+ (expt(sin(- (* 2 (exp(- x))) 4)) 3)
 ;     ln(x+1)   +   e^(-x+7)  +     (x-8)^3  - arctg(x-6) - 2
 )
 (define eps 0.00001)
