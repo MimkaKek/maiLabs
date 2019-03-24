@@ -4,40 +4,32 @@
 #include "fsm.h"
 using namespace std;
 
-enum {
-    BAD_END = 10,
-    GOOD_END
-};
-
 int main() {
     tFSM Adec;
-    addrange(Adec, 0, '1', '9', 5);
-    addstr(Adec, 0, "-+", 1);
-    addstr(Adec, 0, "0", 2);
-    addrange(Adec, 1, '1', '9', 5);
-    addstr(Adec, 1, "0", 2);
-    addrange(Adec, 2, '0', '9', BAD_END);
-    addstr(Adec, 2, ".", 3);
-    addstr(Adec, 2, "Ee", 4);
-    addrange(Adec, 3, '0', '9', 3);
-    addstr(Adec, 3, "Ee", 4);
-    addstr(Adec, 4, "+-", 6);
+    addrange(Adec, 0, '1', '9', 2);
+    addstr  (Adec, 0, "-+", 1);
+    addstr  (Adec, 0, "0", 3);
+    addstr  (Adec, 0, ".", 4);
+    addrange(Adec, 1, '1', '9', 2);
+    addstr  (Adec, 1, "0", 3);
+    addstr  (Adec, 1, ".", 4);
+    addrange(Adec, 2, '0', '9', 2); 
+    addstr  (Adec, 2, ".", 4);
+    addstr  (Adec, 2, "Ee", 6);
+    addstr  (Adec, 3, ".", 4);
+    addstr  (Adec, 3, "Ee", 6);
+    addrange(Adec, 4, '0', '9', 5);
     addrange(Adec, 5, '0', '9', 5);
-    addstr(Adec, 5, "eE", 4);
-    addstr(Adec, 5, ".", 3);
-    addrange(Adec, 6, '0', '9', 6);
-    Adec.final(0);
-    Adec.final(1);
+    addstr  (Adec, 5, "eE", 6);
+    addstr  (Adec, 6, "+-", 7);
+    addrange(Adec, 7, '0', '9', 8);
+    addrange(Adec, 8, '0', '9', 8);
+    
     Adec.final(2);
-    Adec.final(3);
-    Adec.final(4);
     Adec.final(5);
-    Adec.final(6);
-    Adec.final(BAD_END);
-    cout << "*** xxx Adec "
-    << "size=" << Adec.size()
-    << " ***\n";
-    cout << endl;
+    Adec.final(8);
+    
+    cout << "*** xxx Adec " << "size=" << Adec.size() << " ***\n" << endl;
     
     while(true) {
         char input[81];

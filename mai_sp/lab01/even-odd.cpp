@@ -12,8 +12,7 @@ double yyyy = 1999;
 double even__bits(double n) {
 	return (n == 0 ? 1 
 		: remainder(n, 2) == 0 ? even__bits(quotient(n, 2))
-		: true ? odd__bits(quotient(n, 2))
-		: _infinity);
+		: odd__bits(quotient(n, 2)));
 }
 
 double odd__bits(double n) {

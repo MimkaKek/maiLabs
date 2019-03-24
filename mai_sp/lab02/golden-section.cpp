@@ -13,7 +13,7 @@ double xmin = 0;
 
 double fun(double x) {
 	x = x - double(101) / double(102) / e;
-	return expt(sin(2*expt(e, -x) - 4), 3);
+	return expt(sin(2*exp(-x) - 4), 3);
 }
 
 double golden__section__search(double a, double b) {
