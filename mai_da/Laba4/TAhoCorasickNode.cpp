@@ -1,4 +1,4 @@
-#include "TAhiKorasikNode.h"
+#include "TAhoCorasickNode.h"
 
 TAKNode::TAKNode() {
     fail = nullptr;

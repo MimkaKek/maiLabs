@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "TAhiKorasikNode.h"
+#include "TAhoCorasickNode.h"
 
 class TAhoCorasick {
 private:

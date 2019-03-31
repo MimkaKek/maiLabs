@@ -1,5 +1,6 @@
 #include "TPatriciaTrie.h"
 #include <stdlib.h>
+//#include <dmalloc.h>
 #include <iostream>
 #include <cstring>
 
@@ -242,7 +243,6 @@ void TPatriciaTrie<T>::LoadTrieBefore(char* key, TPatriciaTrieItem<T>* root, std
         file->read((char*)&up,sizeof(char));
         file->read((char*)&length,sizeof(int));
         file->read(key, length*sizeof(char));
-        key[length] = '\0';
         file->read((char*)&data,sizeof(T));
         file->read((char*)&index,sizeof(int));
         TPatriciaTrieItem<T>* newNode = new TPatriciaTrieItem<T>();
@@ -259,7 +259,6 @@ void TPatriciaTrie<T>::LoadTrieBefore(char* key, TPatriciaTrieItem<T>* root, std
         file->read((char*)&up,sizeof(char));
         file->read((char*)&length,sizeof(int));
         file->read(key, length*sizeof(char));
-        key[length] = '\0';
         if(!up) {
             file->read((char*)&data,sizeof(T));
             file->read((char*)&index,sizeof(int));
@@ -281,7 +280,6 @@ void TPatriciaTrie<T>::LoadTrieBefore(char* key, TPatriciaTrieItem<T>* root, std
         file->read((char*)&up,sizeof(char));
         file->read((char*)&length,sizeof(int));
         file->read(key, length*sizeof(char));
-        key[length] = '\0';
         if(!up) {
             file->read((char*)&data,sizeof(T));
             file->read((char*)&index,sizeof(int));

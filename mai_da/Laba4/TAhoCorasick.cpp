@@ -1,6 +1,6 @@
 #include <iostream>
 #include <queue>
-#include "TAhiKorasik.h"
+#include "TAhoCorasick.h"
 
 
 TAhoCorasick::TAhoCorasick() {
@@ -33,9 +33,9 @@ void TAhoCorasick::Initialize() {
         
         for(LinksMap::const_iterator iter = current->links.cbegin(); iter != current->links.cend(); ++iter) {
             
-            char symbol = iter->first;
-            TAKNode* child = iter->second;
-            TAKNode* tmp = child->fail;
+            char     symbol = iter->first;
+            TAKNode* child  = iter->second;
+            TAKNode* tmp    = current->fail;
             
             while(tmp) {
                 TAKNode* candidate = tmp->GetLink(symbol);

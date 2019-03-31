@@ -20,7 +20,7 @@ void StrToLower(char* str) {
 double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long int numbWords) {
     
     char**                                  words = (char**) malloc(sizeof(char*)*numbWords);
-    //char                                    str[256];
+    char                                    str[256];
     std::default_random_engine              generator;
     std::uniform_int_distribution<char>     character(97, 122);
     unsigned int start, finish, begin, end;
@@ -55,13 +55,13 @@ double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long
 
 
 
-    /*std::ofstream file1("Benchmark_Current.bin", std::ofstream::binary);
+    std::ofstream file1("temp.bin", std::ofstream::binary);
     if(!file1) {
         std::cout << "ERROR: can't open file!" << std::endl;
         exit(0);
     }
     begin = clock();
-    tree->SaveTrieCurrent(tree->GetHead(), &file1);
+    tree->SaveTrieBefore(tree->GetHead(), &file1);
     end = clock();
     file1.close();
     aTime = (double) (end - begin) / CLOCKS_PER_SEC;
@@ -69,7 +69,7 @@ double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long
     
     
     
-    std::ifstream file4("Benchmark_Current.bin", std::ofstream::binary);
+    std::ifstream file4("temp.bin", std::ofstream::binary);
     if(!file4) {
         std::cout << "ERROR: can't open file!" << std::endl;
         exit(0);
@@ -78,11 +78,11 @@ double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long
         tree->ClearTrie();
     }
     begin = clock();
-    tree->LoadTrieCurrent(str, &file4);
+    tree->LoadTrieBefore(str, tree->GetHead(), &file4);
     end = clock();
     file4.close();
     aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Load) - " << aTime << " sec" << std::endl;*/
+    std::cout << "Avr. Time (Load) - " << aTime << " sec" << std::endl;
     
     
     begin = clock();
@@ -275,15 +275,15 @@ void SearchInTree(TPatriciaTrie<unsigned long long int>* tree, char* str) {
 int main(int argc, char** argv) {
 
     TPatriciaTrie<unsigned long long int>   tree;
-    unsigned long long int                  numb = 0;
+    //unsigned long long int                  numb = 0;
     //char str[256];
-    while(1) {
-        std::cin >> numb;
-        if(std::cin.eof()) {
-            break;
-        }
-        Benchmark(&tree, numb);
-    }
+    //while(1) {
+    //    std::cin >> numb;
+    //    if(std::cin.eof()) {
+    //        break;
+    //    }
+        Benchmark(&tree, 10000);
+    //}
     
     /*while(true) {
         std::cin >> str;
