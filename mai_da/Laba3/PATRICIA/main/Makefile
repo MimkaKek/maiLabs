@@ -1,14 +1,15 @@
 CC=g++
-CFLAGS=-pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm -c -g -pg
+OFLAGS=-ldmalloc -DDMALLOC -DDMALLOC_FUNC_CHECK
+CFLAGS=-pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -pg -lm -c
 OFILES=TPatriciaTrieItem.o TPatriciaTrie.o main.o
 
 all: main
 
 clear:
-	rm *.o
+	rm *.o *.bin
 
 main: $(OFILES)
-	$(CC) $(OFILES) -g -pg -o main
+	$(CC) $(OFILES) -pg -o main
 TPatriciaTrieItem.o: TPatriciaTrieItem.h
 	$(CC) $(CFLAGS) TPatriciaTrieItem.cpp
 TPatriciaTrie.o: TPatriciaTrie.h

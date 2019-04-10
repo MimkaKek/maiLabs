@@ -4,39 +4,46 @@
 #include "TPatriciaTrieItem.h"
 #include <fstream>
 
-template <class T>
+typedef struct {
+    char                    up;
+    int                     length;
+    unsigned long long int  data;
+    int                     index;
+} TPack;
+
 class TPatriciaTrie {
     private:
         
-        void                    RecursiveRemove(TPatriciaTrieItem<T>*);
+        void                    RecursiveRemove(TPatriciaTrieItem*);
         int                     BitGet(char*, int);
         int                     BitFirstDifferent(char*, char*);
         bool                    KeyCompare(char*, char*);
-        void                    KeyCopy(TPatriciaTrieItem<T>*, TPatriciaTrieItem<T>*);
+        void                    KeyCopy(TPatriciaTrieItem*, TPatriciaTrieItem*);
         
-        TPatriciaTrieItem<T>*   head;
+        char                    mask[256];
+        TPatriciaTrieItem*      head;
 
     public:
 
         TPatriciaTrie();
         virtual ~TPatriciaTrie();
         
-        TPatriciaTrieItem<T>*   LookupNode(char*);
-        T*                      Lookup(char*);
-        TPatriciaTrieItem<T>*   Insert(char*, T);
+        TPatriciaTrieItem*      LookupNode(char*);
+        unsigned long long int* Lookup(char*);
+        TPatriciaTrieItem*      Insert(char*, unsigned long long int);
         bool                    Delete(char*);
         
-        TPatriciaTrieItem<T>*   GetHead();
-        void                    Print(TPatriciaTrieItem<T>*, int);
+        TPatriciaTrieItem*      GetHead();
+        void                    Print(TPatriciaTrieItem*, int);
         void                    ClearTrie();
         bool                    Empty();
-        void                    SetHead(TPatriciaTrie<T>*);
+        void                    SetHead(TPatriciaTrie*);
         
-        bool                    SaveTrieCurrent(TPatriciaTrieItem<T>*, std::ofstream*);
-        bool                    SaveTrieBefore(TPatriciaTrieItem<T>*, std::ofstream*);
+        bool                    SaveTrieCurrent(TPatriciaTrieItem*, std::ofstream*);
+        bool                    SaveTrieBefore(TPatriciaTrieItem*, std::ofstream*);
         
         void                    LoadTrieCurrent(char*, std::ifstream*);
-        void                    LoadTrieBefore(char*, TPatriciaTrieItem<T>*, std::ifstream*);
+        void                    LoadTrieBefore(char*, TPatriciaTrieItem*, std::ifstream*);
 };
 
 #endif

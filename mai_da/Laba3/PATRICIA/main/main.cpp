@@ -17,14 +17,14 @@ void StrToLower(char* str) {
     return;
 }
 
-double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long int numbWords) {
+double Benchmark(TPatriciaTrie* tree, unsigned long long int numbWords) {
     
     char**                                  words = (char**) malloc(sizeof(char*)*numbWords);
     char                                    str[256];
     std::default_random_engine              generator;
     std::uniform_int_distribution<char>     character(97, 122);
     unsigned int start, finish, begin, end;
-    double aTime;
+    double aTime, delta = 0;
 
     for(int i = 0; i < numbWords; ++i) {
         int numb = 127;
@@ -34,100 +34,108 @@ double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long
         }
         words[i][numb] = '\0';
     }
+    for(int i = 0; i < 10; ++i) {
+        
+        start = clock();
+        
+        begin = clock();
+        for(unsigned long int i = 0; i < numbWords; ++i) {
+            tree->Insert(words[i], i + 1);
+        }
+        end = clock();
+        aTime = (double) (end - begin) / CLOCKS_PER_SEC;
+        std::cout << "Avr. Time (Insert) - " << aTime << " sec" << std::endl;
+        
+        begin = clock();
+        for(unsigned long int i = 0; i < numbWords; ++i) {
+            tree->Lookup(words[i]);
+        }
+        end = clock();
+        aTime = (double) (end - begin) / CLOCKS_PER_SEC;
+        std::cout << "Avr. Time (Search) - " << aTime << " sec" << std::endl;
     
-    start = clock();
     
-    begin = clock();
-    for(unsigned long int i = 0; i < numbWords; ++i) {
-        tree->Insert(words[i], i + 1);
+    
+        /*std::ofstream file1("Btemp.bin", std::ofstream::binary);
+        if(!file1) {
+            std::cout << "ERROR: can't open file!" << std::endl;
+            exit(0);
+        }
+        begin = clock();
+        tree->SaveTrieBefore(tree->GetHead(), &file1);
+        end = clock();
+        file1.close();
+        aTime = (double) (end - begin) / CLOCKS_PER_SEC;*/
+        //std::cout << "Avr. Time (Save - Before) - " << aTime << " sec" << std::endl;
+        
+        std::ofstream file2("Ctemp.bin", std::ofstream::binary);
+        if(!file2) {
+            std::cout << "ERROR: can't open file!" << std::endl;
+            exit(0);
+        }
+        begin = clock();
+        tree->SaveTrieCurrent(tree->GetHead(), &file2);
+        end = clock();
+        file2.close();
+        delta += aTime;
+        aTime = (double) (end - begin) / CLOCKS_PER_SEC;
+        //std::cout << "Avr. Time (Save - Current) - " << aTime << " sec" << std::endl;
+        delta -= aTime;
+        
+        /*std::ifstream file3("Btemp.bin", std::ofstream::binary);
+        if(!file3) {
+            std::cout << "ERROR: can't open file!" << std::endl;
+            exit(0);
+        }
+        if(!tree->Empty()) {
+            tree->ClearTrie();
+        }
+        begin = clock();
+        tree->LoadTrieBefore(str,tree->GetHead(), &file3);
+        end = clock();
+        file3.close();
+        aTime = (double) (end - begin) / CLOCKS_PER_SEC;*/
+        //std::cout << "Avr. Time (Load - Before) - " << aTime << " sec" << std::endl;
+        
+        std::ifstream file4("Ctemp.bin", std::ofstream::binary);
+        if(!file4) {
+            std::cout << "ERROR: can't open file!" << std::endl;
+            exit(0);
+        }
+        if(!tree->Empty()) {
+            tree->ClearTrie();
+        }
+        begin = clock();
+        tree->LoadTrieCurrent(str, &file4);
+        end = clock();
+        file4.close();
+        delta += aTime;
+        aTime = (double) (end - begin) / CLOCKS_PER_SEC;
+        //std::cout << "Avr. Time (Load - Current) - " << aTime << " sec" << std::endl;
+        delta -= aTime;
+        
+        begin = clock();
+        for(unsigned long int i = 0; i < numbWords; i += 1) {
+                tree->Delete(words[i]);
+        }
+        end = clock();
+        aTime = (double) (end - begin) / CLOCKS_PER_SEC;
+        std::cout << "Avr. Time (Delete) - " << aTime << " sec" << std::endl;
+        
+        
+        finish = clock();
+        aTime = finish + start;
+        std::cout << "All time - " <<  (double) (finish - start) / CLOCKS_PER_SEC << std::endl;
+        
     }
-    end = clock();
-    aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Insert) - " << aTime << " sec" << std::endl;
     
-    begin = clock();
-    for(unsigned long int i = 0; i < numbWords; ++i) {
-        tree->Lookup(words[i]);
+    
+    if(delta > 0) {
+        std::cout << "Faster. Delta = " << delta << std::endl;
     }
-    end = clock();
-    aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Search) - " << aTime << " sec" << std::endl;
-
-
-
-    std::ofstream file1("temp.bin", std::ofstream::binary);
-    if(!file1) {
-        std::cout << "ERROR: can't open file!" << std::endl;
-        exit(0);
+    else {
+        std::cout << "Slower. Delta = " << delta << std::endl;
     }
-    begin = clock();
-    tree->SaveTrieBefore(tree->GetHead(), &file1);
-    end = clock();
-    file1.close();
-    aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Save) - " << aTime << " sec" << std::endl;
-    
-    
-    
-    std::ifstream file4("temp.bin", std::ofstream::binary);
-    if(!file4) {
-        std::cout << "ERROR: can't open file!" << std::endl;
-        exit(0);
-    }
-    if(!tree->Empty()) {
-        tree->ClearTrie();
-    }
-    begin = clock();
-    tree->LoadTrieBefore(str, tree->GetHead(), &file4);
-    end = clock();
-    file4.close();
-    aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Load) - " << aTime << " sec" << std::endl;
-    
-    
-    begin = clock();
-    for(unsigned long int i = 0; i < numbWords; i += 1) {
-            tree->Delete(words[i]);
-    }
-    end = clock();
-    aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Delete) - " << aTime << " sec" << std::endl;
-    
-    
-    
-    finish = clock();
-    std::cout << "All time - " <<  (double) (finish - start) / CLOCKS_PER_SEC << std::endl;
-    
-    std::map<char*, unsigned long long int> myMap;
-    
-    start = clock();
-    
-    begin = clock();
-    for(unsigned long int i = 0; i < numbWords; ++i) {
-        myMap.insert(std::pair<char*, unsigned long long int>(words[i],i + 1));
-    }
-    end = clock();
-    aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Insert) - " << aTime << " sec" << std::endl;
-    
-    begin = clock();
-    for(unsigned long int i = 0; i < numbWords; ++i) {
-            myMap.find(words[i]);
-    }
-    end = clock();
-    aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Search) - " << aTime << " sec" << std::endl;
-    
-    begin = clock();
-    for(unsigned long int i = 0; i < numbWords; i += 1) {
-        myMap.erase(words[i]);
-    }
-    end = clock();
-    aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Delete) - " << aTime << " sec" << std::endl;
-    
-    finish = clock();
-    std::cout << "All time - " <<  (double) (finish - start) / CLOCKS_PER_SEC << std::endl;
     
     for(int i = 0; i < numbWords; ++i) {
         free(words[i]);
@@ -137,7 +145,7 @@ double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long
     return 0;
 }
 
-void AddInTree(TPatriciaTrie<unsigned long long int>* tree, char* str) {
+void AddInTree(TPatriciaTrie* tree, char* str) {
     
     unsigned long long int numb = 0;
     int step = 0;
@@ -175,7 +183,7 @@ void AddInTree(TPatriciaTrie<unsigned long long int>* tree, char* str) {
     return;
 }
 
-void RemoveFromTree(TPatriciaTrie<unsigned long long int>* tree, char* str) {
+void RemoveFromTree(TPatriciaTrie* tree, char* str) {
     
     int step = 0;
     
@@ -205,7 +213,7 @@ void RemoveFromTree(TPatriciaTrie<unsigned long long int>* tree, char* str) {
     return;
 }
 
-void SaveOrLoad(TPatriciaTrie<unsigned long long int>* tree, char* str) {
+void SaveOrLoad(TPatriciaTrie* tree, char* str) {
     
     
     std::cin >> str;
@@ -228,7 +236,7 @@ void SaveOrLoad(TPatriciaTrie<unsigned long long int>* tree, char* str) {
             std::cout << "ERROR: can't open file!" << std::endl;
             exit(0);
         }
-        tree->SaveTrieCurrent(tree->GetHead(), &file);
+        tree->SaveTrieBefore(tree->GetHead(), &file);
         std::cout << "OK" << std::endl;
         file.close();
     }
@@ -246,7 +254,7 @@ void SaveOrLoad(TPatriciaTrie<unsigned long long int>* tree, char* str) {
         if(!tree->Empty()) {
             tree->ClearTrie();
         }
-        tree->LoadTrieCurrent(str, &file);
+        tree->LoadTrieBefore(str, tree->GetHead(), &file);
         std::cout << "OK" << std::endl;
         file.close();
     }
@@ -257,7 +265,7 @@ void SaveOrLoad(TPatriciaTrie<unsigned long long int>* tree, char* str) {
     return;
 }
 
-void SearchInTree(TPatriciaTrie<unsigned long long int>* tree, char* str) {
+void SearchInTree(TPatriciaTrie* tree, char* str) {
     
     unsigned long long int* answer;
     StrToLower(str);
@@ -274,18 +282,11 @@ void SearchInTree(TPatriciaTrie<unsigned long long int>* tree, char* str) {
 
 int main(int argc, char** argv) {
 
-    TPatriciaTrie<unsigned long long int>   tree;
-    //unsigned long long int                  numb = 0;
-    //char str[256];
-    //while(1) {
-    //    std::cin >> numb;
-    //    if(std::cin.eof()) {
-    //        break;
-    //    }
-        Benchmark(&tree, 10000);
-    //}
+    TPatriciaTrie   tree;
+    Benchmark(&tree, 20000);
     
-    /*while(true) {
+    /*char str[256];
+    while(true) {
         std::cin >> str;
         if(std::cin.eof()) {
             break;

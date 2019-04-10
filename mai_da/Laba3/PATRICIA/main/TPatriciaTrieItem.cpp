@@ -1,22 +1,20 @@
 #include "TPatriciaTrieItem.h"
-#include <cstring>
-#include <cstdlib>
 
 //----------------------------------------------------------------------------
-template <class T>
-TPatriciaTrieItem<T>::TPatriciaTrieItem() {
+
+TPatriciaTrieItem::TPatriciaTrieItem() {
     Initialize(nullptr, 0, -1, this, this);
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-TPatriciaTrieItem<T>::TPatriciaTrieItem(char* nKey, T nData, int nIndex, TPatriciaTrieItem<T>* nLeft, TPatriciaTrieItem<T>* nRight) {
+
+TPatriciaTrieItem::TPatriciaTrieItem(char* nKey, unsigned long long int nData, int nIndex, TPatriciaTrieItem* nLeft, TPatriciaTrieItem* nRight) {
     Initialize(nKey, nData, nIndex, nLeft, nRight);
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-void TPatriciaTrieItem<T>::Initialize(char* nKey, T nData, int nIndex, TPatriciaTrieItem<T>* nLeft, TPatriciaTrieItem<T>* nRight) {
+
+void TPatriciaTrieItem::Initialize(char* nKey, unsigned long long int nData, int nIndex, TPatriciaTrieItem* nLeft, TPatriciaTrieItem* nRight) {
     
     if (nKey) {
         key = (char*)strdup(nKey);
@@ -32,12 +30,10 @@ void TPatriciaTrieItem<T>::Initialize(char* nKey, T nData, int nIndex, TPatricia
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-TPatriciaTrieItem<T>::~TPatriciaTrieItem() {
+
+TPatriciaTrieItem::~TPatriciaTrieItem() {
     if (key) {
         free(key);
         key = NULL;
     }
 }
-
-template class TPatriciaTrieItem<unsigned long long int>;

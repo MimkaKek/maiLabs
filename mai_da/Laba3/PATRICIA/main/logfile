@@ -1,0 +1,30 @@
+1554628550: 80004: Dmalloc version '5.5.2' from 'http://dmalloc.com/'
+1554628550: 80004: flags = 0x4e48503, logfile 'logfile'
+1554628550: 80004: interval = 100, addr = 0, seen # = 0, limit = 0
+1554628550: 80004: starting time = 1554628490
+1554628550: 80004: process pid = 3858
+1554628550: 80004: Dumping Chunk Statistics:
+1554628550: 80004: basic-block 4096 bytes, alignment 8 bytes
+1554628550: 80004: heap address range: 0x4029000 to 0x5dc4000, 31043584 bytes
+1554628550: 80004:     user blocks: 2541 blocks, 10407936 bytes (79%)
+1554628550: 80004:    admin blocks: 655 blocks, 2682880 bytes (20%)
+1554628550: 80004:    total blocks: 3196 blocks, 13090816 bytes
+1554628550: 80004: heap checked 801
+1554628550: 80004: alloc calls: malloc 40001, calloc 1, realloc 0, free 40002
+1554628550: 80004: alloc calls: recalloc 0, memalign 0, valloc 0
+1554628550: 80004: alloc calls: new 0, delete 0
+1554628550: 80004:   current memory in use: 0 bytes (0 pnts)
+1554628550: 80004:  total memory allocated: 5280256 bytes (40002 pnts)
+1554628550: 80004:  max in use at one time: 5280256 bytes (40002 pnts)
+1554628550: 80004: max alloced with 1 call: 160000 bytes
+1554628550: 80004: max unused memory space: 5124096 bytes (49%)
+1554628550: 80004: top 10 allocations:
+1554628550: 80004:  total-size  count in-use-size  count  source
+1554628550: 80004:     2560000  20000           0      0  TPatriciaTrieItem.cpp:20
+1554628550: 80004:     2560000  20000           0      0  main.cpp:31
+1554628550: 80004:      160000      1           0      0  main.cpp:22
+1554628550: 80004:         256      1           0      0  TPatriciaTrie.cpp:15
+1554628550: 80004:     5280256  40002           0      0  Total of 4
+1554628550: 80004: Dumping Not-Freed Pointers Changed Since Start:
+1554628550: 80004:  memory table is empty
+1554628550: 80004: ending time = 1554628550, elapsed since start = 0:01:00

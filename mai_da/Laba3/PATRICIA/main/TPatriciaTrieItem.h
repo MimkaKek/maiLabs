@@ -1,27 +1,30 @@
 #ifndef T_PATRICIA_TRIE_H
 #define T_PATRICIA_TRIE_H
 
-template <class T> class TPatriciaTrie;
+#include <cstring>
+#include <cstdlib>
+//#include <dmalloc.h>
 
-template <class T>
+class TPatriciaTrie;
+
 class TPatriciaTrieItem {
     private:
         
-        friend class TPatriciaTrie<T>;
+        friend class TPatriciaTrie;
         
-        T                       data;
+        unsigned long long int  data;
         char*                   key;
         int                     index;
-        TPatriciaTrieItem<T>*   left;
-        TPatriciaTrieItem<T>*   right;
+        TPatriciaTrieItem*      left;
+        TPatriciaTrieItem*      right;
 
     public:
 
         TPatriciaTrieItem();
-        TPatriciaTrieItem(char*, T, int, TPatriciaTrieItem<T>*, TPatriciaTrieItem<T>*);
+        TPatriciaTrieItem(char*, unsigned long long int, int, TPatriciaTrieItem*, TPatriciaTrieItem*);
         virtual ~TPatriciaTrieItem();
 
-        void                    Initialize(char*, T, int, TPatriciaTrieItem<T>*, TPatriciaTrieItem<T>*);
+        void                    Initialize(char*, unsigned long long int, int, TPatriciaTrieItem*, TPatriciaTrieItem*);
 };
 
 #endif

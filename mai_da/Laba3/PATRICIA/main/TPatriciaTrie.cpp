@@ -1,15 +1,13 @@
 #include "TPatriciaTrie.h"
-#include <stdlib.h>
-//#include <dmalloc.h>
 #include <iostream>
 #include <cstring>
 
 const int MAX_DEEP = 10;
 
 //----------------------------------------------------------------------------
-template <class T>
-TPatriciaTrie<T>::TPatriciaTrie() {
-    head = new TPatriciaTrieItem<T>();
+
+TPatriciaTrie::TPatriciaTrie() {
+    head = new TPatriciaTrieItem();
     if(!head) {
         std::cout << "ERROR: bad allocation!" << std::endl;
         exit(0);
@@ -22,19 +20,19 @@ TPatriciaTrie<T>::TPatriciaTrie() {
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-TPatriciaTrie<T>::~TPatriciaTrie() {
+
+TPatriciaTrie::~TPatriciaTrie() {
     RecursiveRemove(head);
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-TPatriciaTrieItem<T>* TPatriciaTrie<T>::Insert(char* key, T data) {
+
+TPatriciaTrieItem* TPatriciaTrie::Insert(char* key, unsigned long long int data) {
     
     int                     bitIndex;
-    TPatriciaTrieItem<T>*   tmp;
-    TPatriciaTrieItem<T>*   prev = head;
-    TPatriciaTrieItem<T>*   directNode = head->right;
+    TPatriciaTrieItem*   tmp;
+    TPatriciaTrieItem*   prev = head;
+    TPatriciaTrieItem*   directNode = head->right;
     
     while (prev->index < directNode->index) {
         prev = directNode;
@@ -57,7 +55,7 @@ TPatriciaTrieItem<T>* TPatriciaTrie<T>::Insert(char* key, T data) {
         tmp = BitGet(key, tmp->index) ? tmp->right : tmp->left;
     }
     
-    TPatriciaTrieItem<T>* newNode = new TPatriciaTrieItem<T>();
+    TPatriciaTrieItem* newNode = new TPatriciaTrieItem();
     if(!newNode) {
         std::cout << "ERROR: bad allocation!" << std::endl;
         exit(0);
@@ -77,8 +75,8 @@ TPatriciaTrieItem<T>* TPatriciaTrie<T>::Insert(char* key, T data) {
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-void TPatriciaTrie<T>::Print(TPatriciaTrieItem<T>* root, int deep) {
+
+void TPatriciaTrie::Print(TPatriciaTrieItem* root, int deep) {
     
     int pDeep;
     
@@ -127,8 +125,8 @@ void TPatriciaTrie<T>::Print(TPatriciaTrieItem<T>* root, int deep) {
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-bool TPatriciaTrie<T>::SaveTrieCurrent(TPatriciaTrieItem<T>* root, std::ofstream* file) {
+
+bool TPatriciaTrie::SaveTrieCurrent(TPatriciaTrieItem* root, std::ofstream* file) {
     
     int length = 0;
     
@@ -139,7 +137,7 @@ bool TPatriciaTrie<T>::SaveTrieCurrent(TPatriciaTrieItem<T>* root, std::ofstream
     length = strlen(root->key);
     file->write((char*)&length, sizeof(int));
     file->write(root->key, sizeof(char)*length);
-    file->write((char*)&root->data, sizeof(T));
+    file->write((char*)&root->data, sizeof(unsigned long long int));
     
     if ( root->index < root->left->index ) {
         if(!SaveTrieCurrent(root->left, file)) {
@@ -157,17 +155,17 @@ bool TPatriciaTrie<T>::SaveTrieCurrent(TPatriciaTrieItem<T>* root, std::ofstream
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-void TPatriciaTrie<T>::LoadTrieCurrent(char* key, std::ifstream* file) {
+
+void TPatriciaTrie::LoadTrieCurrent(char* key, std::ifstream* file) {
     
-    T data = 0;
-    int length = 0;
+    unsigned long long int  data = 0;
+    int                     length = 0;
     
     while(!file->eof()) {
         file->read((char*)&length,sizeof(int));
         file->read(key, length*sizeof(char));
         key[length] = '\0';
-        file->read((char*)&data,sizeof(T));
+        file->read((char*)&data,sizeof(unsigned long long int));
         
         Insert(key, data);
     }
@@ -175,128 +173,115 @@ void TPatriciaTrie<T>::LoadTrieCurrent(char* key, std::ifstream* file) {
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-bool TPatriciaTrie<T>::SaveTrieBefore(TPatriciaTrieItem<T>* root, std::ofstream* file) {
+
+bool TPatriciaTrie::SaveTrieBefore(TPatriciaTrieItem* root, std::ofstream* file) {
     
-    int length = 0;
-    char up = 0;
+    TPack pack;
     
     if( head->right == head) {
         return true;
     }
     else if( head == root ) {
-        up = 0;
-        file->write((char*)&up, sizeof(char));
-        length = strlen(root->right->key);
-        file->write((char*)&length, sizeof(int));
-        file->write(root->right->key, sizeof(char)*length);
-        file->write((char*)&root->right->data, sizeof(unsigned long long int));
-        file->write((char*)&root->right->index, sizeof(int));
+        pack.up = 0;
+        pack.length = strlen(root->right->key);
+        pack.index = root->right->index;
+        pack.data = root->right->data;
+        file->write((char*)&pack, sizeof(TPack));
+        file->write(root->right->key, sizeof(char)*pack.length);
         return SaveTrieBefore(root->right, file);
     }
     
-    up = ( root->index < root->left->index || ( root->left->index == 0 && root->left != head->right && root->left != root ) ) ? 0 : 1;
-    file->write((char*)&up, sizeof(char));
-    length = strlen(root->left->key);
-    file->write((char*)&length, sizeof(int));
-    file->write(root->left->key, sizeof(char)*length);
-    if(!up) {
-        file->write((char*)&root->left->data, sizeof(T));
-        file->write((char*)&root->left->index, sizeof(int));
+    pack.up = ( root->index < root->left->index ) ? 0 : 1;
+    pack.length = strlen(root->left->key);
+    if(!pack.up) {
+        pack.index = root->left->index;
+        pack.data = root->left->data;
     }
+    file->write((char*)&pack, sizeof(TPack));
+    file->write(root->left->key, sizeof(char)*pack.length);
     
-    up = ( root->index < root->right->index || ( root->right->index == 0 && root->right != head->right && root->right != root ) ) ? 0 : 1;
-    file->write((char*)&up, sizeof(char));
-    length = strlen(root->right->key);
-    file->write((char*)&length, sizeof(int));
-    file->write(root->right->key, sizeof(char)*length);
-    if(!up) {
-        file->write((char*)&root->right->data, sizeof(T));
-        file->write((char*)&root->right->index, sizeof(int));
+    pack.up = ( root->index < root->right->index ) ? 0 : 1;
+    pack.length = strlen(root->right->key);
+    if(!pack.up) {
+        pack.index = root->right->index;
+        pack.data = root->right->data;
     }
+    file->write((char*)&pack, sizeof(TPack));
+    file->write(root->right->key, sizeof(char)*pack.length);
     
-    if ( root->index < root->left->index || ( root->left->index == 0 && root->left != head->right && root->left != root ) ) {
-        if(!SaveTrieBefore(root->left, file)) {
-            return false;
-        }
+    if ( root->index < root->left->index ) {
+        SaveTrieBefore(root->left, file);
     }
 
-    if ( root->index < root->right->index || ( root->right->index == 0 && root->right != head->right && root->right != root ) ) {
-        if(!SaveTrieBefore(root->right, file)) {
-            return false;
-        }
+    if ( root->index < root->right->index ) {
+        SaveTrieBefore(root->right, file);
     }
     
     return true;
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-void TPatriciaTrie<T>::LoadTrieBefore(char* key, TPatriciaTrieItem<T>* root, std::ifstream* file) {
+
+void TPatriciaTrie::LoadTrieBefore(char* key, TPatriciaTrieItem* root, std::ifstream* file) {
     
-    int length = 0;
-    int index = 0;
-    T data = 0;
-    char up = 0;
+    TPack pack;
     
     if( head == root ) {
-        file->read((char*)&up,sizeof(char));
-        file->read((char*)&length,sizeof(int));
-        file->read(key, length*sizeof(char));
-        file->read((char*)&data,sizeof(T));
-        file->read((char*)&index,sizeof(int));
-        TPatriciaTrieItem<T>* newNode = new TPatriciaTrieItem<T>();
+        file->read((char*)&pack,sizeof(TPack));
+        file->read(key, pack.length*sizeof(char));
+        key[pack.length] = '\0';
+        TPatriciaTrieItem* newNode = new TPatriciaTrieItem();
         if(!newNode) {
             std::cout << "ERROR: bad allocation!" << std::endl;
             exit(0);
         }
-        newNode->Initialize(key, data, index, newNode, newNode);
+        newNode->Initialize(key, pack.data, pack.index, newNode, newNode);
         head->right = newNode;
-        LoadTrieBefore(key, head->right, file);
-        return;
+        return LoadTrieBefore(key, head->right, file);
     }
     else {
-        file->read((char*)&up,sizeof(char));
-        file->read((char*)&length,sizeof(int));
-        file->read(key, length*sizeof(char));
-        if(!up) {
-            file->read((char*)&data,sizeof(T));
-            file->read((char*)&index,sizeof(int));
-            TPatriciaTrieItem<T>* newNode = new TPatriciaTrieItem<T>();
+        file->read((char*)&pack,sizeof(TPack));
+        file->read(key, pack.length*sizeof(char));
+        key[pack.length] = '\0';
+        if(!pack.up) {
+            TPatriciaTrieItem* newNode = new TPatriciaTrieItem();
             if(!newNode) {
                 std::cout << "ERROR: bad allocation!" << std::endl;
                 exit(0);
             }
-            newNode->Initialize(key, data, index, newNode, newNode);
+            newNode->Initialize(key, pack.data, pack.index, newNode, newNode);
             root->left = newNode;
         }
         else {
-            TPatriciaTrieItem<T>* tmp = head->right;
-            while(tmp != root && strcmp(tmp->key, key) != 0) {
-                tmp = (BitGet(root->key, tmp->index)) ? tmp->right : tmp->left;
+            TPatriciaTrieItem* parent  = head;
+            TPatriciaTrieItem* current = head->right;
+            while(parent->index < current->index) {
+                parent = current;
+                current = (BitGet(key, current->index)) ? current->right : current->left;
             }
-            root->left = tmp;
+            root->left = current;
         }
-        file->read((char*)&up,sizeof(char));
-        file->read((char*)&length,sizeof(int));
-        file->read(key, length*sizeof(char));
-        if(!up) {
-            file->read((char*)&data,sizeof(T));
-            file->read((char*)&index,sizeof(int));
-            TPatriciaTrieItem<T>* newNode = new TPatriciaTrieItem<T>();
+        
+        file->read((char*)&pack,sizeof(TPack));
+        file->read(key, pack.length*sizeof(char));
+        key[pack.length] = '\0';
+        if(!pack.up) {
+            TPatriciaTrieItem* newNode = new TPatriciaTrieItem();
             if(!newNode) {
                 std::cout << "ERROR: bad allocation!" << std::endl;
                 exit(0);
             }
-            newNode->Initialize(key, data, index, newNode, newNode);
+            newNode->Initialize(key, pack.data, pack.index, newNode, newNode);
             root->right = newNode;
         }
         else {
-            TPatriciaTrieItem<T>* tmp = head->right;
-            while(tmp != root && strcmp(tmp->key, key) != 0) {
-                tmp = (BitGet(root->key, tmp->index)) ? tmp->right : tmp->left;
+            TPatriciaTrieItem* parent  = head;
+            TPatriciaTrieItem* current = head->right;
+            while(parent->index < current->index) {
+                parent = current;
+                current = (BitGet(key, current->index)) ? current->right : current->left;
             }
-            root->right = tmp;
+            root->right = current;
         }
         
         if ( root->index < root->left->index ) {
@@ -312,24 +297,25 @@ void TPatriciaTrie<T>::LoadTrieBefore(char* key, TPatriciaTrieItem<T>* root, std
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-T* TPatriciaTrie<T>::Lookup(char* k) {
 
-    TPatriciaTrieItem<T>* node = LookupNode(k);
+unsigned long long int* TPatriciaTrie::Lookup(char* k) {
 
-    if (!node)
+    TPatriciaTrieItem* node = LookupNode(k);
+
+    if (!node) {
         return nullptr;
+    }
 
     return &(node->data);
 
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-TPatriciaTrieItem<T>* TPatriciaTrie<T>::LookupNode(char* key) {
+
+TPatriciaTrieItem* TPatriciaTrie::LookupNode(char* key) {
     
-    TPatriciaTrieItem<T>*   prev = head;
-    TPatriciaTrieItem<T>*   directNode = head->right;
+    TPatriciaTrieItem*   prev = head;
+    TPatriciaTrieItem*   directNode = head->right;
     
     while( prev->index < directNode->index ) {
         prev = directNode;
@@ -345,10 +331,10 @@ TPatriciaTrieItem<T>* TPatriciaTrie<T>::LookupNode(char* key) {
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-bool TPatriciaTrie<T>::Delete(char* key) {
+
+bool TPatriciaTrie::Delete(char* key) {
     
-    TPatriciaTrieItem<T> *path[2], *directNode, *x, *lp;
+    TPatriciaTrieItem *path[2], *directNode, *par, *prev;
 
     path[1]     = head;
     directNode  = head->right;
@@ -363,35 +349,36 @@ bool TPatriciaTrie<T>::Delete(char* key) {
         return false;
     }
 
-    if (directNode != path[1])
+    if (directNode != path[1]) {
         KeyCopy(path[1], directNode);
+    }
 
     if ((path[1]->left->index > path[1]->index) || (path[1]->right->index > path[1]->index)) {
 
         if (path[1] != directNode) {
 
-            lp = path[1];
-            x  = BitGet(path[1]->key, path[1]->index) ? path[1]->right : path[1]->left;
+            prev = path[1];
+            par  = BitGet(path[1]->key, path[1]->index) ? path[1]->right : path[1]->left;
  
-            while (lp->index < x->index) {
-                lp = x;
-                x  = BitGet(path[1]->key, x->index) ? x->right : x->left;
+            while (prev->index < par->index) {
+                prev = par;
+                par  = BitGet(path[1]->key, par->index) ? par->right : par->left;
             }
 
-            if (!KeyCompare(path[1]->key, x->key)) {
+            if (!KeyCompare(path[1]->key, par->key)) {
                 return false;
             }
 
-            if (BitGet(path[1]->key, lp->index)) {
-                lp->right = directNode;
+            if (BitGet(path[1]->key, prev->index)) {
+                prev->right = directNode;
             }
             else {
-                lp->left  = directNode;
+                prev->left  = directNode;
             }
         }
 
         if (path[0] != path[1]) {
-            TPatriciaTrieItem<T>* child = BitGet(key, path[1]->index) ? path[1]->left : path[1]->right;
+            TPatriciaTrieItem* child = BitGet(key, path[1]->index) ? path[1]->left : path[1]->right;
             if (BitGet(key, path[0]->index)) {
                 path[0]->right = child;
             }
@@ -402,8 +389,8 @@ bool TPatriciaTrie<T>::Delete(char* key) {
    
     }
     else if (path[0] != path[1]) {
-        TPatriciaTrieItem<T>* cLeft = path[1]->left;
-        TPatriciaTrieItem<T>* cRight = path[1]->right;
+        TPatriciaTrieItem* cLeft = path[1]->left;
+        TPatriciaTrieItem* cRight = path[1]->right;
         if (BitGet(key, path[0]->index)) {
             path[0]->right = (((cLeft == cRight) && (cLeft == path[1])) ? path[0] : ((cLeft==path[1]) ? cRight : cLeft ));
         }
@@ -418,11 +405,11 @@ bool TPatriciaTrie<T>::Delete(char* key) {
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-void TPatriciaTrie<T>::RecursiveRemove(TPatriciaTrieItem<T>* root) {
 
-    TPatriciaTrieItem<T>* l = root->left;
-    TPatriciaTrieItem<T>* r = root->right;
+void TPatriciaTrie::RecursiveRemove(TPatriciaTrieItem* root) {
+
+    TPatriciaTrieItem* l = root->left;
+    TPatriciaTrieItem* r = root->right;
 
     if ( (l->index >= root->index) && (l != root) && (l != head) )
         RecursiveRemove(l);
@@ -435,16 +422,16 @@ void TPatriciaTrie<T>::RecursiveRemove(TPatriciaTrieItem<T>* root) {
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-void TPatriciaTrie<T>::ClearTrie() {
+
+void TPatriciaTrie::ClearTrie() {
     RecursiveRemove(head->right);
     head->right = head;
     return;
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-bool TPatriciaTrie<T>::Empty() {
+
+bool TPatriciaTrie::Empty() {
     if( head->right == head ) {
         return true;
     }
@@ -453,18 +440,18 @@ bool TPatriciaTrie<T>::Empty() {
     }
 }
 //----------------------------------------------------------------------------
-template <class T>
-int TPatriciaTrie<T>::BitGet(char* bit_stream, int n) {
+
+int TPatriciaTrie::BitGet(char* key, int n) {
     if (n == -1) {
         return 2;
     }
     int k = (n & 0x7);
-    return ( (*(bit_stream + (n >> 3))) >> k) & 0x1;
+    return ( (*(key + (n >> 3))) >> k) & 0x1;
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-bool TPatriciaTrie<T>::KeyCompare(char* key1, char* key2) {
+
+bool TPatriciaTrie::KeyCompare(char* key1, char* key2) {
     if (!key1 || !key2) {
         return false;
     }
@@ -472,8 +459,8 @@ bool TPatriciaTrie<T>::KeyCompare(char* key1, char* key2) {
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-int TPatriciaTrie<T>::BitFirstDifferent(char* key1, char* key2) {
+
+int TPatriciaTrie::BitFirstDifferent(char* key1, char* key2) {
     
     int         posChar = 0;
     int         posBit = 0;
@@ -493,21 +480,21 @@ int TPatriciaTrie<T>::BitFirstDifferent(char* key1, char* key2) {
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-TPatriciaTrieItem<T>* TPatriciaTrie<T>::GetHead() {
+
+TPatriciaTrieItem* TPatriciaTrie::GetHead() {
     return head;
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-void TPatriciaTrie<T>::SetHead(TPatriciaTrie<T>* nTree) {
+
+void TPatriciaTrie::SetHead(TPatriciaTrie* nTree) {
     head->right = nTree->head->right;
     return;
 }
 
 //----------------------------------------------------------------------------
-template <class T>
-void TPatriciaTrie<T>::KeyCopy(TPatriciaTrieItem<T>* src, TPatriciaTrieItem<T>* dest) {
+
+void TPatriciaTrie::KeyCopy(TPatriciaTrieItem* src, TPatriciaTrieItem* dest) {
 
     if (src == dest) {
         return;
@@ -522,5 +509,3 @@ void TPatriciaTrie<T>::KeyCopy(TPatriciaTrieItem<T>* src, TPatriciaTrieItem<T>* 
     dest->data = src->data;
     
 }
-
-template class TPatriciaTrie<unsigned long long int>;
