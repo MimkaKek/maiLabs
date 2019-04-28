@@ -1,0 +1,1 @@
+(define(implication? x? y? )(or(not x?)y?))

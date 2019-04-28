@@ -15,18 +15,19 @@ private:
     std::vector<int>                                    tableOfStr;
     
     void                                                Step(unsigned long long int);
-    void                                                PrintTermsForCurrentState(unsigned int) const;
+    void                                                PrintTermsForCurrentState() const;
 public:
 
     TAhoCorasick();
+    ~TAhoCorasick();
     
-    
+    void                                                ClearTree();
     void                                                EmptyStr();
     void                                                ToStart();
     void                                                FinPattern();
     void                                                AddToPattern(unsigned long long int);
     void                                                Build();
-    void                                                Search(unsigned long long int, unsigned int, unsigned int);
+    void                                                Search(unsigned long long int, unsigned int);
 };
 
 #endif

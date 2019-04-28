@@ -13,6 +13,8 @@
     )
 )
 
+(cond ((= 1 1) 1) ((= 0 1) 0) )
+
 (define (count-change amount) 
     (cc amount LARGEST-COIN)
 )

@@ -8,7 +8,11 @@ TAhoCorasick::TAhoCorasick() {
     state = nullptr;
     lastStrNumb = 0;
     size = 0;
-}   
+}
+
+TAhoCorasick::~TAhoCorasick() {
+    ClearTree();
+}
 
 void TAhoCorasick::AddToPattern(unsigned long long int numb) {
     TAKNode* child = state->GetLink(numb);
@@ -28,6 +32,7 @@ void TAhoCorasick::FinPattern() {
 
 void TAhoCorasick::ToStart() {
     state = &root;
+    return;
 }
 
 void TAhoCorasick::Build() {
@@ -92,93 +97,84 @@ void TAhoCorasick::EmptyStr() {
     }
 }
 
-void TAhoCorasick::PrintTermsForCurrentState(unsigned int currentPos) const {
+void TAhoCorasick::PrintTermsForCurrentState() const {
     
-    unsigned int strNumb;
-    unsigned int posNumb;
+    unsigned int    strNumb;
+    int             posNumb;
     
-    if(DEBUG_STACK_ACT) {
-        std::stack<TAKNode*> nodes;
-        
-        if (state->IsTerminal()) {
-            if(DEBUG_WORK_WITH_STACK) {
-                for(int i = 0; i < state->GetCount(); ++i) {
-                    std::cout << "Number = " << state->numb[i] << " pushed in stack" << std::endl;
-                }
-            }
-            nodes.push(state);
+    if (state->IsTerminal()) {
+        if(DEBUG_PARAM_FUN) {
+            std::cout << "Current position in string = " << tableOfStr[lastStrNumb - 1] << std::endl;
+            std::cout << "Number of string = " << lastStrNumb << std::endl;
+            std::cout << "Count of calls = " << state->GetCount() << std::endl;
+            std::cout << "Result:" << std::endl;
         }
-        TAKNode* tmp = state->term;
-        while (tmp) {
-            nodes.push(tmp);
-            tmp = tmp->term;
+        posNumb = tableOfStr[lastStrNumb - 1] - state->deep + 1;
+        strNumb = lastStrNumb;
+        while(posNumb <= 0) {
+            --strNumb;
+            posNumb = tableOfStr[strNumb - 1] + posNumb;
         }
-        
-        while(!nodes.empty()) {
-            tmp = nodes.top();
-            if(DEBUG_WORK_WITH_STACK) {
-                for(int i = 0; i < state->GetCount(); ++i) {
-                    std::cout << "Number = " << state->numb[i] << " pushed from stack" << std::endl;
-                }
-            }
-            nodes.pop();
-            if(DEBUG_PARAM_FUN) {
-                std::cout << "Current position in string = " << currentPos << std::endl;
-                std::cout << "Number of string = " << strNumb << std::endl;
-                std::cout << "Result:" << std::endl;
-            }
-            for(int i = 0; i < state->GetCount(); ++i) {
-                std::cout << strNumb << ", " << currentPos - state->deep + 1 << ", " << state->numb[i] << std::endl;
-            }
-        }
-    }
-    else {
-        
-        
-        if (state->IsTerminal()) {
-            if(DEBUG_PARAM_FUN) {
-                std::cout << "Current position in string = " << tableOfStr[lastStrNumb - 1] << std::endl;
-                std::cout << "Number of string = " << lastStrNumb << std::endl;
-                std::cout << "Count of calls = " << state->GetCount() << std::endl;
-                std::cout << "Result:" << std::endl;
-            }
-            posNumb = tableOfStr[lastStrNumb - 1] - state->deep + 1;
-            strNumb = lastStrNumb;
-            while(posNumb <= 0) {
-                --strNumb;
-                posNumb = tableOfStr[strNumb - 1] + posNumb;
-            }
+        if(!BENCHMARK) {
             for(int i = 0; i < state->GetCount(); ++i) {
                 std::cout << strNumb << ", " << posNumb << ", " << state->numb[i] << std::endl;
             }
         }
-        
-        TAKNode* tmp = state->term;
-        while (tmp) {
-            if(DEBUG_PARAM_FUN) {
-                std::cout << "Current position in string = " << tableOfStr[lastStrNumb - 1] - tmp->deep + 1 << std::endl;
-                std::cout << "Number of string = " << lastStrNumb << std::endl;
-                std::cout << "Count of calls = " << tmp->GetCount() << std::endl;
-                std::cout << "Result:" << std::endl;
-            }
-            posNumb = tableOfStr[lastStrNumb - 1] - tmp->deep + 1;
-            strNumb = lastStrNumb;
-            while(posNumb <= 0) {
-                --strNumb;
-                posNumb = tableOfStr[strNumb - 1] + posNumb;
-            }
+    }
+    
+    TAKNode* tmp = state->term;
+    while (tmp) {
+        if(DEBUG_PARAM_FUN) {
+            std::cout << "Current position in string = " << tableOfStr[lastStrNumb - 1] - tmp->deep + 1 << std::endl;
+            std::cout << "Number of string = " << lastStrNumb << std::endl;
+            std::cout << "Count of calls = " << tmp->GetCount() << std::endl;
+            std::cout << "Result:" << std::endl;
+        }
+        posNumb = tableOfStr[lastStrNumb - 1] - tmp->deep + 1;
+        strNumb = lastStrNumb;
+        while(posNumb <= 0) {
+            --strNumb;
+            posNumb = tableOfStr[strNumb - 1] + posNumb;
+        }
+        if(!BENCHMARK) {
             for(int i = 0; i < tmp->GetCount(); ++i) {
                 std::cout << strNumb << ", " << posNumb << ", " << tmp->numb[i] << std::endl;
             }
-            tmp = tmp->term;
         }
+        tmp = tmp->term;
     }
 }
 
-void TAhoCorasick::Search(unsigned long long int numb, unsigned int strNumb, unsigned int currentPos) {
+void TAhoCorasick::ClearTree() {
+    std::queue<TAKNode*> nodes;
+    nodes.push(&root);
+    
+    while(!nodes.empty()) {
+        
+        TAKNode* current = nodes.front();
+        nodes.pop();
+        
+        for(TLinksMap::const_iterator iter = current->links.cbegin(); iter != current->links.cend(); ++iter) {
+            nodes.push(iter->second);
+        }
+        
+        if(current != &root) {
+            delete current;
+        }
+    }
+    
+    state = &root;
+    size = 0;
+    lastStrNumb = 0;
+    tableOfStr.clear();
+    
+    return;
+}
+
+void TAhoCorasick::Search(unsigned long long int numb, unsigned int strNumb) {
     if(DEBUG_SEARCH) {
         std::cout << "Search: " << std::endl;
-        std::cout << "numb = " << numb << " | strNumb = " << strNumb << " | currentPos = " << currentPos << std::endl;
+        std::cout << "numb = " << numb << " | strNumb = " << strNumb << std::endl;
     }
     Step(numb);
     if(strNumb > lastStrNumb) {
@@ -191,7 +187,7 @@ void TAhoCorasick::Search(unsigned long long int numb, unsigned int strNumb, uns
     else {
         ++tableOfStr[lastStrNumb - 1];
     }
-    PrintTermsForCurrentState(currentPos);
+    PrintTermsForCurrentState();
 }
 
 

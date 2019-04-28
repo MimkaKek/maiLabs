@@ -5,7 +5,7 @@ OFILES=TPatriciaTrieItem.o TPatriciaTrie.o main.o
 all: main
 
 clear:
-	rm *.o
+	rm *.o main
 
 main: $(OFILES)
 	$(CC) $(OFILES) -o main

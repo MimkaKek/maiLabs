@@ -20,7 +20,7 @@ void StrToLower(char* str) {
 double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long int numbWords) {
     
     char**                                  words = (char**) malloc(sizeof(char*)*numbWords);
-    //char                                    str[256];
+    char                                    str[256];
     std::default_random_engine              generator;
     std::uniform_int_distribution<char>     character(97, 122);
     unsigned int start, finish, begin, end;
@@ -55,7 +55,7 @@ double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long
 
 
 
-    /*std::ofstream file1("Benchmark_Current.bin", std::ofstream::binary);
+    std::ofstream file1("Benchmark_Current.bin", std::ofstream::binary);
     if(!file1) {
         std::cout << "ERROR: can't open file!" << std::endl;
         exit(0);
@@ -78,12 +78,15 @@ double Benchmark(TPatriciaTrie<unsigned long long int>* tree, unsigned long long
         tree->ClearTrie();
     }
     begin = clock();
-    tree->LoadTrieCurrent(str, &file4);
+    tree->LoadTrieCurrent(str, tree->GetHead(), &file4);
     end = clock();
     file4.close();
     aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Avr. Time (Load) - " << aTime << " sec" << std::endl;*/
+    std::cout << "Avr. Time (Load) - " << aTime << " sec" << std::endl;
     
+    for(unsigned long int i = 0; i < numbWords; ++i) {
+        tree->Lookup(words[i]);
+    }
     
     begin = clock();
     for(unsigned long int i = 0; i < numbWords; i += 1) {
@@ -207,17 +210,13 @@ void RemoveFromTree(TPatriciaTrie<unsigned long long int>* tree, char* str) {
 
 void SaveOrLoad(TPatriciaTrie<unsigned long long int>* tree, char* str) {
     
-    
     std::cin >> str;
     if(std::cin.eof()) {
         std::cout << "ERROR: EOF recieved!" << std::endl;
         exit(0);
     }
     
-    if(!strcmp("Exit", str)) {
-        exit(EXIT_SUCCESS);
-    }
-    else if(!strcmp("Save", str)) {
+    if(!strcmp("Save", str)) {
         std::cin >> str;
         if(std::cin.eof()) {
             std::cout << "ERROR: EOF recieved!" << std::endl;
@@ -233,6 +232,7 @@ void SaveOrLoad(TPatriciaTrie<unsigned long long int>* tree, char* str) {
         file.close();
     }
     else if(!strcmp("Load", str)) {
+        TPatriciaTrie<unsigned long long int>  tmp;
         std::cin >> str;
         if(std::cin.eof()) {
             std::cout << "ERROR: EOF recieved!" << std::endl;
@@ -243,10 +243,9 @@ void SaveOrLoad(TPatriciaTrie<unsigned long long int>* tree, char* str) {
             std::cout << "ERROR: can't open file!" << std::endl;
             exit(0);
         }
-        if(!tree->Empty()) {
-            tree->ClearTrie();
-        }
-        tree->LoadTrieCurrent(str, &file);
+        
+        tmp.LoadTrieCurrent(str, tmp.GetHead(), &file);
+        tree->SwapHead(&tmp);
         std::cout << "OK" << std::endl;
         file.close();
     }
@@ -275,17 +274,17 @@ void SearchInTree(TPatriciaTrie<unsigned long long int>* tree, char* str) {
 int main(int argc, char** argv) {
 
     TPatriciaTrie<unsigned long long int>   tree;
-    unsigned long long int                  numb = 0;
-    //char str[256];
-    while(1) {
+    //unsigned long long int                  numb = 0;
+    char str[256];
+    /*while(1) {
         std::cin >> numb;
         if(std::cin.eof()) {
             break;
         }
         Benchmark(&tree, numb);
-    }
+    }*/ 
     
-    /*while(true) {
+    while(true) {
         std::cin >> str;
         if(std::cin.eof()) {
             break;
@@ -303,6 +302,6 @@ int main(int argc, char** argv) {
             default:
                 SearchInTree(&tree, str);
         }
-    }*/
+    }
     return 0;
 }

@@ -1,0 +1,80 @@
+  12,46%  main     main                 [.] TPatriciaTrie::BitGet
+  12,29%  main     main                 [.] TPatriciaTrie::Insert
+   9,51%  main     libc-2.28.so         [.] _int_malloc
+   8,21%  main     main                 [.] std::uniform_int_distribution<char>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> >
+   7,76%  main     main                 [.] TPatriciaTrie::LookupNode
+   7,27%  main     main                 [.] TPatriciaTrie::Delete
+   5,90%  main     libc-2.28.so         [.] __strcmp_avx2
+   5,42%  main     libc-2.28.so         [.] __strlen_avx2
+   3,13%  main     libc-2.28.so         [.] _int_free
+   2,85%  main     main                 [.] TPatriciaTrie::RecursiveRemove
+   2,51%  main     main                 [.] TPatriciaTrie::LoadTrieBefore
+   2,50%  main     libc-2.28.so         [.] cfree@GLIBC_2.2.5
+   2,30%  main     main                 [.] TPatriciaTrie::SaveTrieBefore
+   1,66%  main     main                 [.] TPatriciaTrie::SaveTrieCurrent
+   1,50%  main     main                 [.] TPatriciaTrie::BitFirstDifferent
+   1,44%  main     libc-2.28.so         [.] malloc
+   1,07%  main     libc-2.28.so         [.] __memmove_avx_unaligned_erms
+   0,99%  main     main                 [.] Benchmark
+   0,90%  main     libstdc++.so.6.0.25  [.] std::ostream::write
+   0,87%  main     libstdc++.so.6.0.25  [.] std::istream::read
+   0,63%  main     main                 [.] std::__detail::_Mod<unsigned long, 2147483647ul, 16807ul, 0ul, true, true>::__calc
+   0,63%  main     libstdc++.so.6.0.25  [.] std::basic_filebuf<char, std::char_traits<char> >::xsputn
+   0,63%  main     libstdc++.so.6.0.25  [.] std::basic_streambuf<char, std::char_traits<char> >::xsgetn
+   0,61%  main     libstdc++.so.6.0.25  [.] std::basic_streambuf<char, std::char_traits<char> >::xsputn
+   0,56%  main     main                 [.] TPatriciaTrieItem::Initialize
+   0,45%  main     main                 [.] TPatriciaTrie::KeyCompare
+   0,44%  main     main                 [.] std::uniform_int_distribution<char>::param_type::b
+   0,44%  main     libstdc++.so.6.0.25  [.] std::basic_filebuf<char, std::char_traits<char> >::xsgetn
+   0,37%  main     libstdc++.so.6.0.25  [.] std::ostream::sentry::sentry
+   0,35%  main     main                 [.] std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul>::operator()
+   0,34%  main     libstdc++.so.6.0.25  [.] std::istream::sentry::sentry
+   0,30%  main     libc-2.28.so         [.] __strdup
+   0,29%  main     main                 [.] std::uniform_int_distribution<char>::param_type::a
+   0,28%  main     main                 [.] TPatriciaTrieItem::~TPatriciaTrieItem
+   0,26%  main     libstdc++.so.6.0.25  [.] std::ostream::sentry::~sentry
+   0,26%  main     main                 [.] std::__detail::__mod<unsigned long, 2147483647ul, 16807ul, 0ul>
+   0,25%  main     main                 [.] TPatriciaTrie::LoadTrieCurrent
+   0,22%  main     main                 [.] TPatriciaTrie::KeyCopy
+   0,19%  main     main                 [.] std::uniform_int_distribution<char>::operator()<std::linear_congruential_engine<unsigned long, 16807ul, 0ul, 2147483647ul> >
+   0,18%  main     main                 [.] TPatriciaTrieItem::TPatriciaTrieItem
+   0,16%  main     libc-2.28.so         [.] malloc_consolidate
+   0,16%  main     libc-2.28.so         [.] __strcpy_sse2_unaligned
+   0,11%  main     libstdc++.so.6.0.25  [.] 0x0000000000090734
+   0,11%  main     libstdc++.so.6.0.25  [.] 0x000000000008e110
+   0,10%  main     main                 [.] TPatriciaTrieItem::~TPatriciaTrieItem
+   0,10%  main     main                 [.] TPatriciaTrie::Lookup
+   0,06%  main     libstdc++.so.6.0.25  [.] operator new
+   0,06%  main     main                 [.] free@plt
+   0,06%  main     libc-2.28.so         [.] 0x00000000000223c4
+   0,06%  main     main                 [.] std::istream::read@plt
+   0,06%  main     libstdc++.so.6.0.25  [.] __cxxabiv1::__vmi_class_type_info::__do_dyncast
+   0,04%  main     main                 [.] std::ostream::write@plt
+   0,04%  main     libstdc++.so.6.0.25  [.] std::codecvt<char, char, __mbstate_t>::do_always_noconv
+   0,04%  main     main                 [.] strlen@plt
+   0,03%  main     [unknown]            [k] 0xffffffffa0a00a67
+   0,03%  main     ld-2.28.so           [.] _dl_relocate_object
+   0,03%  main     main                 [.] strcmp@plt
+   0,03%  main     libstdc++.so.6.0.25  [.] operator delete
+   0,03%  main     libstdc++.so.6.0.25  [.] 0x000000000008e274
+   0,03%  main     libstdc++.so.6.0.25  [.] std::__basic_file<char>::xsputn_2
+   0,03%  main     libstdc++.so.6.0.25  [.] std::basic_ios<char, std::char_traits<char> >::eof
+   0,03%  main     libstdc++.so.6.0.25  [.] 0x000000000008edd4
+   0,03%  main     libc-2.28.so         [.] __mpn_lshift
+   0,03%  main     libstdc++.so.6.0.25  [.] 0x0000000000090070
+   0,03%  main     libstdc++.so.6.0.25  [.] 0x000000000008e0a4
+   0,03%  main     main                 [.] operator delete@plt
+   0,03%  main     libstdc++.so.6.0.25  [.] operator delete
+   0,02%  main     libstdc++.so.6.0.25  [.] std::__basic_file<char>::close
+   0,02%  main     libstdc++.so.6.0.25  [.] 0x000000000008f400
+   0,02%  main     libstdc++.so.6.0.25  [.] 0x00000000000b98a0
+   0,02%  main     [unknown]            [k] 0xffffffffa0a00163
+   0,02%  main     libstdc++.so.6.0.25  [.] 0x0000000000090834
+   0,02%  main     libstdc++.so.6.0.25  [.] 0x000000000008e114
+   0,02%  main     libc-2.28.so         [.] _dl_addr
+   0,02%  main     libc-2.28.so         [.] __strchrnul_avx2
+   0,02%  main     ld-2.28.so           [.] do_lookup_x
+   0,01%  main     ld-2.28.so           [.] get_common_indeces.constprop.3
+   0,01%  main     libstdc++.so.6.0.25  [.] 0x0000000000090830
+   0,00%  main     libstdc++.so.6.0.25  [.] 0x000000000010f0d1
+   0,00%  main     libstdc++.so.6.0.25  [.] 0x000000000008df74

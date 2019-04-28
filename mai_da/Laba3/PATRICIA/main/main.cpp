@@ -56,7 +56,7 @@ double Benchmark(TPatriciaTrie* tree, unsigned long long int numbWords) {
     
     
     
-        /*std::ofstream file1("Btemp.bin", std::ofstream::binary);
+        std::ofstream file1("Btemp.bin", std::ofstream::binary);
         if(!file1) {
             std::cout << "ERROR: can't open file!" << std::endl;
             exit(0);
@@ -65,8 +65,9 @@ double Benchmark(TPatriciaTrie* tree, unsigned long long int numbWords) {
         tree->SaveTrieBefore(tree->GetHead(), &file1);
         end = clock();
         file1.close();
-        aTime = (double) (end - begin) / CLOCKS_PER_SEC;*/
-        //std::cout << "Avr. Time (Save - Before) - " << aTime << " sec" << std::endl;
+        aTime = (double) (end - begin) / CLOCKS_PER_SEC;
+        delta += aTime;
+        std::cout << "Avr. Time (Save v.2) - " << aTime << " sec" << std::endl;
         
         std::ofstream file2("Ctemp.bin", std::ofstream::binary);
         if(!file2) {
@@ -77,12 +78,11 @@ double Benchmark(TPatriciaTrie* tree, unsigned long long int numbWords) {
         tree->SaveTrieCurrent(tree->GetHead(), &file2);
         end = clock();
         file2.close();
-        delta += aTime;
         aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-        //std::cout << "Avr. Time (Save - Current) - " << aTime << " sec" << std::endl;
         delta -= aTime;
+        std::cout << "Avr. Time (Save v.1) - " << aTime << " sec" << std::endl;
         
-        /*std::ifstream file3("Btemp.bin", std::ofstream::binary);
+        std::ifstream file3("Btemp.bin", std::ofstream::binary);
         if(!file3) {
             std::cout << "ERROR: can't open file!" << std::endl;
             exit(0);
@@ -94,8 +94,9 @@ double Benchmark(TPatriciaTrie* tree, unsigned long long int numbWords) {
         tree->LoadTrieBefore(str,tree->GetHead(), &file3);
         end = clock();
         file3.close();
-        aTime = (double) (end - begin) / CLOCKS_PER_SEC;*/
-        //std::cout << "Avr. Time (Load - Before) - " << aTime << " sec" << std::endl;
+        aTime = (double) (end - begin) / CLOCKS_PER_SEC;
+        delta += aTime;
+        std::cout << "Avr. Time (Load v.2) - " << aTime << " sec" << std::endl;
         
         std::ifstream file4("Ctemp.bin", std::ofstream::binary);
         if(!file4) {
@@ -109,10 +110,9 @@ double Benchmark(TPatriciaTrie* tree, unsigned long long int numbWords) {
         tree->LoadTrieCurrent(str, &file4);
         end = clock();
         file4.close();
-        delta += aTime;
         aTime = (double) (end - begin) / CLOCKS_PER_SEC;
-        //std::cout << "Avr. Time (Load - Current) - " << aTime << " sec" << std::endl;
         delta -= aTime;
+        std::cout << "Avr. Time (Load v.1) - " << aTime << " sec" << std::endl;
         
         begin = clock();
         for(unsigned long int i = 0; i < numbWords; i += 1) {

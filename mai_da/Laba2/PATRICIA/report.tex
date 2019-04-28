@@ -109,10 +109,10 @@
 		\item void Print(TPatriciaTrieItem<T>*, int) - рекурсивно распечатывает структуру дерева. Была необходима для отладки работы;
 		\item void ClearTrie() - "обёртка" для метода RecursiveRemove;
 		\item bool Empty() - если дерево пустое - возвращает True, иначе - False;
-		\item SaveTrieCurrent (TPatriciaTrieItem<T>*, std::ofstream*) - записывает ключи и соответствующие им значения в файл без сохранения структуры в целом;
-		\item SaveTrieBefore (TPatriciaTrieItem<T>*, std::ofstream*) - записывает ключи и соответствующие им значения в файл с сохранением структуры в целом;
+		\item void SaveTrieCurrent (TPatriciaTrieItem<T>*, std::ofstream*) - записывает ключи и соответствующие им значения в файл без сохранения структуры в целом;
+		\item void SaveTrieBefore (TPatriciaTrieItem<T>*, std::ofstream*) - записывает ключи и соответствующие им значения в файл с сохранением структуры в целом;
 		\item void LoadTrieCurrent(char*, std::ifstream*) - Загрузка ключей и значений из файла и вставка их в дерево;
-		\item LoadTrieBefore(char*, TPatriciaTrieItem<T>*, std::ifstream*) - чтение из файла структуры дерева с его воссозданием;
+		\item void LoadTrieBefore(char*, TPatriciaTrieItem<T>*, std::ifstream*) - чтение из файла структуры дерева с его воссозданием;
 	\end{enumerate}
 \end{enumerate}
 

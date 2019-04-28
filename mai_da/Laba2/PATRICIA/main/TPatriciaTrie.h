@@ -4,6 +4,13 @@
 #include "TPatriciaTrieItem.h"
 #include <fstream>
 
+typedef struct {
+    char                    up;
+    int                     length;
+    unsigned long long int  data;
+    int                     index;
+} TPack;
+
 template <class T>
 class TPatriciaTrie {
     private:
@@ -30,13 +37,13 @@ class TPatriciaTrie {
         void                    Print(TPatriciaTrieItem<T>*, int);
         void                    ClearTrie();
         bool                    Empty();
-        void                    SetHead(TPatriciaTrie<T>*);
+        void                    SwapHead(TPatriciaTrie<T>*);
         
-        bool                    SaveTrieCurrent(TPatriciaTrieItem<T>*, std::ofstream*);
         bool                    SaveTrieBefore(TPatriciaTrieItem<T>*, std::ofstream*);
+        bool                    SaveTrieCurrent(TPatriciaTrieItem<T>*, std::ofstream*);
         
-        void                    LoadTrieCurrent(char*, std::ifstream*);
-        void                    LoadTrieBefore(char*, TPatriciaTrieItem<T>*, std::ifstream*);
+        void                    LoadTrieBefore(char*, std::ifstream*);
+        void                    LoadTrieCurrent(char*, TPatriciaTrieItem<T>*, std::ifstream*);
 };
 
 #endif

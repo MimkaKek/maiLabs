@@ -5,7 +5,7 @@ using namespace std;
 
 tParser::tParser(const char* gramma_name):lr(gr)
 {
-  PARSER_DEBUG=false;
+  PARSER_DEBUG=true;
   gr.loadFromFile(gramma_name);
   if(!gr){
    ferror_message = gr.getError();
