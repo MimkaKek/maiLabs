@@ -8,15 +8,19 @@
 
 template<class T> class TArray {
 public:
-	TArray();
-	void Add(std::shared_ptr<T> figure);
-	std::shared_ptr<T> Remove(int i);
-  void Print(int step) const;
- 	template <class A> friend std::ostream& operator<<(std::ostream& os, TArray<A>& array);
-	virtual ~TArray();
+	
+    TArray();
+	
+    void                    Add(std::shared_ptr<T>);
+	std::shared_ptr<T>      Remove(int);
+    void                    Print(int) const;
+ 	
+    template <class A> friend std::ostream& operator << (std::ostream&, TArray<A>&);
+	
+    virtual ~TArray();
 private:
-	unsigned int amount;
-  std::shared_ptr<T>* array;
+	unsigned int            amount;
+    std::shared_ptr<T>*     array;
 };
 
 #endif	/* TARRAY_H */

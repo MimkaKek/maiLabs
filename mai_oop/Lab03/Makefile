@@ -15,4 +15,4 @@ Rhombus.o: Rhombus.cpp
 	$(CC) $(CFLAGS) Rhombus.cpp
 TArray.o: TArray.cpp
 	$(CC) $(CFLAGS) TArray.cpp
-
+	
