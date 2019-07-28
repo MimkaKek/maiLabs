@@ -1,7 +1,10 @@
+OFILES=main.o Hexagon.o Pentagon.o Rhombus.o
+BINFILE=main.exe
+
 all: main.exe
 	rm *.o
-main.exe: main.o Hexagon.o Pentagon.o Rhombus.o
-	g++ -Wall main.o Hexagon.o Pentagon.o Rhombus.o -o main.exe
+main.exe: $(OFILES)
+	g++ -Wall $(OFILES) -o $(BINFILE)
 main.o: main.cpp
 	g++ -Wall -c main.cpp
 Hexagon.o: Hexagon.cpp

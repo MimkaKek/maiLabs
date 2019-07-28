@@ -13,7 +13,6 @@ int main(int argc, char** argv) {
             case '1':
                 std::cout << "Enter the side: ";
                 ptr = new Hexagon(std::cin);
-                Hexagon test(*ptr);
                 ptr->Print();
                 ptr->Square();
                 delete ptr;
@@ -31,6 +30,7 @@ int main(int argc, char** argv) {
                 ptr->Print();
                 ptr->Square();
                 delete ptr;
+                break;
             case 'e':
                 std::cout << "Exiting the program" << std::endl;
                 return 0;
