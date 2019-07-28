@@ -14,7 +14,7 @@ public:
 	virtual ~TArray();
 private:
 	unsigned int amount;
-	Rhombus* array;
+	Rhombus** array;
 };
 
 #endif	/* TARRAY_H */

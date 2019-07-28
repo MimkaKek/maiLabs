@@ -9,35 +9,37 @@ TArray::TArray() {
 
 void TArray::Add(Rhombus rhombus) {
 	if(amount == 0) {
-		array = new Rhombus(rhombus);
+        
+		array = (Rhombus**) malloc(sizeof(Rhombus*));
 		if(array == nullptr) {
 			std::cout << "Ошибка - нехватка памяти!" << std::endl;
 			exit(1);
 		}
-		amount++;
-		return;
+        array[0] = new Rhombus(rhombus);
 	}
 	else {
-		array = (Rhombus*) realloc(array, (amount + 1) * sizeof(Rhombus));
-		/*if(array == nullptr) {
+		array = (Rhombus**) realloc(array, (amount + 1) * sizeof(Rhombus*));
+		if(array == nullptr) {
 			std::cout << "Ошибка - нехватка памяти!" << std::endl;
 			exit(1);
-		}*/
-		array[amount++] = rhombus;
-		return;
-	}
+		}
+        array[amount] = new Rhombus(rhombus);
+    }
+    ++amount;
+    return;
 }
 
 void TArray::Remove(Rhombus rhombus) {
-	Rhombus tmp;
+	Rhombus* tmp;
 	for(unsigned int step = 0; step < amount; step++) {
-		if(rhombus == array[step]) {
+		if(rhombus == *(array[step])) {
 			for(unsigned int push = step; push < (amount - 1); push++) {
 				tmp = array[push];
 				array[push] = array[push + 1];
 				array[push + 1] = tmp;
 			}
-			array = (Rhombus*) realloc(array, (--amount) * sizeof(Rhombus));
+            --amount;
+			array = (Rhombus**) realloc(array, amount * sizeof(Rhombus*));
 			break;
 		}
 	}
@@ -49,7 +51,7 @@ unsigned int TArray::GetAmount() const {
 }
 
 Rhombus* TArray::GetRhombus(int pos) const {
-	return &array[pos];
+	return array[pos];
 }
 
 std::ostream& operator<<(std::ostream& os, TArray& array) {
@@ -59,6 +61,9 @@ std::ostream& operator<<(std::ostream& os, TArray& array) {
 	return os;
 }
 TArray::~TArray() {
-  delete array;
+    for(int i = 0; i < amount; ++i) {
+        delete array[i];
+    }
+    free(array);
 	std::cout << "Array destroyed!" << std::endl;
 }
