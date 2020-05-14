@@ -1,22 +1,24 @@
 #ifndef TITERATOR_H
-#define	TITERATOR_H
+#define TITERATOR_H
 #include <memory>
 #include <iostream>
 
 template <class node, class T>
 class TIterator {
 public:
-    TIterator(std::shared_ptr<T>* n)   {
+
+    TIterator(std::shared_ptr<T> n)   {
         node_ptr = n;
     }
+    
     T* operator * () {
-        return &(**node_ptr);
+        return *node_ptr;
     }
     T* operator -> () {
-        return &(**node_ptr);
+        return *node_ptr;
     }
     void operator ++ () {
-        ++node_ptr;
+        node_ptr = std::make_shared<T>(node_ptr->GetNext());
     }
     TIterator operator ++ (int) {
         TIterator iter(*this);
@@ -30,7 +32,7 @@ public:
         return !(*this == i);
     }
 private:
-    std::shared_ptr<T>* node_ptr;
+    std::shared_ptr<T> node_ptr;
 };
 
 #endif

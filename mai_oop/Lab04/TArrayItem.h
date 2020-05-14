@@ -1,21 +1,37 @@
-#ifndef TSTACKITEM_H
-#define	TSTACKITEM_H
+#ifndef TARRAYITEM_H
+#define TARRAYITEM_H
 #include <memory>
 
-template<class T> class TStackItem {
+template<class P>
+class TArray;
+
+template<class T>
+class TArrayItem {
 public:
-    TStackItem(const std::shared_ptr<T>& figure);
-    template<class A> friend std::ostream& operator<<(std::ostream& os, const TStackItem<A>& obj);
+
+    friend TArray<T>; //TODO
+
+    TArrayItem();
+    TArrayItem(const std::shared_ptr<T>& figure);
     
-    std::shared_ptr<TStackItem<T>> SetNext(std::shared_ptr<TStackItem> &next);
-    std::shared_ptr<TStackItem<T>> GetNext();
-    std::shared_ptr<T> GetValue() const;
-    void * operator new (size_t size);
-    void operator delete(void *p);
+    TArrayItem<T>*                      SetNext(TArrayItem<T>* next);
+    TArrayItem<T>*                      GetNext() const;
+
+    std::shared_ptr<T>                  SetItem(std::shared_ptr<T> &item);
+    std::shared_ptr<T>                  GetItem() const;
+
+
+    void* operator                      new (size_t size);
+    void  operator                      delete (void *p);
+
+    template<class A>
+    friend std::ostream& operator       << (std::ostream& os, const TArrayItem<A>& obj);
     
-    virtual ~TStackItem();
+    virtual ~TArrayItem();
 private:
-    std::shared_ptr<T> item;
+
+    std::shared_ptr<T>                  item;
+    TArrayItem<T>*                      next;
 };
 
-#endif	/* TSTACKITEM_H */
+#endif  /* TARRAYITEM_H */

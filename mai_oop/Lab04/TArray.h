@@ -1,33 +1,37 @@
 #ifndef TARRAY_H
-#define	TARRAY_H
+#define TARRAY_H
 
-#include "Rhombus.h"
-#include "Pentagon.h"
-#include "Hexagon.h"
 #include "TIterator.h"
+#include "TArrayItem.h"
 #include <memory>
 
 template<class T> class TArray {
 public:
-	TArray();
+    TArray();
   
-	void Push(std::shared_ptr<T> figure);
+    void                            Push(std::shared_ptr<T> figure);
+    std::shared_ptr<T>              Pop(int i);
   
-	std::shared_ptr<T> Pop(int i);
   
-  std::shared_ptr<T>* GetArray();
+    void                            Print(int step) const;
+    bool                            Empty();
   
-  void Print(int step) const;
-  bool Empty();
+    TIterator<TArray<T>,TArrayItem<T>>          begin();
+    TIterator<TArray<T>,TArrayItem<T>>          end();
   
-  TIterator<TArray<T>,T> begin();
-  TIterator<TArray<T>,T> end();
-  
- 	template <class A> friend std::ostream& operator<<(std::ostream& os, TArray<A>& array);
-	virtual ~TArray();
+    template <class A>
+    friend std::ostream& operator   << (std::ostream& os, TArray<A>& array);
+
+    virtual ~TArray();
 private:
-	unsigned int amount;
-  std::shared_ptr<T>* array;
+
+    void                            SetNewSize(unsigned int nSize);
+    
+    unsigned int                    Max;
+    unsigned int                    Current;
+
+    std::shared_ptr<TArrayItem<T>>  End;
+    std::shared_ptr<TArrayItem<T>>* Array;
 };
 
-#endif	/* TARRAY_H */
+#endif  /* TARRAY_H */
