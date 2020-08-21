@@ -8,7 +8,9 @@ const double EPSILON = 0.001;
 
 enum MENU {
     BEGIN_MENU,
-    TASK_MENU
+    TASK_MENU,
+    PART1_MENU,
+    PART2_MENU
 };
 
 enum MTypes {

@@ -1,32 +1,25 @@
 #include "matrix.hpp"
 
-TMatrix::TMatrix(): trans(false), ownM(true), bi(0), bj(0), ei(0), ej(0), li(0), lj(0), m(nullptr) {}
+TMatrix::TMatrix(): trans(false), own(true), a(0), b(0), m(nullptr) {}
 
 TMatrix::TMatrix(const TMatrix &orig) {
 
     rp    = orig.rp;
     trp   = orig.trp;
     trans = orig.trans;
-
-    bi = 0;
-    bj = 0;
-
-    ei = orig.ei - orig.bi;
-    ej = orig.ej - orig.bj;
-
-    li = orig.li;
-    lj = orig.lj;
+    own   = true;
     
-    ownM = true;
+    a = orig.a;
+    b = orig.b;
     
-    m = new double*[li];
-    for(size_t i = 0; i < li; ++i) {
-        m[i] = new double[lj];
+    m = new double*[a];
+    for(size_t i = 0; i < a; ++i) {
+        m[i] = new double[b];
     }
 
-    for(size_t soi = orig.bi, si = bi; si <= ei; ++soi, ++si) {
-        for(size_t soj = orig.bj, sj = bj; sj <= ej; ++soj, ++sj) {
-            m[si][sj] = orig.m[soi][soj];
+    for(size_t i = 0; i < a; ++i) {
+        for(size_t j = 0; j < b; ++j) {
+            m[i][j] = orig.m[i][j];
         }
     }
 }
@@ -34,125 +27,80 @@ TMatrix::TMatrix(const TMatrix &orig) {
 TMatrix::TMatrix(const TMatrix &orig, bool t) {
 
     trans = t;
-
-    bi = orig.bi;
-    bj = orig.bj;
-
-    ei = orig.ei;
-    ej = orig.ej;
-
-    li = orig.li;
-    lj = orig.lj;
+    own = false;
     
-    ownM = false;
+    a = orig.a;
+    b = orig.b;
     
     m = orig.m;
 }
 
-TMatrix::TMatrix(const TMatrix &orig, size_t i1, size_t j1, size_t i2, size_t j2, bool copy) {
+TMatrix::TMatrix(const TMatrix &orig, size_t i1, size_t j1, size_t i2, size_t j2) {
 
-    li = i2 - i1 + 1;
-    lj = j2 - j1 + 1;
+    a = i2 - i1 + 1;
+    b = j2 - j1 + 1;
     
     trans = 0;
+    own = true;
+    m = new double*[a];
+    for(size_t i = 0; i < a; ++i) {
+        m[i] = new double[b];
+    }
+
+    for(size_t soi = i1, si = 0; soi <= i2; ++soi, ++si) {
+        for(size_t soj = j1, sj = 0; soj <= j2; ++soj, ++sj) {
+            m[si][sj] = orig.m[soi][soj];
+        }
+    }
     
-    if(copy) {
-
-        bi = 0;
-        bj = 0;
-
-        ei = li - 1;
-        ej = lj - 1;
-        
-        ownM = true;
-        
-        m = new double*[li];
-        for(size_t i = 0; i < li; ++i) {
-            m[i] = new double[lj];
-        }
-
-        for(size_t soi = i1, si = bi; soi <= i2; ++soi, ++si) {
-            for(size_t soj = j1, sj = bj; soj <= j2; ++soj, ++sj) {
-                m[si][sj] = orig.m[soi][soj];
-            }
-        }
-        
-    }
-    else {
-
-        bi = i1;
-        bj = j1;
-
-        ei = i2;
-        ej = j2;
-
-        ownM = false;
-        
-        m = orig.m;
-    }
 }
 
 TMatrix::TMatrix(std::istream &is) {
 
     std::cout << "Enter the number of lines: ";
-    is >> li;
+    is >> a;
     std::cout << "Enter the number of columns: ";
-    is >> lj;
-   
-
-    bi = 0;
-    bj = 0;
-
-    ei = li - 1;
-    ej = lj - 1;
-    
-    ownM = true;
+    is >> b;
     
     trans = false;
+    own = true;
     
-    m = new double*[li];
-    for(size_t i = bi; i < li; ++i) {
-        m[i] = new double[lj];
+    m = new double*[a];
+    for(size_t i = 0; i < a; ++i) {
+        m[i] = new double[b];
     }
     
     std::cout << "Enter items of matrix:" << std::endl;
-    for(size_t i = bi; i <= ei; ++i) {
-        for(size_t j = bj; j <= ej; ++j) {
+    for(size_t i = 0; i < a; ++i) {
+        for(size_t j = 0; j < b; ++j) {
             is >> m[i][j];
         }
     }
 }
 
-TMatrix::TMatrix(size_t i, size_t j, double **matrix, bool copy) {
+TMatrix::TMatrix(size_t na, size_t nb, double **matrix, bool copy) {
 
-    li = i;
-    lj = j;
+    a = na;
+    b = nb;
 
-    bi = 0;
-    bj = 0;
-
-    ei = li - 1;
-    ej = lj - 1;
-
-    ownM = true;
     trans = false;
-    if(copy) {
-        m = new double*[li];
-        for(size_t i = bi; i < li; ++i) {
-            m[i] = new double[lj];
-        }
+    own = true;
 
+    if(copy) {
         if(matrix == nullptr) {
-            for(size_t si = bi; si <= ei; ++si) {
-                for(size_t sj = bj; sj <= ej; ++sj) {
-                    m[si][sj] = 0;
-                }
-            }
+            std::cout << "Error: matrix constructor get nullptr!" << std::endl;
+            exit(1);
         }
         else {
-            for(size_t si = bi; si <= ei; ++si) {
-                for(size_t sj = bj; sj <= ej; ++sj) {
-                    m[si][sj] = matrix[si][sj];
+
+            m = new double*[a];
+            for(size_t i = 0; i < a; ++i) {
+                m[i] = new double[b];
+            }
+            
+            for(size_t i = 0; i < a; ++i) {
+                for(size_t j = 0; j < b; ++j) {
+                    m[i][j] = matrix[i][j];
                 }
             }
         }
@@ -161,46 +109,41 @@ TMatrix::TMatrix(size_t i, size_t j, double **matrix, bool copy) {
         m = matrix;
     }
     
+    
 }
 
-TMatrix::TMatrix(size_t i, size_t j, size_t type) {
+TMatrix::TMatrix(size_t na, size_t nb, size_t type) {
 
-    li = i;
-    lj = j;
-
-    bi = 0;
-    bj = 0;
+    a = na;
+    b = nb;
     
-    ei = li - 1;
-    ej = lj - 1;
-    
-    ownM  = true;
     trans = false;
+    own = true;
     
-    m = new double*[li];
-    for(size_t i = bi; i < li; ++i) {
-        m[i] = new double[lj];
+    m = new double*[a];
+    for(size_t i = 0; i < a; ++i) {
+        m[i] = new double[b];
     }
 
     switch(type) {
         case ZERO_MATRIX:
-            for(size_t si = bi; si <= ei; ++si) {
-                for(size_t sj = bj; sj <= ej; ++sj) {
-                    m[si][sj] = 0;
+            for(size_t i = 0; i < a; ++i) {
+                for(size_t j = 0; j < b; ++j) {
+                    m[i][j] = 0;
                 }
             }
             break;
         case UNIT_MATRIX:
-            for(size_t si = bi; si <= ei; ++si) {
-                for(size_t sj = bj; sj <= ej; ++sj) {
-                    m[si][sj] = (si == sj ? 1 : 0);
+            for(size_t i = 0; i < a; ++i) {
+                for(size_t j = 0; j < b; ++j) {
+                    m[i][j] = (i == j ? 1 : 0);
                 }
             }
             break;
         default:
-            for(size_t si = bi; si <= ei; ++si) {
-                for(size_t sj = bj; sj <= ej; ++sj) {
-                    m[si][sj] = 0;
+            for(size_t i = 0; i < a; ++i) {
+                for(size_t j = 0; j < b; ++j) {
+                    m[i][j] = 0;
                 }
             }
             break;
@@ -208,9 +151,9 @@ TMatrix::TMatrix(size_t i, size_t j, size_t type) {
 }
 
 TMatrix::~TMatrix() {
-    if(m != nullptr && ownM) {
-        for(size_t si = bi; si < li; ++si) {
-            delete m[si];
+    if(m != nullptr && own) {
+        for(size_t i = 0; i < a; ++i) {
+            delete m[i];
         }
         delete m;
     }
@@ -218,21 +161,21 @@ TMatrix::~TMatrix() {
 
 double TMatrix::CalcNorm(unsigned char type) {
     
-    if(li == 1) {
+    if(a == 1) {
         switch(type) {
             case TYPE_1:
             {
                 double norm = 0;
-                for(size_t sj = bj; sj <= ej; ++sj) {
-                    norm += (m[bi][sj] < 0) ? -m[bi][sj] : m[bi][sj];
+                for(size_t j = 0; j < b; ++j) {
+                    norm += (m[0][j] < 0) ? -m[0][j] : m[0][j];
                 }
                 return norm;
             }
             case TYPE_2:
             {
                 double norm = 0;
-                for(size_t sj = bj; sj <= ej; ++sj) {
-                    norm += m[bi][sj] * m[bi][sj];
+                for(size_t j = 0; j < b; ++j) {
+                    norm += m[0][j] * m[0][j];
                 }
 
                 norm = sqrt(norm);
@@ -241,9 +184,9 @@ double TMatrix::CalcNorm(unsigned char type) {
             }
             case TYPE_C:
             {
-                double norm = m[bi][bj];
-                for(size_t sj = bj; sj <= ej; ++sj) {
-                    norm = (norm < m[bi][sj]) ? m[bi][sj] : norm;
+                double norm = m[0][0];
+                for(size_t j = 0; j < b; ++j) {
+                    norm = (norm < m[0][j]) ? m[0][j] : norm;
                 }
                 return norm;
             }
@@ -252,21 +195,21 @@ double TMatrix::CalcNorm(unsigned char type) {
                 exit(1);
         }
     }
-    else if(lj == 1) {
+    else if(b == 1) {
         switch(type) {
             case TYPE_1:
             {
                 double norm = 0;
-                for(size_t si = bi; si <= ei; ++si) {
-                    norm += (m[si][bj] < 0) ? -m[si][bj] : m[si][bj];
+                for(size_t i = 0; i < a; ++i) {
+                    norm += (m[i][0] < 0) ? -m[i][0] : m[i][0];
                 }
                 return norm;
             }
             case TYPE_2:
             {
                 double norm = 0;
-                for(size_t si = bi; si <= ei; ++si) {
-                    norm += m[si][bj] * m[si][bj];
+                for(size_t i = 0; i < a; ++i) {
+                    norm += m[i][0] * m[i][0];
                 }
 
                 norm = sqrt(norm);
@@ -275,9 +218,9 @@ double TMatrix::CalcNorm(unsigned char type) {
             }
             case TYPE_C:
             {
-                double norm = m[bi][bj];
-                for(size_t si = bi; si <= ei; ++si) {
-                    norm = (norm < m[si][bj]) ? m[si][bj] : norm;
+                double norm = m[0][0];
+                for(size_t i = 0; i < a; ++i) {
+                    norm = (norm < m[i][0]) ? m[i][0] : norm;
                 }
                 return norm;
             }
@@ -293,15 +236,15 @@ double TMatrix::CalcNorm(unsigned char type) {
                 double norm = 0;
                 double nextNorm;
 
-                for(size_t si = bi; si <= ei; ++si) {
-                    norm += (m[si][bj] < 0) ? -m[si][bj] : m[si][bj];
+                for(size_t i = 0; i < a; ++i) {
+                    norm += (m[i][0] < 0) ? -m[i][0] : m[i][0];
                 }
 
-                for(size_t sj = bj + 1; sj <= ej; ++sj) {
+                for(size_t j = 1; j < b; ++j) {
 
                     nextNorm = 0;
-                    for(size_t si = bi; si <= ei; ++si) {
-                        nextNorm += (m[si][sj] < 0) ? -m[si][sj] : m[si][sj];
+                    for(size_t i = 0; i < a; ++i) {
+                        nextNorm += (m[i][j] < 0) ? -m[i][j] : m[i][j];
                     }
 
                     norm = (norm < nextNorm) ? nextNorm : norm;
@@ -312,9 +255,9 @@ double TMatrix::CalcNorm(unsigned char type) {
             case TYPE_2:
             {
                 double norm = 0;
-                for(size_t si = bi; si <= ei; ++si) {
-                    for(size_t sj = bj; sj <= ej; ++sj) {
-                        norm += m[si][sj] * m[si][sj];
+                for(size_t i = 0; i < a; ++i) {
+                    for(size_t j = 0; j < b; ++j) {
+                        norm += m[i][j] * m[i][j];
                     }
                 }
 
@@ -327,15 +270,15 @@ double TMatrix::CalcNorm(unsigned char type) {
                 double norm = 0;
                 double nextNorm;
 
-                for(size_t sj = bj + 1; sj <= ej; ++sj) {
-                    norm += (m[bi][sj] < 0) ? -m[bi][sj] : m[bi][sj];
+                for(size_t j = 0; j < b; ++j) {
+                    norm += (m[0][j] < 0) ? -m[0][j] : m[0][j];
                 }
 
-                for(size_t si = bi + 1; si <= ei; ++si) {
+                for(size_t i = 1; i < a; ++i) {
 
                     nextNorm = 0;
-                    for(size_t sj = bj; sj <= ej; ++sj) {
-                        nextNorm += (m[si][sj] < 0) ? -m[si][sj] : m[si][sj];
+                    for(size_t j = 0; j < b; ++j) {
+                        nextNorm += (m[i][j] < 0) ? -m[i][j] : m[i][j];
                     }
 
                     norm = (norm < nextNorm) ? nextNorm : norm;
@@ -351,8 +294,6 @@ double TMatrix::CalcNorm(unsigned char type) {
 }
 
 void TMatrix::SwapInMatrix(size_t i1, size_t i2, unsigned char type) {
-
-    CreateOwnTable();
     
     if(type == STRING) {
         double* tmp = m[i1];
@@ -361,10 +302,10 @@ void TMatrix::SwapInMatrix(size_t i1, size_t i2, unsigned char type) {
     }
     else {
         double tmp;
-        for(size_t si = bi; si <= ei; ++si) {
-            tmp = m[si][i1];
-            m[si][i1] = m[si][i2];
-            m[si][i2] = tmp;
+        for(size_t i = 0; i < a; ++i) {
+            tmp = m[i][i1];
+            m[i][i1] = m[i][i2];
+            m[i][i2] = tmp;
         }
     }
     trp.push_back(type);
@@ -392,35 +333,34 @@ double TMatrix::GetDeterminant() {
     
     double answer = 0;
     
-    if(li != lj) {
+    if(a != b) {
         std::cout << "Error: the determinant of non-square matrix cannot be calculated!" << std::endl;
-        std::cout << li << 'x' << lj << ':' << std::endl;
+        std::cout << a << 'x' << b << ':' << std::endl;
         std::cout << *this;
         exit(1);
     }
     else {
-        if(li == 1) {
-            return m[bi][bj];
+        if(a == 1) {
+            return m[0][0];
         }
-        else if(li == 2) {
-            answer = m[bi][bj]     * m[bi + 1][bj + 1]
-                   - m[bi][bj + 1] * m[bi + 1][bj];
+        else if(a == 2) {
+            answer = m[0][0] * m[1][1] - m[0][1] * m[1][0];
         }
-        else if (li == 3) {
-            answer = m[bi][bj]     * m[bi + 1][bj + 1] * m[bi + 2][bj + 2]
-                   - m[bi][bj]     * m[bi + 1][bj + 2] * m[bi + 2][bj + 1]
-                   - m[bi][bj + 1] * m[bi + 1][bj]     * m[bi + 2][bj + 2]
-                   + m[bi][bj + 1] * m[bi + 1][bj + 2] * m[bi + 2][bj]
-                   + m[bi][bj + 2] * m[bi + 1][bj]     * m[bi + 2][bj + 1]
-                   - m[bi][bj + 2] * m[bi + 1][bj + 1] * m[bi + 2][bj];
+        else if (a == 3) {
+            answer = m[0][0] * m[1][1] * m[2][2]
+                   - m[0][0] * m[1][2] * m[2][1]
+                   - m[0][1] * m[1][0] * m[2][2]
+                   + m[0][1] * m[1][2] * m[2][0]
+                   + m[0][2] * m[1][0] * m[2][1]
+                   - m[0][2] * m[1][1] * m[2][0];
         }
         else {
 
-            size_t* leadElem = new size_t[li];
+            size_t* leadElem = new size_t[a];
             
-            for(size_t sj = 0; sj <= ej; ++sj) {
-                leadElem[bi] = sj;
-                answer += pow(-1, sj) * m[bi][sj] * this->recDeterminant(leadElem, bi + 1);
+            for(size_t j = 0; j < b; ++j) {
+                leadElem[0] = j;
+                answer += pow(-1, j) * m[0][j] * this->recDeterminant(leadElem, 1);
             }
 
             delete leadElem;
@@ -431,11 +371,11 @@ double TMatrix::GetDeterminant() {
 }
 
 size_t TMatrix::GetSA() const {
-    return li;
+    return a;
 }
 
 size_t TMatrix::GetSB() const {
-    return lj;
+    return b;
 }
 
 size_t TMatrix::GetRp() const {
@@ -455,12 +395,33 @@ TMatrix TMatrix::T() {
     return TMatrix(*this, (trans ? false : true));
 }
 
+void TMatrix::PrintPart(size_t i1, size_t j1, size_t i2, size_t j2) const {
+    
+    if(m != nullptr) {
+        for(size_t i = i1; i <= i2; ++i) {
+            for(size_t j = j1; j <= j2; ++j) {
+                std::cout << (trans ? m[j][i] : m[i][j]);
+                if(j != j2) {
+                    std::cout << ", ";
+                }
+                else {
+                    std::cout << std::endl;
+                }
+            }
+        }
+    }
+    else {
+        std::cout << "Empty!" << std::endl;
+    }
+}
+
 long long TMatrix::recDeterminant(size_t* leadElem, size_t nstr) {
-    size_t  sMinor = li - nstr;
+
+    size_t  sMinor = a - nstr;
     bool isFree = true;
 
     if(sMinor == 1) {
-        for(size_t j = 0; j < lj; ++j) {
+        for(size_t j = 0; j < b; ++j) {
             for(size_t i = 0; i < nstr; ++i) {
                 if(leadElem[i] == j) {
                     isFree = false;
@@ -477,9 +438,11 @@ long long TMatrix::recDeterminant(size_t* leadElem, size_t nstr) {
         }
     }
     else {
+
         long long   answer = 0;
-        size_t      nItem = 1;
-        for(size_t j = 0; j < lj; ++j) {
+        size_t      nItem  = 1;
+        
+        for(size_t j = 0; j < b; ++j) {
             for(size_t i = 0; i < nstr; ++i) {
                 if(leadElem[i] == j) {
                     isFree = false;
@@ -502,7 +465,7 @@ long long TMatrix::recDeterminant(size_t* leadElem, size_t nstr) {
 
     std::cout << "Error: calc determination failed!" << std::endl;
     std::cout << "Info: ";
-    for(size_t i = 0; i < li; ++i) {
+    for(size_t i = 0; i < a; ++i) {
         std::cout << leadElem[i] << ' ';
     }
     std::cout << std::endl;
@@ -512,50 +475,17 @@ long long TMatrix::recDeterminant(size_t* leadElem, size_t nstr) {
     exit(1);
 }
 
-void TMatrix::CreateOwnTable() {
-    if(!ownM) {
-
-        size_t obi = bi;
-        size_t obj = bj;
-
-        bi = 0;
-        bj = 0;
-
-        ei = li - 1;
-        ej = lj - 1;
-        
-        ownM = true;
-        
-        double** toCopy = m;
-        
-        m = new double*[li];
-        for(size_t si = bi; si < li; ++si) {
-            m[si] = new double[lj];
-        }
-
-        for(size_t soi = obi, si = bi; si <= ei; ++si, ++soi) {
-            for(size_t soj = obj, sj = bj; sj <= ej; ++sj, ++soj) {
-                m[si][sj] = toCopy[soi][soj];
-            }
-        }
-    }
-
-    return;
-}
-
 std::ostream& operator << (std::ostream &out, const TMatrix &matrix) {
 
-    size_t a = (matrix.trans ? matrix.lj : matrix.li);
-    size_t b = (matrix.trans ? matrix.li : matrix.lj);
-    size_t ei = a + (matrix.trans ? matrix.bj : matrix.bi) - 1;
-    size_t ej = b + (matrix.trans ? matrix.bi : matrix.bj) - 1;
+    size_t a = (matrix.trans ? matrix.b : matrix.a);
+    size_t b = (matrix.trans ? matrix.a : matrix.b);
     
     
     if(matrix.m != nullptr) {
-        for(size_t si = matrix.bi; si <= ei; ++si) {
-            for(size_t sj = matrix.bj; sj <= ej; ++sj) {
-                out << (matrix.trans ? matrix.m[sj][si] : matrix.m[si][sj]);
-                if(sj != ej) {
+        for(size_t i = 0; i < a; ++i) {
+            for(size_t j = 0; j < b; ++j) {
+                out << (matrix.trans ? matrix.m[j][i] : matrix.m[i][j]);
+                if(j != b - 1) {
                     out << ", ";
                 }
                 else {
@@ -573,25 +503,19 @@ std::ostream& operator << (std::ostream &out, const TMatrix &matrix) {
 
 bool operator == (const TMatrix &left, const TMatrix &right) {
 
-    size_t a1  = (left.trans) ? left.lj : left.li;
-    size_t b1 = (left.trans) ? left.li : left.lj;
-    size_t a2 = (right.trans) ? right.lj : right.li;
-    size_t b2  = (right.trans) ? right.li : right.lj;
+    size_t a1 = (left.trans)  ? left.b  : left.a;
+    size_t b1 = (left.trans)  ? left.a  : left.b;
+    size_t a2 = (right.trans) ? right.b : right.a;
+    size_t b2 = (right.trans) ? right.a : right.b;
 
     if(a1 != a2 || b1 != b2) {
         return false;
     }
     else {
-
-        size_t rbi = right.bi;
-        size_t rbj = right.bj;
-        size_t lbi = left.bi;
-        size_t lbj = left.bj;
         
-        for(size_t si = 0; si < a1; ++si) {
-            for(size_t sj = 0; sj < b1; ++sj) {
-                if((left.trans  ? left.m[lbi + sj][lbj + si]  : left.m[lbi + si][lbj + sj]) !=
-                   (right.trans ? right.m[rbi + sj][rbj + si] : right.m[rbi + si][rbj + sj])) {
+        for(size_t i = 0; i < a1; ++i) {
+            for(size_t j = 0; j < b1; ++j) {
+                if((left.trans ? left.m[j][i] : left.m[i][j]) != (right.trans ? right.m[j][i] : right.m[i][j])) {
                     return false;
                 }
             }
@@ -603,25 +527,19 @@ bool operator == (const TMatrix &left, const TMatrix &right) {
 
 bool operator != (const TMatrix &left, const TMatrix &right) {
 
-    size_t a1  = (left.trans) ? left.lj : left.li;
-    size_t b1 = (left.trans) ? left.li : left.lj;
-    size_t a2 = (right.trans) ? right.lj : right.li;
-    size_t b2  = (right.trans) ? right.li : right.lj;
+    size_t a1 = (left.trans)  ? left.b  : left.a;
+    size_t b1 = (left.trans)  ? left.a  : left.b;
+    size_t a2 = (right.trans) ? right.b : right.a;
+    size_t b2 = (right.trans) ? right.a : right.b;
 
     if(a1 != a2 || b1 != b2) {
         return true;
     }
     else {
-
-        size_t rbi = right.bi;
-        size_t rbj = right.bj;
-        size_t lbi = left.bi;
-        size_t lbj = left.bj;
         
-        for(size_t si = 0; si < a1; ++si) {
-            for(size_t sj = 0; sj < b1; ++sj) {
-                if((left.trans  ? left.m[lbi + sj][lbj + si]  : left.m[lbi + si][lbj + sj]) !=
-                   (right.trans ? right.m[rbi + sj][rbj + si] : right.m[rbi + si][rbj + sj])) {
+        for(size_t i = 0; i < a1; ++i) {
+            for(size_t j = 0; j < b1; ++j) {
+                if((left.trans ? left.m[j][i] : left.m[i][j]) != (right.trans ? right.m[j][i] : right.m[i][j])) {
                     return true;
                 }
             }
@@ -633,26 +551,21 @@ bool operator != (const TMatrix &left, const TMatrix &right) {
 
 const TMatrix operator + (const TMatrix &left, const TMatrix &right) {
 
-    size_t a1 = (left.trans) ?  left.lj : left.li;
-    size_t b1 = (left.trans) ?  left.li : left.lj;
-    size_t a2 = (right.trans) ? right.lj : right.li;
-    size_t b2 = (right.trans) ? right.li : right.lj;
+    size_t a1 = (left.trans)  ? left.b  : left.a;
+    size_t b1 = (left.trans)  ? left.a  : left.b;
+    size_t a2 = (right.trans) ? right.b : right.a;
+    size_t b2 = (right.trans) ? right.a : right.b;
     
     if(a1 == a2 && b1 == b2) {
 
         double** m = new double*[a1];
-        for(size_t si = 0; si < a1; ++si) {
-            m[si] = new double[b1];
+        for(size_t i = 0; i < a1; ++i) {
+            m[i] = new double[b1];
         }
         
-        size_t rbi = right.bi;
-        size_t rbj = right.bj;
-        size_t lbi = left.bi;
-        size_t lbj = left.bj;
-        for(size_t si = 0; si < a1; ++si) {
-            for(size_t sj = 0; sj < b1; ++sj) {
-                m[si][sj] = (left.trans ? left.m[lbi + sj][lbj + si] : left.m[lbi + si][lbj + sj]) +
-                            (right.trans ? right.m[rbi + sj][rbj + si] : right.m[rbi + si][rbj + sj]);
+        for(size_t i = 0; i < a1; ++i) {
+            for(size_t j = 0; j < b1; ++j) {
+                m[i][j] = (left.trans ? left.m[j][i] : left.m[i][j]) + (right.trans ? right.m[j][i] : right.m[i][j]);
             }
         }
 
@@ -668,33 +581,28 @@ const TMatrix operator + (const TMatrix &left, const TMatrix &right) {
 
 const TMatrix operator - (const TMatrix &left, const TMatrix &right) {
 
-    size_t a1 = (left.trans) ?  left.lj : left.li;
-    size_t b1 = (left.trans) ?  left.li : left.lj;
-    size_t a2 = (right.trans) ? right.lj : right.li;
-    size_t b2 = (right.trans) ? right.li : right.lj;
+    size_t a1 = (left.trans)  ? left.b  : left.a;
+    size_t b1 = (left.trans)  ? left.a  : left.b;
+    size_t a2 = (right.trans) ? right.b : right.a;
+    size_t b2 = (right.trans) ? right.a : right.b;
     
     if(a1 == a2 && b1 == b2) {
 
         double** m = new double*[a1];
-        for(size_t si = 0; si < a1; ++si) {
-            m[si] = new double[b1];
+        for(size_t i = 0; i < a1; ++i) {
+            m[i] = new double[b1];
         }
         
-        size_t rbi = right.bi;
-        size_t rbj = right.bj;
-        size_t lbi = left.bi;
-        size_t lbj = left.bj;
-        for(size_t si = 0; si < a1; ++si) {
-            for(size_t sj = 0; sj < b1; ++sj) {
-                m[si][sj] = (left.trans ? left.m[lbi + sj][lbj + si] : left.m[lbi + si][lbj + sj]) -
-                            (right.trans ? right.m[rbi + sj][rbj + si] : right.m[rbi + si][rbj + sj]);
+        for(size_t i = 0; i < a1; ++i) {
+            for(size_t j = 0; j < b1; ++j) {
+                m[i][j] = (left.trans ? left.m[j][i] : left.m[i][j]) - (right.trans ? right.m[j][i] : right.m[i][j]);
             }
         }
 
         return TMatrix(a1, b1, m, false);
     }
     else {
-        std::cout << "Error: matrix substraction!" << std::endl;
+        std::cout << "Error: incorrect matrix substraction!" << std::endl;
         std::cout << "Left matrix: " << a1 << "x" << b1 << std::endl;
         std::cout << "Right matrix: " << a2 << "x" << b2 << std::endl;
         exit(1);
@@ -703,34 +611,29 @@ const TMatrix operator - (const TMatrix &left, const TMatrix &right) {
 
 const TMatrix operator * (const TMatrix &left, const TMatrix &right) {
 
-    size_t a  = (left.trans) ? left.lj : left.li;
-    size_t b1 = (left.trans) ? left.li : left.lj;
-    size_t b2 = (right.trans) ? right.lj : right.li;
-    size_t c  = (right.trans) ? right.li : right.lj;
+    size_t a  = (left.trans)  ? left.b  : left.a;
+    size_t b1 = (left.trans)  ? left.a  : left.b;
+    size_t b2 = (right.trans) ? right.b : right.a;
+    size_t c  = (right.trans) ? right.a : right.b;
     
     if(b1 == b2) {
 
         double** m = new double*[a];
-        for(size_t si = 0; si < a; ++si) {
-            m[si] = new double[c];
+        for(size_t i = 0; i < a; ++i) {
+            m[i] = new double[c];
         }
         
-        for(size_t si = 0; si < a; ++si) {
-            for(size_t sj = 0; sj < c; ++sj) {
-                m[si][sj] = 0;
+        for(size_t i = 0; i < a; ++i) {
+            for(size_t j = 0; j < c; ++j) {
+                m[i][j] = 0;
             }
         }
-
-        size_t rbi = right.bi;
-        size_t rbj = right.bj;
-        size_t lbi = left.bi;
-        size_t lbj = left.bj;
         
-        for(size_t si = 0; si < a; ++si) {
-            for(size_t sj = 0; sj < c; ++sj) {
+        for(size_t i = 0; i < a; ++i) {
+            for(size_t j = 0; j < c; ++j) {
                 for(size_t summ = 0; summ < b1; ++summ) {
-                    m[si][sj] += ((left.trans)  ? left.m[lbi + summ][lbj + si]  :  left.m[lbi + si][lbj + summ]) *
-                                 ((right.trans) ? right.m[rbi + sj][rbj + summ] : right.m[rbi + summ][rbj + sj]);
+                    m[i][j] += ((left.trans)  ? left.m[summ][i]  :  left.m[i][summ]) *
+                               ((right.trans) ? right.m[j][summ] : right.m[summ][j]);
                 }
             }
         }
@@ -746,80 +649,79 @@ const TMatrix operator * (const TMatrix &left, const TMatrix &right) {
 }
 
 const TMatrix operator * (const double &left, const TMatrix &right) {
-
-    size_t li = right.li;
-    size_t lj = right.lj;
     
-    double** m = new double*[li];
-    for(size_t si = 0; si < li; ++si) {
-        m[si] = new double[lj];
+    size_t sa = right.a;
+    size_t sb = right.b;
+    
+    double** m = new double*[sa];
+    for(size_t i = 0; i < sa; ++i) {
+        m[i] = new double[sb];
     }
     
-    for(size_t si = 0, soi = right.bi; si < li; ++si, ++soi) {
-        for(size_t sj = 0, soj = right.bj; sj < lj; ++sj, ++soj) {
-            m[si][sj] = right.m[soi][soj] * left;
+    for(size_t i = 0; i < sa; ++i) {
+        for(size_t j = 0; j < sb; ++j) {
+            m[i][j] = right.m[i][j] * left;
         }
     }
     
-    return TMatrix(li, lj, m, false);
+    return TMatrix(sa, sb, m, false);
 }
 
 const TMatrix operator * (const TMatrix &left, const double &right) {
 
-    size_t li = left.li;
-    size_t lj = left.lj;
+    size_t sa = left.a;
+    size_t sb = left.b;
     
-    double** m = new double*[li];
-    for(size_t si = 0; si < li; ++si) {
-        m[si] = new double[lj];
+    double** m = new double*[sa];
+    for(size_t i = 0; i < sa; ++i) {
+        m[i] = new double[sb];
     }
     
-    for(size_t si = 0, soi = left.bi; si < li; ++si, ++soi) {
-        for(size_t sj = 0, soj = left.bj; sj < lj; ++sj, ++soj) {
-            m[si][sj] = left.m[soi][soj] * right;
+    for(size_t i = 0; i < sa; ++i) {
+        for(size_t j = 0; j < sb; ++j) {
+            m[i][j] = left.m[i][j] * right;
         }
     }
     
-    return TMatrix(li, lj, m, false);
+    return TMatrix(sa, sb, m, false);
 }
 
 const TMatrix operator / (const TMatrix &left, const double &right) {
 
-    size_t li = left.li;
-    size_t lj = left.lj;
+    size_t sa = left.a;
+    size_t sb = left.b;
     
-    double** m = new double*[li];
-    for(size_t si = 0; si < li; ++si) {
-        m[si] = new double[lj];
+    double** m = new double*[sa];
+    for(size_t i = 0; i < sa; ++i) {
+        m[i] = new double[sb];
     }
     
-    for(size_t si = 0, soi = left.bi; si < li; ++si, ++soi) {
-        for(size_t sj = 0, soj = left.bj; sj < lj; ++sj, ++soj) {
-            m[si][sj] = left.m[soi][soj] / right;
+    for(size_t i = 0; i < sa; ++i) {
+        for(size_t j = 0; j < sb; ++j) {
+            m[i][j] = left.m[i][j] / right;
         }
     }
     
-    return TMatrix(li, lj, m, false);
+    return TMatrix(sa, sb, m, false);
 }
 
-TMatrix& TMatrix::operator -= (const TMatrix &right) {
-        
-    size_t a1 = (trans) ?  lj : li;
-    size_t b1 = (trans) ?  li : lj;
-    size_t a2 = (right.trans) ? right.lj : right.li;
-    size_t b2 = (right.trans) ? right.li : right.lj;
+TMatrix& TMatrix::operator += (const TMatrix &right) {
+
+    size_t a1 = (trans)       ? b : a;
+    size_t b1 = (trans)       ? a : b;
+    size_t a2 = (right.trans) ? right.b : right.a;
+    size_t b2 = (right.trans) ? right.a : right.b;
     
     if(a1 == a2 && b1 == b2) {
 
-        if(!ownM) {
-            CreateOwnTable();
+        double** m = new double*[a1];
+        for(size_t i = 0; i < a1; ++i) {
+            m[i] = new double[b1];
         }
         
-        size_t rbi = right.bi;
-        size_t rbj = right.bj;
-        for(size_t si = 0; si < a1; ++si) {
-            for(size_t sj = 0; sj < b1; ++sj) {
-                (trans ? m[sj][si] : m[si][sj]) -= (right.trans ? right.m[rbi + sj][rbj + si] : right.m[rbi + si][rbj + sj]);
+        for(size_t i = 0; i < a1; ++i) {
+            for(size_t j = 0; j < b1; ++j) {
+                (trans ? m[j][i] : m[i][j]) += (right.trans ? right.m[j][i] : right.m[i][j]);
             }
         }
 
@@ -833,71 +735,105 @@ TMatrix& TMatrix::operator -= (const TMatrix &right) {
     }
 }
 
-TMatrix& TMatrix::operator *= (const TMatrix &right) {
+TMatrix& TMatrix::operator -= (const TMatrix &right) {
+        
+    size_t a1 = (trans)       ? b : a;
+    size_t b1 = (trans)       ? a : b;
+    size_t a2 = (right.trans) ? right.b : right.a;
+    size_t b2 = (right.trans) ? right.a : right.b;
     
-    size_t a  = (trans) ? lj : li;
-    size_t b1 = (trans) ? li : lj;
-    size_t b2 = (right.trans) ? right.lj : right.li;
-    size_t c  = (right.trans) ? right.li : right.lj;
-    
-    if(b1 == b2) {
+    if(a1 == a2 && b1 == b2) {
 
-        double** tmp = new double*[a];
-        for(size_t si = 0; si < a; ++si) {
-            tmp[si] = new double[c];
+        double** m = new double*[a1];
+        for(size_t i = 0; i < a1; ++i) {
+            m[i] = new double[b1];
         }
         
-        for(size_t si = 0; si < a; ++si) {
-            for(size_t sj = 0; sj < c; ++sj) {
-                tmp[si][sj] = 0;
+        for(size_t i = 0; i < a1; ++i) {
+            for(size_t j = 0; j < b1; ++j) {
+                (trans ? m[j][i] : m[i][j]) -= (right.trans ? right.m[j][i] : right.m[i][j]);
             }
         }
 
-        size_t rbi = right.bi;
-        size_t rbj = right.bj;
+        return *this;
+    }
+    else {
+        std::cout << "Error: incorrect matrix substraction!" << std::endl;
+        std::cout << "Left matrix: " << a1 << "x" << b1 << std::endl;
+        std::cout << "Right matrix: " << a2 << "x" << b2 << std::endl;
+        exit(1);
+    }
+}
+
+TMatrix& TMatrix::operator *= (const TMatrix &right) {
+
+    if(m == nullptr) {
+        std::cout << "Error: шncorrect matrix multiplication" << std::endl;
+        std::cout << "Get nullptr of left operand" << std::endl;
+        exit(1);
+    }
+
+    if(right.m == nullptr) {
+        std::cout << "Error: шncorrect matrix multiplication" << std::endl;
+        std::cout << "Get nullptr of right operand" << std::endl;
+        exit(1);
+    }
+    
+    size_t na  =       (trans) ?       b :       a;
+    size_t b1  =       (trans) ?       a :       b;
+    size_t b2  = (right.trans) ? right.b : right.a;
+    size_t nc  = (right.trans) ? right.a : right.b;
+    
+    if(b1 == b2) {
+
+        double** tmp = new double*[na];
+        for(size_t i = 0; i < na; ++i) {
+            tmp[i] = new double[nc];
+        }
         
-        for(size_t si = 0; si < a; ++si) {
-            for(size_t sj = 0; sj < c; ++sj) {
+        for(size_t i = 0; i < na; ++i) {
+            for(size_t j = 0; j < nc; ++j) {
+                tmp[i][j] = 0;
+            }
+        }
+        
+        for(size_t i = 0; i < na; ++i) {
+            for(size_t j = 0; j < nc; ++j) {
                 for(size_t summ = 0; summ < b1; ++summ) {
-                    tmp[si][sj] += ((trans)       ? m[bi + summ][bj + si]  :  m[bi + si][bj + summ]) *
-                                   ((right.trans) ? right.m[rbi + sj][rbj + summ] : right.m[rbi + summ][rbj + sj]);
+                    tmp[i][j] += ((trans)       ?       m[summ][i] :       m[i][summ]) *
+                                 ((right.trans) ? right.m[j][summ] : right.m[summ][j]);
                 }
             }
         }
 
-        if(ownM) {
-            for(size_t si = 0; si < li; ++si) {
-                delete m[si];
-            }
-            delete m;
+        for(size_t i = 0; i < a; ++i) {
+                delete m[i];
         }
+        delete m;
 
-        bi = 0;
-        bj = 0;
-        ei = a - 1;
-        ej = c - 1;
-        li = a;
-        lj = c;
+        m = tmp;
+        a = na;
+        b = nc;
+
+        rp.clear();
+        trp.clear();
 
         trans = false;
-        rp.clear();
-        m = tmp;
-        
         return *this;
     }
     else {
-        std::cout << "Error: incorrect matrix multiplication" << std::endl;
-        std::cout << "Left matrix: " << a << "x" << b1 << std::endl;
-        std::cout << "Right matrix: " << b2 << "x" << c << std::endl;
+        std::cout << "Error: шncorrect matrix multiplication" << std::endl;
+        std::cout << "Left matrix: " << na << "x" << b1 << std::endl;
+        std::cout << "Right matrix: " << b2 << "x" << nc << std::endl;
         exit(1);
     }
 }
 
 TMatrix& TMatrix::operator *= (const double &right) {
     
-    for(size_t si = 0; si < li; ++si) {
-        for(size_t sj = 0; sj < lj; ++sj) {
-            m[si][sj] *= right;
+    for(size_t i = 0; i < a; ++i) {
+        for(size_t j = 0; j < b; ++j) {
+            m[i][j] *= right;
         }
     }
     
@@ -906,9 +842,9 @@ TMatrix& TMatrix::operator *= (const double &right) {
 
 TMatrix& TMatrix::operator /= (const double &right) {
     
-    for(size_t si = 0; si < li; ++si) {
-        for(size_t sj = 0; sj < lj; ++sj) {
-            m[si][sj] /= right;
+    for(size_t i = 0; i < a; ++i) {
+        for(size_t j = 0; j < b; ++j) {
+            m[i][j] /= right;
         }
     }
     
@@ -921,36 +857,30 @@ TMatrix& TMatrix::operator = (const TMatrix& right) {
         return *this;
     }
 
-    if(m != nullptr && ownM) {
-        for(size_t si = bi; si <= ei; ++si) {
-            delete m[si];
+    if(m != nullptr) {
+        for(size_t i = 0; i < a; ++i) {
+            delete m[i];
         }
         delete m;
     }
     
-    bi = 0;
-    bj = 0;
+    a = right.a;
+    b = right.b;
 
-    li = right.li;
-    lj = right.lj;
-
-    ei = li - 1;
-    ej = lj - 1;
-    
+    trp = right.trp;
     rp = right.rp;
     
     trans = right.trans;
+    own = true;
 
-    m = new double*[li];
-    for(size_t si = 0; si < li; ++si) {
-        m[si] = new double[lj];
+    m = new double* [a];
+    for(size_t i = 0; i < a; ++i) {
+        m[i] = new double[b];
     }
 
-    size_t rbi = right.bi;
-    size_t rbj = right.bj;
-    for(size_t si = 0; si < li; ++si) {
-        for(size_t sj = 0; sj < lj; ++sj) {
-            m[si][sj] = right.m[rbi + si][rbj + sj];
+    for(size_t i = 0; i < a; ++i) {
+        for(size_t j = 0; j < b; ++j) {
+            m[i][j] = right.m[i][j];
         }
     }
 
@@ -1291,7 +1221,6 @@ std::pair<TMatrix, TMatrix> RotationMethod(TMatrix A, double eps) {
     
     for(size_t iter = 0; norm > eps; ++iter) {
 
-        
         mi = 0;
         mj = 1;
         
@@ -1320,7 +1249,9 @@ std::pair<TMatrix, TMatrix> RotationMethod(TMatrix A, double eps) {
         
         U *= nextU;
         
-        A = nextU.T() * A * nextU;
+        A = A * nextU;
+        
+        A = nextU.T() * A;
 
         norm = 0;
         for(size_t i = 0; i < sizeM; ++i) {

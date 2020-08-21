@@ -245,8 +245,8 @@ int main() {
                         TMatrix V1, V2;
                         for(size_t j1 = 0; j1 < sizeM; ++j1) {
                             for(size_t j2 = j1 + 1; j2 < sizeM; ++j2) {
-                                V1 = TMatrix(answer.second, 0, j1, sizeM - 1, j1, false);
-                                V2 = TMatrix(answer.second, 0, j2, sizeM - 1, j2, false);
+                                answer.second.PrintPart(0, j1, sizeM - 1, j1);
+                                answer.second.PrintPart(0, j2, sizeM - 1, j2);
                                 std::cout << "(V" << j1 << ", V" << j2 << ") = " << V1.T()*V2;
                             }
                         }

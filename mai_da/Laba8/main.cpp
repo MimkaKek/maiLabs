@@ -1,5 +1,31 @@
 #include <cmath>
 #include <iostream>
+#include <chrono>
+#include <random>
+
+class Timer {
+private:
+    // Псевдонимы типов используются для удобного доступа к вложенным типам
+    using clock_t = std::chrono::high_resolution_clock;
+    using second_t = std::chrono::duration<double, std::ratio<1> >;
+    
+    std::chrono::time_point<clock_t> m_beg;
+ 
+public:
+    Timer() : m_beg(clock_t::now())
+    {
+    }
+    
+    void reset()
+    {
+        m_beg = clock_t::now();
+    }
+    
+    double elapsed() const
+    {
+        return std::chrono::duration_cast<second_t>(clock_t::now() - m_beg).count();
+    }
+};
 
 int main() {
 
@@ -13,7 +39,7 @@ int main() {
     for(uint32_t i = 0; i < n; ++i) {
         coin[i] = 0;
     }
-
+    Timer t;
     uint32_t step = n - 1;
     while(sum != 0) {
 
@@ -30,5 +56,7 @@ int main() {
     for(uint32_t i = 0; i < n; ++i) {
         std::cout << coin[i] << std::endl;
     }
+
+    std::cout << "Time: " << t.elapsed() << " sec" << std::endl;
     return 0;
 }

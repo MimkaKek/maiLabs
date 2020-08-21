@@ -48,10 +48,10 @@ TMatrix SimpleIterations(TMatrix& X0, TMatrix A, TMatrix B, double eps) {
     double norm = 0, mnorm = 0;
     for(size_t pi = 0; pi < (POINTS - 1); ++pi) {
         for(size_t pj = 0; pj < (POINTS - 1); ++pj) {
-            DFi[0][0] = dSF11(X[0][0], X[1][0]);
-            DFi[0][1] = dSF12(X[0][0], X[1][0]);
-            DFi[1][0] = dSF21(X[0][0], X[1][0]);
-            DFi[1][1] = dSF22(X[0][0], X[1][0]);
+            DFi[0][0] = dSFi11(X[0][0], X[1][0]);
+            DFi[0][1] = dSFi12(X[0][0], X[1][0]);
+            DFi[1][0] = dSFi21(X[0][0], X[1][0]);
+            DFi[1][1] = dSFi22(X[0][0], X[1][0]);
             norm = DFi.CalcNorm();
             mnorm = (norm > mnorm ? norm : mnorm);
             X[1][0] += Delta[1][0];
@@ -61,7 +61,7 @@ TMatrix SimpleIterations(TMatrix& X0, TMatrix A, TMatrix B, double eps) {
 
     if(mnorm > 0) {
         std::cout << "Failed" << std::endl;
-        //return TMatrix(2, 1);
+        return TMatrix(2, 1);
     }
     
     TMatrix NX(2, 1);

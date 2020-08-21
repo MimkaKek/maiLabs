@@ -1,22 +1,32 @@
-TARGET=main
-CFLAGS=-Wall -Wextra -Werror -pedantic -Wno-sign-compare -Wno-long-long -lm -O3 -std=c++11
-DEBUG=-ggdb -g3
+#======================================
+# Параметры сборки
+# TARGET - название исполняемого файла
+#======================================
+TARGET  = main
+#======================================
+# Параметры компиляции
+# СС - компилятор
+# CFLAGS - флаги для компиляции
+#======================================
+CC      =g++
+CFLAGS  =-Wall -Wextra -Werror -pedantic -Wno-sign-compare -Wno-long-long -lm -O3 -c
+#======================================
+# Тут подхватываются файлы .cpp
+#======================================
+SRC    := main.cpp
+#======================================
+
+OBJS   := main.o
+
+.PHONY: all clean
 
 all: $(TARGET)
 
-$(TARGET): main.o
-	g++ main.o -o main $(CFLAGS)
-main.o:
-	g++ $(CFLAGS) -c main.cpp
-sffxtr.o:
-	g++ $(CFLAGS) -c sffxtr.cpp
-sffxtrn.o:
-	g++ $(CFLAGS) -c sffxtrn.cpp
+$(TARGET): $(OBJS)
+	$(CC) $(DEBUG) $^ -o $@
 	
-debug: main_dbg.o
-	g++ main_dbg.o -o $(TARGET)_dbg
-main_dbg.o: main.cpp
-	g++ -c main.cpp -o main_dbg.o $(DEBUG)
-	
+%.o: %.cpp 
+	$(CC) $(CFLAGS) $(DEBUG) $<
+
 clean:
-	rm -f *.o $(TARGET)
+	rm *.o $(TARGET)

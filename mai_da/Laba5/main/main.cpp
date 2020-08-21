@@ -13,100 +13,16 @@ const size_t            ALPHA_SIZE    = 27;
 const size_t            INTERNAL      = SIZE_MAX;
 const char              SENTINEL      = '$';
 
-class TList {
-    private:
-    
-        class TListItem {
-            private:
-            
-                TListItem*          next;
-                unsigned char       n;
-
-            public:
-                TListItem() {
-                    next = nullptr;
-                    n = 0;
-                };
-    
-                TListItem(char nletter, TListItem* item) {
-                    n = nletter;
-                    next = item;
-                };
-
-                ~TListItem() {
-                    if(next) {
-                        delete next;
-                    }
-                }
-
-                TListItem* getNext() {
-                    return next;
-                };
-
-                void setNext(TListItem* item) {
-                    next = item;
-                    return;
-                };
-
-                char getLetter() {
-                    return n;
-                };
-                
-        };
-
-        TListItem*      begin;
-        
-    public:
-
-        TList() {
-            begin = new TListItem(END, nullptr);
-        };
-        
-        void addItem(char letter) {
-            
-            TListItem* curr = begin->getNext();
-            TListItem* prev = begin;
-            
-            while(curr != nullptr && letter > curr->getLetter()) {
-                prev = curr;
-                curr = curr->getNext();
-            }
-            
-            TListItem* newItem = new TListItem(letter, curr);
-            prev->setNext(newItem);
-            return;
-        };
-
-        unsigned char popItem() {
-            TListItem* toDelete = begin->getNext();
-
-            if(toDelete == nullptr) {
-                return END;
-            }
-            
-            unsigned char letter = toDelete->getLetter();
-            letter = (letter == SENTINEL) ? GET_SENTINEL : letter - 'a';
-            begin->setNext(toDelete->getNext());
-            toDelete->setNext(nullptr);
-            delete toDelete;
-            return letter;
-        };
-
-        ~TList() {
-            delete begin;
-        }
-};
-
 class TNode {
     public:
         TNode*                                      edges[ALPHA_SIZE];
-        TList                                       list;
         size_t                                      left;
         size_t*                                     right;
         size_t                                      number;
+        size_t                                      bSearch;
         TNode*                                      suffLink;
 
-        TNode(size_t l, size_t *r, size_t n, TNode *node) : edges{}, left(l), right(r), number(n), suffLink(node) {
+        TNode(size_t l, size_t *r, size_t n, TNode *node) : edges{}, left(l), right(r), number(n), bSearch(ALPHA_SIZE), suffLink(node) {
         }
 
         TNode* getEdge(char letter) {
@@ -117,6 +33,7 @@ class TNode {
         void setEdge(char letter, TNode* node) {
             size_t pos = (letter == SENTINEL) ? 26 : letter - 'a';
             edges[pos] = node;
+            bSearch = (bSearch > pos) ? pos : bSearch;
             return;
         };
         
@@ -130,15 +47,6 @@ class TNode {
         
         size_t getLength() {
             return getRight() - getLeft() + 1;
-        };
-
-        void addLetter(char letter) {
-            list.addItem(letter);
-            return;
-        };
-
-        unsigned char getLetter() {
-            return list.popItem();
         };
 };
 
@@ -189,7 +97,6 @@ class TSuffTree {
                 if (activeNode->getEdge(str[activeEdge]) == nullptr) {
                     // Если нет ребра с таким символом - создаём лист
                     activeNode->setEdge(str[activeEdge], new TNode(phaseNum, &end, suffNum, nullptr));
-                    activeNode->addLetter(str[activeEdge]);
         
                     suffNum++;
                     remain--;
@@ -245,20 +152,58 @@ class TSuffTree {
         
         void Task() {
 
-            unsigned char pos = root->getLetter();
-            if(pos == GET_SENTINEL) {
-                pos = root->getLetter();
-            }
+            std::stack<TNode*> path;
+            TNode*             state = root;
+            size_t             len = 0;
+            size_t             needed = (str.length() - 1) / 2;
+            size_t             p;
+            bool               cont = false;
 
-            while(pos != END) {
-                
-                if(GetLowest(root->edges[pos]->getLength(), root->edges[pos])) {
-                        std::cout << answer << std::endl;
-                        return;
+            while(true) {
+                while(len < needed) {
+                    
+                    for(size_t p = state->bSearch; p < ALPHA_SIZE; ++p) {
+                        if(state->edges[p]) {
+                            path.push(state);
+                            state->bSearch = p + 1;
+                            state = state->edges[p];
+                            len += state->getLength();
+                            cont = true;
+                            break;
+                        }
+                    }
+                    
+                    if(cont) {
+                        cont = false;
+                        continue;
+                    }
+                    
+                    len -= state->getLength();
+                    state = path.top();
+                    path.pop();
                 }
 
-                pos = root->getLetter();
+                p = state->getRight() - len + needed;
+                if(str[p] == '$') {
+                    len -= state->getLength();
+                    state = path.top();
+                    path.pop();
+                    continue;
+                }
+                
+                while(true) {
+                    answer[ansPos] = str[p];
+                    if(ansPos == 0) {
+                        break;
+                    }
+                    --ansPos;
+                    --p;
+                }
+
+                break;
             }
+            std::cout << answer << std::endl;
+            
             return;
         };
         
@@ -277,41 +222,7 @@ class TSuffTree {
         size_t              remain;
         size_t              suffNum;
         
-        bool GetLowest(size_t strLength, TNode* node) {
-
-            if(strLength >= (str.length() / 2)) {
-                size_t delta = strLength - (str.length() / 2);
-                for(size_t p = node->getRight() - delta; p >= node->getLeft(); --p) {
-                    answer[ansPos] = str[p];
-                    --ansPos;
-                }
-                return true;
-            }
-
-
-            unsigned char pos = node->getLetter();
-            if(pos == GET_SENTINEL) {
-                pos = node->getLetter();
-            }
-
-            while(pos != END) {
-                
-                if(GetLowest(strLength + node->edges[pos]->getLength(), node->edges[pos])) {
-                    for(size_t p = node->getRight(); p >= node->getLeft(); --p) {
-                        answer[ansPos] = str[p];
-                        --ansPos;
-                        
-                        if(p == 0) {
-                            break;
-                        }
-                    }
-                    return true;
-                }
-
-                pos = node->getLetter();
-            }
-            return false;
-        };
+        
         
         TNode* Insert(TNode *toInsert) {
             TNode *edge = activeNode->getEdge(str[activeEdge]);
@@ -320,12 +231,10 @@ class TSuffTree {
             TNode *newInternalNode = new TNode(left, (size_t *)(left + activeLength - 1), INTERNAL, root);
 
             newInternalNode->setEdge(str[left + activeLength], edge);
-            newInternalNode->addLetter(str[left + activeLength]);
 
             edge->left = left + activeLength;
 
             newInternalNode->setEdge(str[toInsert->left], toInsert);
-            newInternalNode->addLetter(str[toInsert->left]);
 
             activeNode->setEdge(str[activeEdge], newInternalNode);
 

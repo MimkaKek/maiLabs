@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
+#include "matrix.hpp"
 
 //=========================================================================================================
 
@@ -52,6 +54,7 @@ class TTableOfPoints {
         void PrintTable();
         bool IsEmpty();
         size_t getSize();
+        double getP(size_t n, char t = 'x');
         
         friend  std::ostream&               operator << (std::ostream &out, const TTableOfPoints &table);
                 std::pair<double, double>   operator [] (const size_t n);
@@ -110,7 +113,14 @@ class TSplines {
     private:
         TTableOfPoints*                     table;
         std::vector<std::vector<double>>    coef;
+
+        double H(size_t i);
 };
+
+//=========================================================================================================
+
+void Derivative(TTableOfPoints* table, double x);
+void Integral(double (*func)(double), double x1, double x2, double h1, double h2);
 
 //=========================================================================================================
 

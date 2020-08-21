@@ -28,4 +28,14 @@ double SFi2(double x1, double x2);
 double dSFi21(double x1, double x2);
 double dSFi22(double x1, double x2);
 
+double G1(double x, double y, double z);
+double F1(double x, double y, double z);
+
+double G2(double x, double y, double z);
+double F2(double x, double y, double z);
+
+double TrueODE1(double x);
+double TrueODE2(double x);
+
+double CheckFunc(double x, double y, double z);
 #endif

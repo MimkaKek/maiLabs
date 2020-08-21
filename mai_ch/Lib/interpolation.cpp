@@ -299,6 +299,50 @@ std::pair<double, double> TTableOfPoints::operator [] (const size_t n) {
     return std::pair<double, double>(head->x, head->y);
 }
 
+double TTableOfPoints::getP(size_t n, char t) {
+    if(head == nullptr) {
+        head = &begin;
+        pos = 0;
+    }
+
+    n += 1;
+    
+    if(n > size) {
+        std::cout << "Error: out of borders!" << std::endl;
+        return 0;
+    }
+
+    long long delta = n - pos;
+    if(delta >= 0) {
+        if(delta > (size / 2)) {
+            head = end;
+            pos = size;
+        }
+    }
+    else {
+        if(delta < -(size / 2)) {
+            head = &begin;
+            pos = 0;
+        }
+    }
+
+    delta = n - pos;
+    if(delta >= 0) {
+        while(pos != n) {
+            head = head->next;
+            ++pos;
+        }
+    }
+    else {
+        while(pos != n) {
+            head = head->prev;
+            --pos;
+        }
+    }
+
+    return (t == 'x') ? head->x : head->y;
+}
+
 std::ostream& operator << (std::ostream &out, const TTableOfPoints &table) {
 
     out << " <<TABLE>> " << std::endl;
@@ -328,18 +372,6 @@ TLagrangeInter::TLagrangeInter(): table(nullptr) {}
 
 TLagrangeInter::TLagrangeInter(TTableOfPoints* nTable) {
     table = nTable;
-    
-    size_t size = table->getSize();
-    double nCoef;
-    for(size_t i = 1; i <= size; ++i) {
-        nCoef = (*table)[i].second;
-        for(size_t j = 1; j <= size; ++j) {
-            if(i != j) {
-                nCoef /= ( (*table)[i].first - (*table)[j].first );
-            }
-        }
-        coef.push_back(nCoef);
-    }
 }
 
 TLagrangeInter::~TLagrangeInter() {}
@@ -383,22 +415,6 @@ TNewtonInter::TNewtonInter(): table(nullptr) {}
 
 TNewtonInter::TNewtonInter(TTableOfPoints* nTable) {
     table = nTable;
-    
-    size_t size = table->getSize();
-
-    coef.clear();
-    coef.resize(size);
-    for(size_t i = 1; i <= size; ++i) {
-        coef[0].push_back((*table)[i].second);
-    }
-
-    size_t nf;
-    for(size_t i = 1; i < size; ++i) {
-        nf = size - i; 
-        for(size_t j = 0; j < nf; ++j) {
-            coef[i].push_back(coef[i - 1][j + 1] - coef[i - 1][j]);
-        }
-    }
 }
 
 TNewtonInter::~TNewtonInter() {}
@@ -439,56 +455,210 @@ double TNewtonInter::operator () (double& x) {
 
 TSplines::TSplines(TTableOfPoints* nTable) {
     table = nTable;
-    
-    size_t size = table->getSize();
-
-    coef.clear();
-    coef.resize(size);
-    for(size_t i = 1; i <= size; ++i) {
-        coef[0].push_back((*table)[i].second);
-    }
-
-    size_t nf;
-    for(size_t i = 1; i < size; ++i) {
-        nf = size - i; 
-        for(size_t j = 0; j < nf; ++j) {
-            coef[i].push_back(coef[i - 1][j + 1] - coef[i - 1][j]);
-        }
-    }
 }
 
 TSplines::~TSplines() {}
 
 void TSplines::Update() {
-    size_t size = table->getSize();
+    size_t size = table->getSize() - 1;
 
     coef.clear();
     coef.resize(size);
-    for(size_t j = 1; j <= size; ++j) {
-        coef[0].push_back((*table)[j].second);
+    for(size_t i = 0; i < size; ++i) {
+        coef[i].clear();
+        coef[i].resize(4);
+    }
+
+    TMatrix SC(size - 1, size - 1, ZERO_MATRIX);
+    TMatrix SB(size - 1, 1, ZERO_MATRIX);
+
+    SC[0][0] = 2*(H(1) + H(2));
+    SC[0][1] = H(2);
+    SB[0][0] = 3 * ( ((table->getP(2, 'y') - table->getP(1, 'y')) / H(2)) - ((table->getP(1, 'y') - table->getP(0, 'y')) / H(1)) );
+    
+    for(size_t i = 3; i <= size - 1; ++i) {
+        SC[i - 2][i - 3] = H(i - 1);
+        SC[i - 2][i - 2] = 2 * (H(i - 1) + H(i));
+        SC[i - 2][i - 1] = H(i);
+        SB[i - 2][0]     = 3 * ( ((table->getP(i, 'y') - table->getP(i - 1, 'y')) / H(i)) - ((table->getP(i - 1, 'y') - table->getP(i - 2, 'y')) / H(i - 1)) );
+    }
+
+    SC[size - 2][size - 3] = H(size - 1);
+    SC[size - 2][size - 2] = 2 * (H(size - 1) + H(size));
+    SB[size - 2][0] = 3 * ( ((table->getP(size, 'y') - table->getP(size - 1, 'y')) / H(size)) - ((table->getP(size - 1, 'y') - table->getP(size - 2, 'y')) / H(size - 1)) );
+
+    TMatrix C(size, 1), tmp;
+
+    tmp = SweepMethod(SC, SB);
+
+    for(size_t i = 1; i < size; ++i) {
+        C[i][0] = tmp[i - 1][0];
     }
     
-    size_t nf;
-    for(size_t i = 1; i < size; ++i) {
-        nf = size - i;
-        for(size_t j = 0; j < nf; ++j) {
-            coef[i].push_back((coef[i - 1][j + 1] - coef[i - 1][j]) /
-                              (((*table)[j + i + 1].first) - ((*table)[j + 1].first)));
-        }
+    for(size_t i = 1; i <= size; ++i) {
+        coef[i - 1][0] = table->getP(i - 1, 'y');
+        coef[i - 1][2] = C[i - 1][0];
     }
+
+    for(size_t i = 1; i <= size - 1; ++i) {
+        coef[i - 1][1] = ( ((table->getP(i, 'y') - table->getP(i - 1, 'y')) / H(i)) - ((H(i) * (C[i][0] + 2 * C[i - 1][0])) / 3) );
+    }
+    coef[size - 1][1] = ( ((table->getP(size, 'y') - table->getP(size - 1, 'y')) / H(size)) - ((H(size) * 2 * C[size - 1][0]) / 3) );
+
+    for(size_t i = 1; i <= size - 1; ++i) {
+        coef[i - 1][3] = (C[i][0] - C[i - 1][0]) / (3*H(i));
+    }
+    coef[size - 1][3] = (-C[size - 1][0]) / (3 * H(size));
+
+    for(size_t i = 0; i < size; ++i) {
+        for(size_t j = 0; j < 4; ++j) {
+            std::cout << coef[i][j] << ' ';
+        }
+        std::cout << std::endl;
+    }
+    return;
+}
+
+inline double TSplines::H(size_t i) {
+    return table->getP(i) - table->getP(i - 1);
 }
 
 double TSplines::operator () (double& x) {
-    size_t size = coef.size();
-    double y = 0;
-    double fx;
-    for(size_t i = 0; i < size; ++i) {
-        fx = coef[i][0];
-        for(size_t j = i; j > 0; --j) {
-                fx *= (x - (*table)[j].first);
-        }
-        y += fx;
+
+    size_t p = 0;
+    size_t size = table->getSize();
+    
+    while(x > table->getP(p) && p < size) {
+        ++p;
     }
 
-    return y;
+    if(p == 0 || p >= size) {
+        std::cout << "Out of borders!" << std::endl;
+        return 0;
+    }
+
+    return coef[p - 1][0] +
+           coef[p - 1][1] * (x - table->getP(p - 1)) +
+           coef[p - 1][2] * pow((x - table->getP(p - 1)), 2) +
+           coef[p - 1][3] * pow((x - table->getP(p - 1)), 3);
+}
+
+void Derivative(TTableOfPoints* table, double x) {
+
+    size_t p = 0;
+    size_t size = table->getSize();
+    
+    while(x > table->getP(p) && p < size) {
+        ++p;
+    }   
+
+    if(p == 0 || p >= size) {
+        std::cout << "Out of borders!" << std::endl;
+        return;
+    }
+
+    double x1 = table->getP(p - 1);
+    double y1 = table->getP(p - 1, 'y');
+    double x2 = table->getP(p);
+    double y2 = table->getP(p, 'y');
+
+    double der11 = (y2 - y1) / (x2 - x1);
+    if(x != table->getP(p)) {
+        std::cout << "1 derivative (1 approx): " << der11 << std::endl;
+    }
+    
+
+    if(p + 1 < size) {
+        double x3 = table->getP(p + 1);
+        double y3 = table->getP(p + 1, 'y');
+
+        double d1 = der11;
+        double d2 = (y3 - y2) / (x3 - x2);
+
+        if(x == table->getP(p)) {
+            std::cout << "1 derivative (1 approx, left side): " << d1 << std::endl;
+            std::cout << "1 derivative (1 approx, right side): " << d2 << std::endl;
+        }
+        
+        double der12 = d1 + ((d2 - d1) / (x3 - x1)) * (2 * x - x1 - x2);
+
+        std::cout << "1 derivative (2 approx): " << der12 << std::endl;
+
+        double der22 = ((d2 - d1) / (x3 - x1)) * 2;
+
+        std::cout << "2 derivative: " << der22 << std::endl;
+    }
+    
+    return;
+}
+
+void Integral(double (*func)(double), double x1, double x2, double h1, double h2) {
+
+    double x = x1;
+    double i = 0;
+    
+    while(x < x2) {
+        i += func((x + x + h1) / 2);
+        x += h1;
+    }
+
+    i *= h1;
+    std::cout << "(Rectangle method, h1) I = " << i << std::endl;
+
+    x = x1;
+    i = 0;
+    
+    while(x < x2) {
+        i += func((x + x + h2) / 2);
+        x += h2;
+    }
+
+    i *= h2;
+    std::cout << "(Rectangle method, h2) I = " << i << std::endl;
+
+    x = x1;
+    i = 0;
+
+    while(x < x2) {
+        i += func(x) + func(x + h1);
+        x += h1;
+    }
+
+    i *= h1;
+    i /= 2;
+    std::cout << "(Trapezoid method, h1) I = " << i << std::endl;
+
+    x = x1;
+    i = 0;
+    
+    while(x < x2) {
+        i += func(x) + func(x + h2);
+        x += h2;
+    }
+
+    i *= h2;
+    i /= 2;
+    std::cout << "(Trapezoid method, h2) I = " << i << std::endl;
+    
+    while(x < x2) {
+        i += func(x) + func(x + h1) + 4 * func(x + (h1 / 2));
+        x += h1;
+    }
+
+    i *= h1;
+    i /= 3;
+    std::cout << "(Simpson method, h1)   I = " << i << std::endl;
+
+    x = x1;
+    i = 0;
+    
+    while(x < x2) {
+        i += func(x) + func(x + h2) + 4 * func(x + (h2 / 2));
+        x += h2;
+    }
+
+    i *= h2;
+    i /= 3;
+    std::cout << "(Simpson method, h2)   I = " << i << std::endl;
+    return;
 }

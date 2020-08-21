@@ -1,18 +1,47 @@
-WAY=../Lib/
-CC=g++
-CFLAGS=-pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm -c
-OFILES=main.o matrix.o interpolation.o
+#======================================
+# Параметры сборки
+# TARGET - название исполняемого файла
+# ILIB - директория, откуда могут браться библиотеки
+# LSRC - нужные исходики, которые лежат в библиотеке
+#======================================
+TARGET  = main
+ILIB    = ../Lib/
+LSRC   := matrix.cpp interpolation.cpp 
+#======================================
 
-all: main
+
+#======================================
+# Параметры компиляции
+# СС - компилятор
+# CFLAGS - флаги для компиляции
+#======================================
+CC      = g++
+CFLAGS  = -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm -c
+#======================================
+
+LSRC   := $(LSRC: %=$(ILIB)%)
+
+#======================================
+# Тут подхватываются файлы .cpp
+#======================================
+SRC    := $(wildcard *.cpp) $(LSRC)
+#======================================
+
+OBJS   := $(SRC:$(ILIB)%=%)
+OBJS   := $(OBJS:.cpp=.o)
+
+.PHONY: all clean
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(DEBUG) $^ -o $@
+	
+%.o: %.cpp %.hpp
+	$(CC) $(CFLAGS) $(DEBUG) $<
+	
+%.o: $(ILIB)%.cpp $(ILIB)%.hpp
+	$(CC) $(CFLAGS) $(DEBUG) $<
 
 clean:
-	rm *.o main
-
-main: $(OFILES)
-	$(CC) $(OFILES) -o main
-main.o:
-	$(CC) $(CFLAGS) main.cpp
-matrix.o:
-	$(CC) $(CFLAGS) $(WAY)matrix.cpp
-interpolation.o:
-	$(CC) $(CFLAGS) $(WAY)interpolation.cpp
+	rm *.o $(TARGET)

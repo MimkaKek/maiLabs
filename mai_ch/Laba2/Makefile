@@ -1,20 +1,42 @@
-WAY=../Lib/
-CC=g++
-CFLAGS=-pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm -c
-OFILES=main.o matrix.o aproxcalc.o functions.o
+TARGET  = main
+ILIB    = ../Lib/
+LSRC   := matrix.cpp aproxcalc.cpp functions.cpp
 
-all: main
+CC = g++
+CFLAGS = -pedantic -Wall -Werror -Wno-sign-compare -Wno-long-long -lm -c
+
+LSRC   := $(LSRC: %=$(ILIB)%)
+
+SRC    := $(wildcard *.cpp) $(LSRC)
+
+OBJS   := $(SRC:$(ILIB)%=%)
+OBJS   := $(OBJS:.cpp=.o)
+
+.PHONY: all clean
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+ifdef debug
+	$(CC) -g $^ -o $@
+else
+	$(CC) $^ -o $@
+endif
+	
+
+%.o: %.cpp
+ifdef debug
+	$(CC) $(CFLAGS) -g $<
+else
+	$(CC) $(CFLAGS) $<
+endif
+	
+
+%.o: $(ILIB)%.cpp
+ifdef debug
+	$(CC) $(CFLAGS) -g $<
+else
+	$(CC) $(CFLAGS) $<
+endif
 
 clean:
-	rm *.o main
-
-main: $(OFILES)
-	$(CC) $(OFILES) -o main
-main.o:
-	$(CC) $(CFLAGS) main.cpp
-matrix.o:
-	$(CC) $(CFLAGS) $(WAY)matrix.cpp
-aproxcalc.o:
-	$(CC) $(CFLAGS) $(WAY)aproxcalc.cpp
-functions.o:
-	$(CC) $(CFLAGS) $(WAY)functions.cpp
+	rm *.o $(TARGET)
