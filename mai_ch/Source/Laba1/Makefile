@@ -6,7 +6,7 @@
 #======================================
 TARGET  = main
 ILIB    = ../Lib/
-LSRC   := ODE.cpp functions.cpp matrix.cpp
+LSRC   := matrix.cpp 
 #======================================
 
 

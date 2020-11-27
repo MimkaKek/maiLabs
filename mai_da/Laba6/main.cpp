@@ -3,62 +3,150 @@
 #include <stack>
 #include <iostream>
 #include <string>
+#include <iomanip>
+
+const unsigned int BASE = 100000;
+const unsigned int BSIZE = 5;
 
 class BigInt {
     public:
 
-        BigInt(): limit(10) {};
+        BigInt(): base(BASE), bSize(BSIZE), fError(false) {};
         BigInt(const BigInt &toCopy) {
-            limit = toCopy.limit;
+            base = toCopy.base;
             n = toCopy.n;
+            bSize = toCopy.bSize;
+            fError = toCopy.fError;
         };
 
-        BigInt(std::vector<unsigned char> nn, size_t l) {
-            limit = l;
-            n = nn;
+        BigInt(std::vector<long long> number) {
+
+            base = BASE;
+            n = number;
+            bSize = 0;
+            fError = false;
+            
+            size_t tmp = BASE - 1;
+            while(tmp > 0) {
+                tmp /= 10;
+                ++bSize;
+            }
         };
 
-        BigInt(size_t l) {
-            limit = l;
-            n = {0};
+        BigInt(size_t b) {
+
+            base = BASE;
+            bSize = 0;
+            fError = false;
+            
+            size_t tmp = BASE - 1;
+            while(tmp > 0) {
+                tmp /= 10;
+                ++bSize;
+            }
+
+            long long numb;
+            do {
+                numb = b % BASE;
+                n.push_back(numb);
+                b /= BASE;
+            } while(b > 0);
+        };
+
+        BigInt(size_t b, bool error) {
+
+            base = BASE;
+            bSize = 0;
+            fError = error;
+            
+            size_t tmp = BASE - 1;
+            while(tmp > 0) {
+                tmp /= 10;
+                ++bSize;
+            }
+
+            long long numb;
+            do {
+                numb = b % BASE;
+                n.push_back(numb);
+                b /= BASE;
+            } while(b > 0);
         };
         
         ~BigInt() {};
-        
-        friend  const    BigInt          operator +  (const BigInt &left, const BigInt &right);
-        friend  const    BigInt          operator -  (const BigInt &left, const BigInt &right);
-        friend  const    BigInt          operator *  (const BigInt &left, const BigInt &right); //TODO
-        friend  const    BigInt          operator *  (const BigInt &left, const size_t &right); //TODO
-        friend  const    BigInt          operator /  (const BigInt &left, const BigInt &right); //TODO
-        friend  const    BigInt          operator /  (const BigInt &left, const size_t &right); //TODO
-        friend  const    bool            operator >  (const BigInt &left, const BigInt &right);
-        friend  const    bool            operator <  (const BigInt &left, const BigInt &right);
-        friend  const    bool            operator >= (const BigInt &left, const BigInt &right);
-        friend  const    bool            operator <= (const BigInt &left, const BigInt &right);
-        friend  const    bool            operator == (const BigInt &left, const BigInt &right);
-        friend  const    bool            operator != (const BigInt &left, const BigInt &right);
-        friend std::ostream& operator << (std::ostream &out, const BigInt &numb);
-        friend std::istream& operator >> (std::istream &in, BigInt &numb);
 
+        //Бинарные операторы
+        
+        BigInt          operator +  (const BigInt &right) const;
+        BigInt          operator -  (const BigInt &right) const;
+        BigInt          operator *  (const BigInt &right) const;
+        BigInt          operator /  (const BigInt &right) const;
+
+        //Унарные операторы
         
         BigInt&    operator += (const BigInt &right); //TODO
         BigInt&    operator -= (const BigInt &right); //TODO
         BigInt&    operator /= (const BigInt &right); //TODO
         BigInt&    operator *= (const BigInt &right); //TODO
-        BigInt&    operator =  (const BigInt &right) {
-            limit = right.limit;
-            n = right.n;
-            return *this;
-        }
+        BigInt&    operator =  (const BigInt &right);
+        
+        //Операции сравнения
+
+        const    bool            operator >  (const BigInt &right) const;
+        const    bool            operator <  (const BigInt &right) const;
+        const    bool            operator >= (const BigInt &right) const;
+        const    bool            operator <= (const BigInt &right) const;
+        const    bool            operator == (const BigInt &right) const;
+        const    bool            operator != (const BigInt &right) const;
+        
+        friend std::ostream& operator << (std::ostream &out, const BigInt &numb);
+        friend std::istream& operator >> (std::istream &in, BigInt &numb);
+
+        bool IsOdd() const;
+
+        friend BigInt pow(BigInt a, BigInt power);
 
     private:
-        std::vector<unsigned char>  n;
-        size_t                      limit;
+        std::vector<long long>  n;
+        size_t                  base;
+        size_t                  bSize;
+        bool                    fError;
 };
 
-const bool   operator == (const BigInt &left, const BigInt &right) {
+bool BigInt::IsOdd() const {
+    return (n[0] % 2) == 1;
+}
 
-    size_t ls = left.n.size(), rs = right.n.size();
+BigInt pow(BigInt a, BigInt power) {
+
+    BigInt two = BigInt(2);
+    BigInt zero = BigInt(0);
+    BigInt res = BigInt(1);
+
+    if(power == zero) {
+        return BigInt(0, true);
+    }
+    
+    while(power > zero) {
+        if(power.IsOdd()) {
+            res = res * a;
+        }
+        a = a * a;
+        power = power / two;
+    }
+    
+    return res;
+}
+
+BigInt& BigInt::operator = (const BigInt &right) {
+    base = right.base;
+    n = right.n;
+    return *this;
+}
+
+const bool BigInt::operator == (const BigInt &right) const {
+
+    size_t ls = this->n.size(), rs = right.n.size();
     size_t step;
     
     if(ls != rs) {
@@ -66,35 +154,21 @@ const bool   operator == (const BigInt &left, const BigInt &right) {
     }
     else {
         for(step = ls - 1; step > 0; --step) {
-            if(left.n[step] != right.n[step]) {
+            if(this->n[step] != right.n[step]) {
                 return false;
             }
         }
-        return left.n[0] == right.n[0];
+        return this->n[0] == right.n[0];
     }
 }
 
-const bool   operator != (const BigInt &left, const BigInt &right) {
-
-    size_t ls = left.n.size(), rs = right.n.size();
-    size_t step;
-    
-    if(ls == rs) {
-        return false;
-    }
-    else {
-        for(step = ls - 1; step > 0; --step) {
-            if(left.n[step] == right.n[step]) {
-                return false;
-            }
-        }
-        return left.n[0] != right.n[0];
-    }
+const bool BigInt::operator != (const BigInt &right) const {
+    return !(*this == right);
 }
 
-const bool   operator >  (const BigInt &left, const BigInt &right) {
+const bool BigInt::operator > (const BigInt &right) const {
 
-    size_t ls = left.n.size(), rs = right.n.size();
+    size_t ls = this->n.size(), rs = right.n.size();
     size_t step;
     
     if(ls < rs) {
@@ -105,20 +179,20 @@ const bool   operator >  (const BigInt &left, const BigInt &right) {
     }
     else {
         for(step = ls - 1; step > 0; --step) {
-            if(left.n[step] > right.n[step]) {
+            if(this->n[step] > right.n[step]) {
                 return true;
             }
-            else if(left.n[step] < right.n[step]) {
+            else if(this->n[step] < right.n[step]) {
                 return false;
             }
         }
-        return left.n[0] > right.n[0];
+        return this->n[0] > right.n[0];
     }
 }
 
-const bool   operator >= (const BigInt &left, const BigInt &right) {
+const bool BigInt::operator >= (const BigInt &right) const {
 
-    size_t ls = left.n.size(), rs = right.n.size();
+    size_t ls = this->n.size(), rs = right.n.size();
     size_t step;
     
     if(ls < rs) {
@@ -129,20 +203,20 @@ const bool   operator >= (const BigInt &left, const BigInt &right) {
     }
     else {
         for(step = ls - 1; step > 0; --step) {
-            if(left.n[step] > right.n[step]) {
+            if(this->n[step] > right.n[step]) {
                 return true;
             }
-            else if(left.n[step] < right.n[step]) {
+            else if(this->n[step] < right.n[step]) {
                 return false;
             }
         }
-        return left.n[0] >= right.n[0];
+        return this->n[0] >= right.n[0];
     }
 }
 
-const bool   operator <  (const BigInt &left, const BigInt &right) {
+const bool BigInt::operator < (const BigInt &right) const {
 
-    size_t ls = left.n.size(), rs = right.n.size();
+    size_t ls = this->n.size(), rs = right.n.size();
     size_t step;
     
     if(ls < rs) {
@@ -153,20 +227,20 @@ const bool   operator <  (const BigInt &left, const BigInt &right) {
     }
     else {
         for(step = ls - 1; step > 0; --step) {
-            if(left.n[step] > right.n[step]) {
+            if(this->n[step] > right.n[step]) {
                 return false;
             }
-            else if(left.n[step] < right.n[step]) {
+            else if(this->n[step] < right.n[step]) {
                 return true;
             }
         }
-        return left.n[0] < right.n[0];
+        return this->n[0] < right.n[0];
     }
 }
 
-const bool   operator <= (const BigInt &left, const BigInt &right) {
+const bool BigInt::operator <= (const BigInt &right) const {
 
-    size_t ls = left.n.size(), rs = right.n.size();
+    size_t ls = this->n.size(), rs = right.n.size();
     size_t step;
     
     if(ls < rs) {
@@ -177,39 +251,39 @@ const bool   operator <= (const BigInt &left, const BigInt &right) {
     }
     else {
         for(step = ls - 1; step > 0; --step) {
-            if(left.n[step] > right.n[step]) {
+            if(this->n[step] > right.n[step]) {
                 return false;
             }
-            else if(left.n[step] < right.n[step]) {
+            else if(this->n[step] < right.n[step]) {
                 return true;
             }
         }
-        return left.n[0] <= right.n[0];
+        return this->n[0] <= right.n[0];
     }
 }
 
-const BigInt operator +  (const BigInt &left, const BigInt &right) {
+BigInt BigInt::operator + (const BigInt &right) const {
 
     size_t i;
-    size_t limit = left.limit;
-    size_t maxS = (left.n.size() > right.n.size()) ? left.n.size()  : right.n.size();
-    size_t minS = (left.n.size() > right.n.size()) ? right.n.size() : left.n.size();
+    size_t base = this->base;
+    size_t maxS = (this->n.size() > right.n.size()) ? this->n.size()  : right.n.size();
+    size_t minS = (this->n.size() > right.n.size()) ? right.n.size() : this->n.size();
 
-    std::vector<unsigned char> answer;
+    std::vector<long long> answer;
     answer.resize(maxS + 1, 0);
     
     for(i = 0; i < minS; ++i) {
-        answer[i] = left.n[i] + right.n[i];
-        if(answer[i] >= limit) {
-            answer[i] -= limit;
+        answer[i] = this->n[i] + right.n[i];
+        if(answer[i] >= base) {
+            answer[i] -= base;
             answer[i + 1] += 1;
         }
     }
 
     for(i = minS; i < maxS; ++i) {
-        answer[i] = (left.n.size() > right.n.size()) ? left.n[i] : right.n[i];
-        if(answer[i] >= limit) {
-            answer[i] -= limit;
+        answer[i] = (this->n.size() > right.n.size()) ? this->n[i] : right.n[i];
+        if(answer[i] >= base) {
+            answer[i] -= base;
             answer[i + 1] += 1;
         }
     }
@@ -218,111 +292,100 @@ const BigInt operator +  (const BigInt &left, const BigInt &right) {
         answer.pop_back();
     }
     
-    return BigInt(answer, limit);
+    return BigInt(answer);
 }
 
-const BigInt operator - (const BigInt &left, const BigInt &right) {
-    
-    size_t i, toErase = 0;
-    size_t limit = left.limit;
-    size_t size  = (left.n.size() > right.n.size()) ? right.n.size() : left.n.size();
+BigInt BigInt::operator - (const BigInt &right) const {
 
-    std::vector<unsigned char> answer;
-    answer = left.n;
-    if(left >= right) {
+    size_t i, toErase = 0;
+    size_t base = this->base;
+    size_t size  = (this->n.size() > right.n.size()) ? right.n.size() : this->n.size();
+
+    std::vector<long long> answer;
+    answer = this->n;
+    if(*this >= right) {
         for(i = 0; i < size; ++i) {
-            if(answer[i] < right.n[i]) {
-                answer[i + 1] -= 1;
-                answer[i] += limit;
-            }
             answer[i] -= right.n[i];
+            if(answer[i] < 0) {
+                answer[i] += base;
+                answer[i + 1] -= 1;
+            }
         }
     }
     else {
-        std::cout << "Error";
-        return BigInt();
+        return BigInt(0, true);
     }
     
     i = answer.size() - 1;
-    while(i > 0) {
-        if(answer[i] == 0) {
-            ++toErase;
-        }
+    while(i > 0 && answer[i] == 0) {
+        ++toErase;
         --i;
     }
 
     answer.erase(answer.end() - toErase, answer.end());
-    return BigInt(answer, limit);
+    return BigInt(answer);
 }
 
-const BigInt operator *  (const BigInt &left, const size_t &right) {
+BigInt BigInt::operator / (const BigInt &right) const {
     
-    size_t limit = left.limit;
-    size_t r     = right;
-    size_t i, j, k;
-    std::vector<unsigned char> answer;
-    std::vector<unsigned char> shift;
-    std::vector<unsigned char> numb;
-
-    if(r == 0) {
-        answer.push_back(0);
-        return BigInt(answer, limit);
-    }
-    
-    while(r > 0) {
-        numb.push_back(r % 10);
-        r /= 10;
-    }
-
-    for(i = 0; i < numb.size(); ++i) {
-        shift.clear();
-        for(j = 0; j < left.n.size(); ++j) {
-            shift.push_back(left.n[j] * numb[i]);
+    if(right.n.size() == 1) {
+        if (right.n[0] == 1) {
+            return BigInt(*this);
         }
-
-        size_t mp = shift.size() + i;
-        
-        for(j = i; j < mp; ++j) {
-            if(j == answer.size()) {
-                answer.push_back(shift[j - i]);
-            }
-            else {
-                answer[j] += shift[j - i];
-            }
-        }
-        k = i;
-        while(answer[k] >= limit) {
-
-            if((k + 1) == answer.size()) {
-                answer.push_back(0);
-            }
-            
-            while(answer[k] >= limit) {
-                answer[k] -= limit;
-                answer[k + 1] += 1;
-            }
-            
-            ++k;
+        else if (right.n[0] == 0) {
+            return BigInt(0, true);
         }
     }
+
+    if(n.size() == 1) {
+        if (n[0] == 0) {
+            return BigInt(0);
+        }
+    }
+
+    std::vector<long long> res;
+    res.resize(n.size());
     
-    return BigInt(answer, limit);
+    BigInt cv = BigInt(0);
+    for (int i = (int) n.size() - 1; i >= 0; --i) {
+        cv.n.insert(cv.n.begin(), n[i]);
+        if (!cv.n.back())
+            cv.n.pop_back();
+        int x = 0, l = 0, r = BASE;
+        while (l <= r) {
+            int m = (l + r) / 2;
+            BigInt cur = right * BigInt(m);
+            if (cur <= cv) {
+                x = m;
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+        res[i] = x;
+        cv = cv - right * BigInt(x);
+    }
+
+    for(int i = res.size() - 1; res[i] == 0; --i) {
+        res.pop_back();
+    }
+    
+    return res;
 }
 
-const BigInt operator *  (const BigInt &left, const BigInt &right) {
+BigInt BigInt::operator * (const BigInt &right) const {
 
-    size_t limit = left.limit;
     size_t i, j, k;
-    std::vector<unsigned char> answer;
-    std::vector<unsigned char> shift;
+    std::vector<long long> answer;
+    std::vector<long long> shift;
 
-    shift.resize(left.n.size(), 0);
-    answer.resize(left.n.size() + right.n.size(), 0);
+    shift.resize(n.size(), 0);
+    answer.resize(n.size() + right.n.size(), 0);
 
     for(i = 0; i < right.n.size(); ++i) {
         
-        for(j = 0; j < left.n.size(); ++j) {
-            shift[j] = left.n[j] * right.n[i];
+        for(j = 0; j < n.size(); ++j) {
+            shift[j] = n[j] * right.n[i];
         }
 
         size_t mp = shift.size() + i;
@@ -332,13 +395,9 @@ const BigInt operator *  (const BigInt &left, const BigInt &right) {
         }
         
         k = i;
-        while(answer[k] >= limit) {
-
-            while(answer[k] >= limit) {
-                answer[k] -= limit;
-                answer[k + 1] += 1;
-            }
-            
+        while(answer[k] >= base) {
+            answer[k + 1] += (answer[k] / base);
+            answer[k] %= base;
             ++k;
         }
     }
@@ -347,44 +406,54 @@ const BigInt operator *  (const BigInt &left, const BigInt &right) {
         answer.pop_back();
     }
     
-    return BigInt(answer, limit);
+    return BigInt(answer);
 }
 
 std::ostream& operator << (std::ostream &out, const BigInt &numb) {
 
-    size_t size = numb.n.size();
-    if(size > 0) {
-         for(size_t p = size - 1; p > 0; --p) {
-            out << (unsigned int) numb.n[p];
+    long long size = numb.n.size();
+    if(size > 0 && !numb.fError) {
+        out << (long long) numb.n[size - 1];
+        for(long long p = size - 2; p >= 0; --p) {
+            out << std::setfill('0') << std::setw(numb.bSize) << (long long) numb.n[p];
         }
-        out << (unsigned int) numb.n[0];
+    }
+    else {
+        out << "Error";
     }
     return out;
 }
 
-std::istream& operator >> (std::istream &in, BigInt &right) {
-    std::string                 str;
-    unsigned long               i, check = 0;
-    std::stack<unsigned char>   stack;
-    right.n.clear();
+std::istream& operator >> (std::istream &in, BigInt &numb) {
 
-    in >> str;
+    numb.n.clear();
+    size_t bSize = numb.bSize;
+    std::string    str;
+    long long  i, nSymb, check;
     
+    in >> str;
+
+    check = 0;
     while(str[check] == '0') {
         ++check;
     }
 
     if(check == str.size()) {
-        right.n.push_back(0);
+        numb.n.push_back(0);
     }
     else {
-        for(i = str.size() - 1; i > check; --i) {
-            right.n.push_back(str[i] - '0');
+        for(i = str.size() - 1; i >= check; i -= bSize) {
+            nSymb = i - check + 1;
+            if(nSymb < bSize) {
+                numb.n.push_back(atoi(str.substr(check, nSymb).c_str()));
+            }
+            else {
+                numb.n.push_back(atoi(str.substr(i - bSize + 1, bSize).c_str()));
+            }
+            
         }
-        right.n.push_back(str[check] - '0');
     }
     
-
     return in;
 }
 
@@ -393,10 +462,7 @@ int main() {
     BigInt a, b;
     unsigned char comm;
 
-    while(true) {
-        std::cin >> a;
-        std::cin >> b;
-        std::cin >> comm;
+    while(std::cin >> a >> b >> comm) {
         switch(comm) {
             case '+':
             {
@@ -415,12 +481,12 @@ int main() {
             }
             case '/':
             {
-                //std::cout << a / b << std::endl;
+                std::cout << a / b << std::endl;
                 break;
             }
             case '^':
             {
-                //std::cout << a / b << std::endl;
+                std::cout << pow(a, b) << std::endl;
                 break;
             }
             case '>':

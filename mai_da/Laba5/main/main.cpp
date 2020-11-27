@@ -9,9 +9,9 @@
 
 const unsigned char     END           = 255;
 const unsigned char     GET_SENTINEL  = 254;
-const size_t            ALPHA_SIZE    = 27;
 const size_t            INTERNAL      = SIZE_MAX;
 const char              SENTINEL      = '$';
+const size_t            ALPHA_SIZE    = 27;
 
 class TNode {
     public:
