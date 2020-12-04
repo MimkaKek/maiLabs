@@ -11,7 +11,8 @@ const unsigned char     END           = 255;
 const unsigned char     GET_SENTINEL  = 254;
 const size_t            INTERNAL      = SIZE_MAX;
 const char              SENTINEL      = '$';
-const size_t            ALPHA_SIZE    = 27;
+const unsigned char     ALPHA_SIZE    = 27;
+const unsigned char     TESTS         = 10;
 
 class TNode {
     public:
@@ -19,7 +20,7 @@ class TNode {
         size_t                                      left;
         size_t*                                     right;
         size_t                                      number;
-        size_t                                      bSearch;
+        unsigned char                               bSearch;
         TNode*                                      suffLink;
 
         TNode(size_t l, size_t *r, size_t n, TNode *node) : edges{}, left(l), right(r), number(n), bSearch(ALPHA_SIZE), suffLink(node) {
@@ -52,10 +53,10 @@ class TNode {
 
 class TSuffTree {
     public:
-        TSuffTree(const std::string &s) : str(std::move(s + SENTINEL)) {
+        TSuffTree(const std::string &s) : str(std::move(s)) {
 
+            str += str + SENTINEL;
             root = new TNode(0, 0, INTERNAL, nullptr);
-            
             
             activeNode = root;
             activeEdge = 0;
@@ -68,11 +69,7 @@ class TSuffTree {
         
             size_t len = str.length();
         
-            answer = (char*) malloc((sizeof (char)) * (len / 2) + 1);
-            ansPos = len / 2;
-            answer[ansPos] = '\0';
-            --ansPos;
-            for (size_t i = 0; i < len; i++) {
+            for (size_t i = 0; i < len; ++i) {
                 Phase(i);
             }
         };
@@ -83,8 +80,8 @@ class TSuffTree {
         
         void Phase(size_t phaseNum) {
             
-            remain++;       //узел, который надо вставить в дерево
-            end++;          //позиция конца строки
+            ++remain;       //узел, который надо вставить в дерево
+            ++end;          //позиция конца строки
         
             TNode *lastAddedInternalNode = nullptr;
         
@@ -98,8 +95,8 @@ class TSuffTree {
                     // Если нет ребра с таким символом - создаём лист
                     activeNode->setEdge(str[activeEdge], new TNode(phaseNum, &end, suffNum, nullptr));
         
-                    suffNum++;
-                    remain--;
+                    ++suffNum;
+                    --remain;
         
                     // Не забываем про суффиксные ссылки
                     if (lastAddedInternalNode != nullptr) {  
@@ -121,26 +118,26 @@ class TSuffTree {
                             lastAddedInternalNode->suffLink = activeNode;
                             lastAddedInternalNode = nullptr;
                         }
-                        activeLength++;
+                        ++activeLength;
                         break;
                     } else {
                         // Иначе создаём промежуточный узел
                         TNode *toInsert = new TNode(phaseNum, &end, suffNum, nullptr);
-                        suffNum++;
+                        ++suffNum;
         
                         TNode *justInserted = Insert(toInsert);
                         if (lastAddedInternalNode != nullptr) {
                             lastAddedInternalNode->suffLink = justInserted;
                         }
                         lastAddedInternalNode = justInserted;
-                        remain--;
+                        --remain;
                     }
                 }
         
                 
                 if (activeNode == root) {
                     if (activeLength > 0) {
-                        activeLength--;
+                        --activeLength;
                         activeEdge = phaseNum - remain + 1;
                     }
                 }
@@ -150,7 +147,7 @@ class TSuffTree {
             }
         };
         
-        void Task() {
+        std::string GetMinCyclicShift() {
 
             std::stack<TNode*> path;
             TNode*             state = root;
@@ -162,7 +159,7 @@ class TSuffTree {
             while(true) {
                 while(len < needed) {
                     
-                    for(size_t p = state->bSearch; p < ALPHA_SIZE; ++p) {
+                    for(unsigned char p = state->bSearch; p < ALPHA_SIZE; ++p) {
                         if(state->edges[p]) {
                             path.push(state);
                             state->bSearch = p + 1;
@@ -184,34 +181,22 @@ class TSuffTree {
                 }
 
                 p = state->getRight() - len + needed;
-                if(str[p] == '$') {
+                if(str[p] == SENTINEL) {
                     len -= state->getLength();
                     state = path.top();
                     path.pop();
                     continue;
                 }
-                
-                while(true) {
-                    answer[ansPos] = str[p];
-                    if(ansPos == 0) {
-                        break;
-                    }
-                    --ansPos;
-                    --p;
-                }
 
                 break;
             }
-            std::cout << answer << std::endl;
             
-            return;
+            return str.substr(p - needed + 1, needed);
         };
         
     private:
     
         std::string         str;
-        char*               answer;
-        size_t              ansPos;
         TNode*              root;
         
         TNode*              activeNode;
@@ -221,8 +206,6 @@ class TSuffTree {
         size_t              end;
         size_t              remain;
         size_t              suffNum;
-        
-        
         
         TNode* Insert(TNode *toInsert) {
             TNode *edge = activeNode->getEdge(str[activeEdge]);
@@ -277,14 +260,40 @@ class TSuffTree {
         };
 };
 
+std::string minCyclicShift (std::string s) {
+    s += s;
+    int n = (int) s.length();
+    int i=0, ans=0;
+    while (i < n/2) {
+        ans = i;
+        int j=i+1, k=i;
+        while (j < n && s[k] <= s[j]) {
+            if (s[k] < s[j])
+                k = i;
+            else
+                ++k;
+            ++j;
+        }
+        while (i <= k)  i += j - k;
+    }
+    return s.substr(ans, n/2);
+}
+
 int main() {
+
+    clock_t dt = 0, t0, t1;
+    double avrTime;
     std::string pattern;
-    std::cin >> pattern;
-    //clock_t begin = clock();
-    TSuffTree tree(pattern + pattern);
-    tree.Task();
-    //clock_t end = clock();
-    //float time = (end - begin) /  (float) CLOCKS_PER_SEC;
-    //std::cout << "Total time = " << time << std::endl;
+    for(unsigned char iter = 0; iter < TESTS; ++iter) {
+        std::cin >> pattern;
+        t0 = clock();
+        TSuffTree tree(pattern);
+        tree.GetMinCyclicShift();
+        t1 = clock();
+        dt += t1 - t0;
+    }
+    avrTime = (double) dt / TESTS;
+    avrTime /= CLOCKS_PER_SEC;
+    std::cout << "Average time: " << avrTime << std::endl;
     return 0;
 }
